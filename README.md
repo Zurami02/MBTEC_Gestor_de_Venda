@@ -1,4 +1,4 @@
-I. MBTEC Gestor de Venda
+\# MBTEC Gestor de Venda
 
 
 
@@ -6,7 +6,7 @@ MBTEC Gestor de Venda é um "sistema desktop" desenvolvido pela empresa "MBTEC E
 
 
 
-II. Funcionalidades
+\## Funcionalidades
 
 
 
@@ -18,7 +18,7 @@ II. Funcionalidades
 
 
 
-III. Tecnologias
+\## Tecnologias
 
 
 
@@ -26,6 +26,3 @@ III. Tecnologias
 * JavaFX
 * JDBC / SQLITE
 * JasperReports
-
-
-
