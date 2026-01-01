@@ -52,11 +52,12 @@ out/
 # Logs
 
 # Javadoc gerado
-mbtec/
 index-files/
 resource-files/
 script-files/
 legal/
 element-list
+*.html
+*/class-use/
 
 
