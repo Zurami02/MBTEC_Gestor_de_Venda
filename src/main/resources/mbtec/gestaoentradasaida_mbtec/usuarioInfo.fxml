@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import com.jfoenix.controls.JFXButton?>
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.Blend?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane fx:id="anchorPaneMain" prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.UsuarioInfoController">
+   <children>
+      <ImageView fitHeight="533.0" fitWidth="723.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@fotos/foto2.jpg" />
+         </image></ImageView>
+      <ImageView fitHeight="50.0" fitWidth="72.0" layoutX="588.0" layoutY="431.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icones/logoNormal.png" />
+         </image>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+            </Lighting>
+         </effect>
+      </ImageView>
+      <Label layoutX="13.0" layoutY="462.0" text="Natite, Mercado de Mbanguia perto da Escola de Natite, Pemba, Cabo Delgado" textFill="#449bc6" />
+      <GridPane layoutX="31.0" layoutY="59.0" prefHeight="227.0" prefWidth="589.0">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+          <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+        </columnConstraints>
+        <rowConstraints>
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+          <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+            <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label text="Nome do funcionario" textFill="#ebe7e7">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Data de Nascimento" textFill="#ebe7e7" GridPane.rowIndex="1">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Número de BI" textFill="#ebe7e7" GridPane.rowIndex="2">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Email" textFill="#ebe7e7" GridPane.rowIndex="4">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Telefone" textFill="#ebe7e7" GridPane.rowIndex="3">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Usuario" textFill="#ebe7e7" GridPane.rowIndex="5">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Perfil" textFill="#ebe7e7" GridPane.rowIndex="6">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <TextField fx:id="txtNomeUsuarioInfo" editable="false" opacity="0.7" text="Zulo Rajabo Mitumba" GridPane.columnIndex="1">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtdataNascUsuarioInfo" editable="false" opacity="0.7" text="01/01/2025" GridPane.columnIndex="1" GridPane.rowIndex="1">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtTelefoneUsuarioInfo" editable="false" opacity="0.7" text="876660002" GridPane.columnIndex="1" GridPane.rowIndex="3">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtEmailUsuarioInfo" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="4">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtUsuarioUsuarioInfo" editable="false" opacity="0.7" text="mbtec" GridPane.columnIndex="1" GridPane.rowIndex="5">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtPerfilUsuarioInfo" editable="false" opacity="0.7" text="Tecnico de Automacao" GridPane.columnIndex="1" GridPane.rowIndex="6">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+            <TextField fx:id="txtnumeroBIUsuarioInfo" editable="false" opacity="0.7" GridPane.columnIndex="1" GridPane.rowIndex="2">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </TextField>
+         </children>
+      </GridPane>
+      <Label layoutX="189.0" layoutY="14.0" text="Informações pessoais" textFill="#ebe7e7">
+         <font>
+            <Font name="System Bold Italic" size="20.0" />
+         </font>
+      </Label>
+      <Pane layoutX="93.0" layoutY="298.0" prefHeight="158.0" prefWidth="464.0" style="-fx-background-color: white;">
+         <effect>
+            <InnerShadow />
+         </effect>
+         <children>
+            <JFXButton fx:id="btnMudarSenhaUsuarioInfo" layoutX="14.0" layoutY="14.0" onAction="#btnMudarSenhaUsuarioInfo" prefHeight="30.0" prefWidth="98.0" style="-fx-border-color: blue;" text="Mudar senha">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+               <effect>
+                  <Blend />
+               </effect>
+            </JFXButton>
+            <PasswordField fx:id="txtSenhaAtual" layoutX="156.0" layoutY="46.0" promptText="Digite senha atual">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.03921568766236305" green="0.4941176474094391" blue="0.843137264251709" />
+                     </color>
+                  </InnerShadow>
+               </effect></PasswordField>
+            <PasswordField fx:id="txtNovaSenha" layoutX="14.0" layoutY="79.0" promptText="Digite nova senha">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.03921568766236305" green="0.4941176474094391" blue="0.843137264251709" />
+                     </color>
+                  </InnerShadow>
+               </effect>
+            </PasswordField>
+            <PasswordField fx:id="txtConfirmarSenha" layoutX="295.0" layoutY="79.0" promptText="Confirmar a senha ">
+               <effect>
+                  <InnerShadow>
+                     <color>
+                        <Color red="0.03921568766236305" green="0.4941176474094391" blue="0.843137264251709" />
+                     </color>
+                  </InnerShadow>
+               </effect>
+            </PasswordField>
+            <JFXButton fx:id="btnConfirmarSenhaUsuarioInfo" buttonType="RAISED" layoutX="361.0" layoutY="120.0" onAction="#btnConfirmarSenhaUsuarioInfo" prefHeight="30.0" prefWidth="79.0" style="-fx-border-color: blue;" text="Salvar">
+               <font>
+                  <Font name="System Bold Italic" size="12.0" />
+               </font>
+            </JFXButton>
+            <Label fx:id="lbAvisoErroUsuarioInfo" layoutX="152.0" layoutY="21.0" prefHeight="18.0" prefWidth="294.0" />
+         </children>
+      </Pane>
+   </children>
+</AnchorPane>

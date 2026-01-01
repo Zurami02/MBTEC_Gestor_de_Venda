@@ -1,0 +1,197 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.Group?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.effect.DropShadow?>
+<?import javafx.scene.effect.InnerShadow?>
+<?import javafx.scene.effect.SepiaTone?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
+<?import javafx.scene.layout.Pane?>
+<?import javafx.scene.paint.Color?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.UsuarioController">
+   <children>
+      <BorderPane prefHeight="476.0" prefWidth="650.0" style="-fx-background-color: #075;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+         <center>
+            <Pane prefHeight="200.0" prefWidth="200.0" BorderPane.alignment="CENTER">
+               <children>
+                  <ImageView fitHeight="512.0" fitWidth="627.0" layoutY="-14.0" opacity="0.23" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icones/mbtecShort.png" />
+                     </image>
+                  </ImageView>
+                  <Label layoutX="147.0" layoutY="14.0" prefHeight="38.0" prefWidth="374.0" text="CADASTRO DE FUNCIONÁRIOS " textFill="#99c722">
+                     <font>
+                        <Font name="System Bold" size="25.0" />
+                     </font>
+                  </Label>
+                  <Group layoutX="544.0" layoutY="330.0">
+                     <children>
+                        <Button fx:id="btnRegistarUsuario" mnemonicParsing="false" onAction="#btnRegistarUsuario" prefHeight="25.0" prefWidth="90.0" text="Registar">
+                           <effect>
+                              <SepiaTone />
+                           </effect>
+                        </Button>
+                        <Button fx:id="btnRemoverUsuario" layoutY="37.0" mnemonicParsing="false" onAction="#btnRemoverUsuario" prefHeight="25.0" prefWidth="90.0" text="Remover">
+                           <effect>
+                              <InnerShadow>
+                                 <color>
+                                    <Color red="0.9210526347160339" green="0.046905457973480225" blue="0.046905457973480225" />
+                                 </color>
+                              </InnerShadow>
+                           </effect>
+                        </Button>
+                        <Button fx:id="btnAtualizarUsuario" layoutX="2.0" layoutY="72.0" mnemonicParsing="false" onAction="#btnAtualizarUsuario" prefHeight="25.0" prefWidth="90.0" text="Atualizar">
+                           <effect>
+                              <SepiaTone />
+                           </effect>
+                        </Button>
+                     </children>
+                  </Group>
+                  <Label layoutX="17.0" layoutY="75.0" text="Nome:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtNome" layoutX="150.0" layoutY="73.0" prefHeight="25.0" prefWidth="184.0" promptText="Nome completo do funcionario">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                  </TextField>
+                  <Label layoutX="17.0" layoutY="106.0" text="Data de Nasc." textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="17.0" layoutY="136.0" text="Email:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtEmail" layoutX="150.0" layoutY="134.0" prefWidth="184.0" promptText="Email do Usuario" />
+                  <Label layoutX="17.0" layoutY="165.0" text="Cargo:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtCargo" layoutX="150.0" layoutY="163.0" prefWidth="184.0" promptText="seu cargo" />
+                  <Label layoutX="17.0" layoutY="195.0" text="Estado A/Inativo:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtEstado" layoutX="150.0" layoutY="193.0" prefWidth="184.0" promptText="1 Ativo / 0 Inativo" />
+                  <Label layoutX="17.0" layoutY="225.0" text="Usuario:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtUsuario" layoutX="150.0" layoutY="223.0" prefWidth="184.0" promptText="Escolhe o Usuario" />
+                  <Label layoutX="17.0" layoutY="255.0" text="Data de Admissao:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="378.0" layoutY="75.0" text="Sexo:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtSexo" layoutX="451.0" layoutY="73.0" prefWidth="184.0" promptText="Coloque o Genero" />
+                  <Label layoutX="377.0" layoutY="105.0" text="B.I  Nº: " textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtBI" layoutX="450.0" layoutY="103.0" prefWidth="184.0" promptText="Documento de Identificacao" />
+                  <Label layoutX="377.0" layoutY="135.0" text="Telefone:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtTelefone" layoutX="450.0" layoutY="133.0" prefWidth="184.0" promptText="Numero de Telefone" />
+                  <Label layoutX="378.0" layoutY="165.0" text="Salario:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtSalario" layoutX="451.0" layoutY="163.0" prefWidth="184.0" promptText="Salario do usuario" />
+                  <Label layoutX="378.0" layoutY="195.0" text="Perfil:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtPerfil" layoutX="451.0" layoutY="193.0" prefWidth="184.0" promptText="Posicao administrativa" />
+                  <Label layoutX="377.0" layoutY="224.0" text="Senha:" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="377.0" layoutY="255.0" text="Senha" textFill="#eeeaea">
+                     <font>
+                        <Font name="System Bold" size="14.0" />
+                     </font>
+                  </Label>
+                  <TextField fx:id="txtPesquisa" layoutX="534.0" layoutY="297.0" prefHeight="25.0" prefWidth="59.0" promptText="Pesq." />
+                  <TableView fx:id="tableviewUsuario" layoutX="17.0" layoutY="287.0" prefHeight="184.0" prefWidth="518.0">
+                    <columns>
+                      <TableColumn fx:id="colunaCodigoUsuario" prefWidth="63.0" text="Codigo" />
+                      <TableColumn fx:id="colunaNomeUsuario" prefWidth="128.0" text="Nome" />
+                        <TableColumn fx:id="colunaSexoUsuario" prefWidth="73.0" text="Sexo" />
+                        <TableColumn fx:id="colunaPerfi" prefWidth="75.0" text="Perfil" />
+                        <TableColumn fx:id="colunaSalarioUsuario" prefWidth="68.0" text="Salario" />
+                        <TableColumn fx:id="colunaTelefoneUsuario" prefWidth="90.0" text="Telefone" />
+                    </columns>
+                     <columnResizePolicy>
+                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                     </columnResizePolicy>
+                  </TableView>
+                  <Button layoutX="596.0" layoutY="296.0" mnemonicParsing="false" onAction="#pesquisarFuncionario" prefHeight="26.0" prefWidth="51.0">
+                     <font>
+                        <Font name="System Bold" size="12.0" />
+                     </font>
+                     <graphic>
+                        <ImageView fitHeight="18.0" fitWidth="50.0" onMouseClicked="#pesquisarFuncionario" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-search-48.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </Button>
+                  <PasswordField fx:id="txtSenha" layoutX="450.0" layoutY="223.0" prefWidth="184.0" promptText="Escolha a senha" />
+                  <DatePicker fx:id="datapickerDataAdmissao" layoutX="150.0" layoutY="253.0" prefWidth="184.0" promptText="Dat de intregracao" />
+                  <DatePicker fx:id="datapickerDataNascimento" layoutX="150.0" layoutY="103.0" prefWidth="184.0" promptText="Data de Nascimento" />
+                  <ImageView fitHeight="41.0" fitWidth="47.0" layoutX="16.0" layoutY="12.0" onMouseClicked="#primeiraVezLogin" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icones/mbtecShort.png" />
+                     </image>
+                     <effect>
+                        <DropShadow />
+                     </effect>
+                  </ImageView>
+                  <PasswordField fx:id="txtSenhaConfirmar" layoutX="450.0" layoutY="253.0" prefWidth="184.0" promptText="Digita novamente a senha">
+                     <font>
+                        <Font name="System Bold" size="13.0" />
+                     </font>
+                  </PasswordField>
+                  <Button fx:id="btnRelatorioUsuario" layoutX="548.0" layoutY="437.0" mnemonicParsing="false" onAction="#btnRelatorioUsuario" prefHeight="25.0" prefWidth="90.0" text="Pint">
+                     <effect>
+                        <SepiaTone />
+                     </effect>
+                  </Button>
+               </children>
+            </Pane>
+         </center>
+      </BorderPane>
+   </children>
+</AnchorPane>

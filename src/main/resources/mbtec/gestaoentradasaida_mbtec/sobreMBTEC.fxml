@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchorPaneMain" prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <ImageView fitHeight="533.0" fitWidth="723.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@fotos/foto2.jpg" />
+         </image></ImageView>
+      <ImageView fitHeight="346.0" fitWidth="346.0" layoutX="152.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icones/logoNormal.png" />
+         </image>
+         <effect>
+            <Lighting>
+               <bumpInput>
+                  <Shadow />
+               </bumpInput>
+            </Lighting>
+         </effect>
+      </ImageView>
+      <Label layoutX="13.0" layoutY="462.0" text="Natite, Mercado de Mbanguia perto da Escola de Natite, Pemba, Cabo Delgado" textFill="#449bc6" />
+      <TextArea editable="false" layoutX="44.0" layoutY="44.0" opacity="0.9" prefHeight="395.0" prefWidth="562.0" text="MBTEC:&#10;A Mbtec – Consultoria, Serviços de Tecnologia da Informação, Eletricidade e Fornecimento de &#10;Materiais, é uma empresa especializada em soluções técnicas nas áreas de TI e serviços elétricos. &#10;Prestamos serviços de alta qualidade com foco em inovação, eficiência e atendimento personalizado,&#10; atendendo clientes residenciais, comerciais e industriais.&#10;&#10;Missão, Visão:&#10;&#10;Missão&#10;Oferecer soluções técnicas integradas e confiáveis nas áreas de tecnologia da informação, eletricidade e&#10; fornecimento de materiais, com foco em inovação, excelência no atendimento e impacto positivo na &#10;produtividade e no bem-estar dos nossos clientes.&#10;Visão&#10;A Mbtec tem como visão aproximar a tecnologia da informação do dia-a-dia das pessoas, tornando o &#10;mundo mais acolhedor, brilhante e extraordinário por meio de soluções tecnológicas bem aproveitadas,&#10;com alta qualidade e atendimento preciso, oferecendo serviços abrangentes, inovadores e de &#10;excelência.&#10;" />
+   </children>
+</AnchorPane>

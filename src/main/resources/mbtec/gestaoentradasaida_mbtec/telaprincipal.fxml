@@ -1,0 +1,207 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.Menu?>
+<?import javafx.scene.control.MenuBar?>
+<?import javafx.scene.control.MenuItem?>
+<?import javafx.scene.effect.Light.Distant?>
+<?import javafx.scene.effect.Lighting?>
+<?import javafx.scene.effect.Shadow?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaprincipalController">
+   <children>
+      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+        <menus>
+          <Menu mnemonicParsing="false" text="File">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemHome" text="Home">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-home-24.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem fx:id="menuitemUsuario" mnemonicParsing="false" onAction="#menuitemUsuario" text="Usuario">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-client-24.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemConfiguracoes" text="Configurações">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/configurações.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+              <MenuItem mnemonicParsing="false" onAction="#menuitemClose" text="Close">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/ifechar-janela.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+            </items>
+               <graphic>
+                  <ImageView fitHeight="18.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icones/menu-50.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Menu>
+          <Menu mnemonicParsing="false" text="Cadastros">
+            <items>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroProdutos" text="Produtos">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/product-50%20(1).png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" text="Categoria de Produtos" visible="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-category-64.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroFornecedor" text="Fornecedores">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-provider-50%20(1).png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroServico" text="Servicos" visible="false">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-service-100.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem fx:id="menuitemcadastrofuncionario" mnemonicParsing="false" onAction="#menuitemcadastrofuncionario" text="Funcionário ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-service-100.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+            </items>
+          </Menu>
+            <Menu mnemonicParsing="false" text="Processos">
+               <items>
+                  <MenuItem mnemonicParsing="false" text="Venda" visible="false" />
+                  <MenuItem mnemonicParsing="false" text="Orcamento" visible="false" />
+                  <MenuItem mnemonicParsing="false" text="Precificacao" visible="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroFluxodeCaixa" text="Fluxo de Caixa">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/sell-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroEntradaSaida" text="Gestao de Entradas e Saidas">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/product-management.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+               </items>
+            </Menu>
+            <Menu mnemonicParsing="false" text="Relatorios">
+              <items>
+                <MenuItem mnemonicParsing="false" onAction="#menuitemRelatorioFluxodeCaixa" text="Fluxo de caixa">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-report-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemRelatorioGestaoES" text="Gestao de Entrada e Saida">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-report-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
+              </items>
+            </Menu>
+          <Menu fx:id="menuitemMBTEC" mnemonicParsing="false" onAction="#menuitemMBTEC" text="MBTEC">
+            <items>
+              <MenuItem mnemonicParsing="false" text="MBTEC" />
+            </items>
+               <graphic>
+                  <ImageView fitHeight="17.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icones/mbtecShort.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+          </Menu>
+            <Menu fx:id="menuUsuario" mnemonicParsing="false" text="Usuario">
+               <graphic>
+                  <ImageView fitHeight="17.0" fitWidth="16.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@icones/icons8-client-24.png" />
+                     </image>
+                  </ImageView>
+               </graphic>
+            </Menu>
+        </menus>
+      </MenuBar>
+      <AnchorPane fx:id="anchorPaneMain" layoutY="25.0" prefHeight="476.0" prefWidth="650.0">
+         <children>
+            <Label text="Localizcao: Av. Eduardo Mondlane, Mercado Mbanguia, perto da Escola Primaria">
+               <font>
+                  <Font size="15.0" />
+               </font>
+            </Label>
+            <ImageView fitHeight="565.0" fitWidth="720.0" layoutX="-70.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@fotos/foto2.jpg" />
+               </image>
+            </ImageView>
+            <ImageView fitHeight="346.0" fitWidth="346.0" layoutX="152.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+               <image>
+                  <Image url="@icones/logoNormal.png" />
+               </image>
+               <effect>
+                  <Lighting>
+                     <bumpInput>
+                        <Shadow />
+                     </bumpInput>
+                     <light>
+                        <Light.Distant />
+                     </light>
+                  </Lighting>
+               </effect>
+            </ImageView>
+            <Label layoutX="14.0" layoutY="460.0" text="Natite, Mercado de Mbanguia perto da Escola de Natite, Pemba, Cabo Delgado" textFill="#449bc6" />
+         </children></AnchorPane>
+   </children>
+</AnchorPane>

@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+
+<AnchorPane fx:id="anchorPaneMain" prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaprincipalCopyController">
+   <children>
+      <ImageView fitHeight="533.0" fitWidth="723.0" layoutX="-73.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@fotos/foto2.jpg" />
+         </image></ImageView>
+      <ImageView fitHeight="346.0" fitWidth="346.0" layoutX="152.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true">
+         <image>
+            <Image url="@icones/logoNormal.png" />
+         </image>
+         <effect>
+
+         </effect>
+      </ImageView>
+      <Label layoutX="13.0" layoutY="462.0" text="Natite, Mercado de Mbanguia perto da Escola de Natite, Pemba, Cabo Delgado" textFill="#449bc6" />
+   </children>
+</AnchorPane>
