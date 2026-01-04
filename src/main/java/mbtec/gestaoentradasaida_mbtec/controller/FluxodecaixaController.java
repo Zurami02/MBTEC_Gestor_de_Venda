@@ -337,56 +337,6 @@ public class FluxodecaixaController implements Initializable {
         });
     }
 
-    public void carregarComboBoxProdutos() {
-
-        listProdutos = produtosDAO.listar(); // ou outro método que lista produtos
-        produtosObservableList = FXCollections.observableArrayList(listProdutos);
-        // Cria uma lista filtrável
-        FilteredList<Produtos> produtosFiltrados = new FilteredList<>(produtosObservableList, p -> true);
-        txtcomboboxProdutoFC.setItems(produtosFiltrados);
-
-        // Define os itens no ComboBox
-        txtcomboboxProdutoFC.setItems(produtosFiltrados);
-
-        // Permite edição
-        txtcomboboxProdutoFC.setEditable(true);
-
-        // Listener para texto digitado
-        txtcomboboxProdutoFC.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            final TextField editor = txtcomboboxProdutoFC.getEditor();
-            final Produtos selected = txtcomboboxProdutoFC.getSelectionModel().getSelectedItem();
-
-            // Atualiza a filtragem
-            produtosFiltrados.setPredicate(produto -> {
-                if (newValue == null || newValue.isEmpty()) {
-                    return true;
-                }
-                String lower = newValue.toLowerCase();
-                return produto.getDescricao_produto().toLowerCase().contains(lower);
-            });
-
-            // Se o item selecionado não for o mesmo que o texto digitado, limpa seleção
-            if (selected == null || !selected.getDescricao_produto().equals(editor.getText())) {
-                txtcomboboxProdutoFC.getSelectionModel().clearSelection();
-            }
-        });
-
-        txtcomboboxProdutoFC.setConverter(new StringConverter<Produtos>() {
-            @Override
-            public String toString(Produtos produto) {
-                return produto != null ? produto.toString() : "";
-            }
-
-            @Override
-            public Produtos fromString(String string) {
-                return txtcomboboxProdutoFC.getItems().stream()
-                        .filter(p -> p.toString().equals(string))
-                        .findFirst().orElse(null);
-            }
-        });
-
-    }
-
     private void limparCampos() {
         txtcomboboxProdutoFC.setValue(null);
         txtquantidadeFC.clear();
@@ -399,14 +349,6 @@ public class FluxodecaixaController implements Initializable {
         estoqueLabel.setText("");
         descontoLabel.setText("");
 
-    }
-
-    private void mostrarAlertaErro(String titulo, String mensagem) {
-        Alert alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setTitle(titulo);
-        alert.setHeaderText(null);
-        alert.setContentText(mensagem);
-        alert.show();
     }
 
     public void carregarCombboxProdutosAutoCompletado() {

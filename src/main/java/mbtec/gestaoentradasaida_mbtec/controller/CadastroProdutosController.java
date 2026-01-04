@@ -135,19 +135,10 @@ public class CadastroProdutosController implements Initializable {
             Scene scene = new Scene(root);
             Stage stage = new Stage();
             stage.setScene(scene);
-
-            //Não permite maximizar
             stage.setResizable(false);
-
-            //(bloqueia a tela principal até fechar)
             stage.initModality(Modality.APPLICATION_MODAL);
-
-            // Título da janela
             stage.setTitle("Cadastro de Categoria");
-
-            // Centralizar na tela
             stage.centerOnScreen();
-
             stage.showAndWait();
 
         } catch (IOException e) {
@@ -155,60 +146,63 @@ public class CadastroProdutosController implements Initializable {
         }
     }
 
-        @FXML
+    @FXML
     void btneditarProduto(ActionEvent event) {
-        produto = tableviewProdutos.getSelectionModel().getSelectedItem();
-        if (produto != null) {
-            Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
-            alert.setTitle("Confirmação de Atualização");
-            alert.setHeaderText("Você está prestes a atualizar o produto");
-            alert.setContentText("Tem certeza que deseja atualizar " + produto.getDescricao_produto() + "?");
-            Stage stage = (Stage) alert.getDialogPane().getScene().getWindow();
-            stage.getIcons().add(
-                    new Image(Objects.requireNonNull(AlertaUtil.class.
-                            getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
-            );
-
-            Optional<ButtonType> resultado = alert.showAndWait();
-            if (resultado.isPresent() && resultado.get() == ButtonType.OK) {
-                String produtoAtual = produto.getDescricao_produto(); // Armazena o produto atual
-                String produtoNovo = txtdescricao.getText();
-
-                if (!produtoAtual.equals(produtoNovo) && produtosDAO.existeProduto(produtoNovo)) {
-                    alert = new Alert(Alert.AlertType.ERROR);
-                    alert.setTitle("Erro no Cadastro");
-                    alert.setHeaderText("Campo produto inválido");
-                    alert.setContentText("Produto já existe!");
-                    alert.show();
-                    return;
-                }
-
-                // Verifica se houve alguma alteração antes de editar
-                if (!produtoAtual.equals(produtoNovo) ||
-                        produto.getQuantidade_produto() != Integer.parseInt(txtquantidade.getText()) ||
-                        produto.getPreco() != Double.parseDouble(txtpreco.getText()) ||
-                        !produto.getCategoria().equals(txtcategoria.getText())) {
-
-                    produto.setDescricao_produto(txtdescricao.getText());
-                    produto.setQuantidade_produto(Integer.parseInt(txtquantidade.getText()));
-                    produto.setPreco(Double.parseDouble(txtpreco.getText()));
-                    produto.setCategoria(txtcomboboxCategoriaProduto.getValue());
-
-                    produtosDAO.editar(produto);
-                    carregarTableViewProdutos();
-                    limparCampos();
-                } else {
-                    // Se não houve mudanças, você pode mostrar uma mensagem ou simplesmente retornar
-                    Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
-                    infoAlert.setTitle("Nenhuma Alteração");
-                    infoAlert.setHeaderText(null);
-                    infoAlert.setContentText("Nenhuma alteração foi feita no produto.");
-                    infoAlert.show();
-                }
-            }
-        }else {
-            AlertaUtil.mostrarErro("Falha na Atualizacao de dados","Selecione os dados na tabela");
+        Produtos produto = tableviewProdutos.getSelectionModel().getSelectedItem();
+        if (produto == null) {
+            AlertaUtil.mostrarErro("Falha na Atualização", "Selecione um produto na tabela.");
+            return;
         }
+
+        int quantidade;
+        double preco;
+        try {
+            quantidade = Integer.parseInt(txtquantidade.getText());
+            preco = Double.parseDouble(txtpreco.getText());
+        } catch (NumberFormatException e) {
+            AlertaUtil.mostrarErro("Erro de Entrada", "Quantidade ou preço inválido!");
+            return;
+        }
+
+        String descricao = txtdescricao.getText();
+        Categoria categoriaSelecionada = txtcomboboxCategoriaProduto.getValue();
+
+        Alert confirm = new Alert(Alert.AlertType.CONFIRMATION);
+        confirm.setTitle("Confirmação de Atualização");
+        confirm.setHeaderText("Você está prestes a atualizar o produto");
+        confirm.setContentText("Tem certeza que deseja atualizar " + produto.getDescricao_produto() + "?");
+        Stage stage = (Stage) confirm.getDialogPane().getScene().getWindow();
+        stage.getIcons().add(new Image(Objects.requireNonNull(
+                AlertaUtil.class.getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png"))));
+
+        Optional<ButtonType> resultado = confirm.showAndWait();
+        if (resultado.isEmpty() || resultado.get() != ButtonType.OK) return;
+
+        if (!produto.getDescricao_produto().equals(descricao) && produtosDAO.existeProduto(descricao)) {
+            AlertaUtil.mostrarErro("Produto já existe", "Produto com este nome já está cadastrado!");
+            return;
+        }
+
+        if (!houveAlteracao(produto, descricao, quantidade, preco, categoriaSelecionada)) {
+            AlertaUtil.mostrarInfo("Erro na Atualizacao","Nenhuma alteração foi feita no produto.");
+            return;
+        }
+
+        produto.setDescricao_produto(descricao);
+        produto.setQuantidade_produto(quantidade);
+        produto.setPreco(preco);
+        produto.setCategoria(categoriaSelecionada);
+
+        produtosDAO.editar(produto);
+        carregarTableViewProdutos();
+        limparCampos();
+    }
+
+    private boolean houveAlteracao(Produtos produto, String descricao, int quantidade, double preco, Categoria categoria) {
+        return !produto.getDescricao_produto().equals(descricao)
+                || produto.getQuantidade_produto() != quantidade
+                || produto.getPreco() != preco
+                || !Objects.equals(produto.getCategoria(), categoria);
     }
 
     @FXML
