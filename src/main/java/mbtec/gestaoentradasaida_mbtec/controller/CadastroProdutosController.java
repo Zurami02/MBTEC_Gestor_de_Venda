@@ -198,7 +198,8 @@ public class CadastroProdutosController implements Initializable {
         limparCampos();
     }
 
-    private boolean houveAlteracao(Produtos produto, String descricao, int quantidade, double preco, Categoria categoria) {
+    private boolean houveAlteracao(Produtos produto, String descricao, int quantidade,
+                                   double preco, Categoria categoria) {
         return !produto.getDescricao_produto().equals(descricao)
                 || produto.getQuantidade_produto() != quantidade
                 || produto.getPreco() != preco
