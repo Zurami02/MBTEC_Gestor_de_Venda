@@ -3,7 +3,6 @@ package mbtec.gestaoentradasaida_mbtec;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.fxml.FXMLLoader;
-import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonBar;
@@ -12,8 +11,8 @@ import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.util.EstadoApp;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.EstadoApp;
 
 import java.io.IOException;
 import java.util.Objects;

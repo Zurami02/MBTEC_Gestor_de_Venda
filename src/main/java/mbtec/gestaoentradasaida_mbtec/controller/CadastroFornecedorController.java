@@ -10,8 +10,8 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import mbtec.gestaoentradasaida_mbtec.domain.Fornecedores;
-import mbtec.gestaoentradasaida_mbtec.domain.FornecedoresDAO;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.DAO.FornecedoresDAO;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
 import java.net.URL;
 import java.util.List;

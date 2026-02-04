@@ -55,7 +55,7 @@
                   <Font size="14.0" />
                </font>
             </Button>
-            <Button layoutX="141.0" mnemonicParsing="false" onAction="#btneditarProduto" text="EDITAR">
+            <Button layoutX="141.0" mnemonicParsing="false" onAction="#btneditarProduto" text="UPDATE">
                <font>
                   <Font size="14.0" />
                </font>

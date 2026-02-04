@@ -10,7 +10,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import mbtec.gestaoentradasaida_mbtec.DAO.GestaoESDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.GestaoES;
-import mbtec.gestaoentradasaida_mbtec.util.RelatorioUtil;
+import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
 
 import java.io.InputStream;
 import java.net.URL;
@@ -70,7 +70,6 @@ public class RelatorioGestaoController implements Initializable {
 
     @FXML
     void onGerarRelatorioPorPeriodo(ActionEvent event) {
-        InputStream is = getClass().getResourceAsStream("/relatoriosjasper/RelatorioGestaoES.jasper");
 
         LocalDate dataInicial = dataPickerInicial.getValue();
         LocalDate dataFinal = dataPickerFinal.getValue();

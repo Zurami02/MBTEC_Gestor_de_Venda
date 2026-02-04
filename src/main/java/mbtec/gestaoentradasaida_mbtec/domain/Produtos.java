@@ -5,28 +5,17 @@ public class Produtos {
     private String descricao_produto;
     private int quantidade_produto;
     private double preco;
-    private String categoria1;//descartado
     private Categoria categoria;
 
-    public Produtos() {
-    }
+    public Produtos() {}
 
-    public Produtos(int idproduto, String descricao_produto, int quantidade_produto, double preco) {
+    public Produtos(int idproduto, String descricao_produto, int quantidade_produto, double preco, Categoria categoria) {
         this.idproduto = idproduto;
         this.descricao_produto = descricao_produto;
         this.quantidade_produto = quantidade_produto;
         this.preco = preco;
-    }
-
-    public Produtos(int idproduto, String descricao, int quantidade, double preco, Categoria categoria) {
-        this.idproduto = idproduto;
-        this.descricao_produto = descricao;
-        this.quantidade_produto = quantidade;
-        this.preco = preco;
         this.categoria = categoria;
     }
-
-
 
     public int getIdproduto() {
         return idproduto;
@@ -62,10 +51,6 @@ public class Produtos {
 
     public Categoria getCategoria() {
         return categoria;
-    }
-
-    public String getDescricao_categoria(){
-        return categoria != null? categoria.getDescricao_categoria() : null;
     }
 
     public void setCategoria(Categoria categoria) {

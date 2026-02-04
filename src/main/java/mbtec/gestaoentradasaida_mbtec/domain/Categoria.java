@@ -7,9 +7,9 @@ public class Categoria {
     public Categoria() {
     }
 
-    public Categoria(int idcategoria, String descricao_categoria) {
+    public Categoria(int idcategoria, String descricaocategoria) {
         this.idcategoria = idcategoria;
-        this.descricao_categoria = descricao_categoria;
+        this.descricao_categoria = descricaocategoria;
     }
 
     public int getIdcategoria() {

@@ -1,4 +1,4 @@
-package mbtec.gestaoentradasaida_mbtec.util;
+package mbtec.gestaoentradasaida_mbtec.service;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;

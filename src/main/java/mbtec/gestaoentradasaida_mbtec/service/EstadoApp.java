@@ -1,4 +1,4 @@
-package mbtec.gestaoentradasaida_mbtec.util;
+package mbtec.gestaoentradasaida_mbtec.service;
 
 /**
  * Controla o Estado de Sistema para verificacao de banco de dados

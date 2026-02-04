@@ -81,7 +81,7 @@ public class FluxodeCaixaDAO {
         return lista;
     }
 
-    public void deletar(FluxodeCaixa fluxodeCaixa) {
+    public void deletar(@NotNull FluxodeCaixa fluxodeCaixa) {
         String sql = "DELETE FROM fluxo_caixa WHERE idfluxocaixa = ?";
         try (Connection connection = ConexaoSQLite.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
@@ -108,7 +108,7 @@ public class FluxodeCaixaDAO {
         }
     }
 
-    public List<FluxodeCaixa> buscarPorNome(String nome) {
+    public List<FluxodeCaixa> buscarPorNome(@NotNull String nome) {
         String sql = "SELECT fc.idfluxocaixa, fc.quantidade AS quantidade_fc, fc.valor, fc.data, fc.desconto, " +
                 "p.idproduto, p.descricao AS descricao_produto, " +
                 "p.quantidade AS quantidade_produto, p.preco, c.idcategoria, c.descricao_categoria " +
@@ -153,7 +153,7 @@ public class FluxodeCaixaDAO {
         return fluxodeCaixas;
     }
 
-    public List<FluxodeCaixa> listarFluxoPorPeriodo(LocalDate inicio, LocalDate fim) {
+    public List<FluxodeCaixa> listarFluxoPorPeriodo(@NotNull LocalDate inicio, @NotNull LocalDate fim) {
         List<FluxodeCaixa> lista = new ArrayList<>();
         String sql = "SELECT fc.idfluxocaixa, fc.quantidade, fc.valor, fc.data, fc.desconto, " +
                 "p.idproduto, p.descricao AS descricao_produto, p.quantidade AS quantidade_produto, p.preco, " +

@@ -8,10 +8,10 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.paint.Color;
 import mbtec.gestaoentradasaida_mbtec.DAO.UsuarioDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.Usuario;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.util.ControladorSenha;
-import mbtec.gestaoentradasaida_mbtec.util.CriptografarUtil;
-import mbtec.gestaoentradasaida_mbtec.util.PularPaginasUtil;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.ControladorSenha;
+import mbtec.gestaoentradasaida_mbtec.service.CriptografarUtil;
+import mbtec.gestaoentradasaida_mbtec.service.PularPaginasUtil;
 
 import java.io.IOException;
 import java.net.URL;

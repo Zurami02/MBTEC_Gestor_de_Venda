@@ -1,4 +1,4 @@
-package mbtec.gestaoentradasaida_mbtec.util;
+package mbtec.gestaoentradasaida_mbtec.service;
 
 import java.util.regex.Pattern;
 

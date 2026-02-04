@@ -2,7 +2,7 @@ package mbtec.gestaoentradasaida_mbtec.DAO;
 
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.Usuario;
-import mbtec.gestaoentradasaida_mbtec.util.CriptografarUtil;
+import mbtec.gestaoentradasaida_mbtec.service.CriptografarUtil;
 import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 

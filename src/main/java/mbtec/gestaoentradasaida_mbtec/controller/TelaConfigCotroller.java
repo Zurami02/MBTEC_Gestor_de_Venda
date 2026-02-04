@@ -10,7 +10,7 @@ import javafx.scene.control.SpinnerValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.util.Duration;
-import mbtec.gestaoentradasaida_mbtec.util.TemporizadorConfig;
+import mbtec.gestaoentradasaida_mbtec.service.TemporizadorConfig;
 
 import java.net.URL;
 import java.util.ResourceBundle;

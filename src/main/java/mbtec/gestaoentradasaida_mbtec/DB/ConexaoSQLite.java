@@ -1,6 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.DB;
 
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
 import java.io.File;
 import java.io.IOException;

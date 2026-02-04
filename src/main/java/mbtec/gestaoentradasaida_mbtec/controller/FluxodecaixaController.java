@@ -16,7 +16,7 @@ import mbtec.gestaoentradasaida_mbtec.DAO.FluxodeCaixaDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.FluxodeCaixa;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
 import java.net.URL;
 import java.time.LocalDate;

@@ -1,0 +1,47 @@
+package mbtec.gestaoentradasaida_mbtec.controller;
+
+import javafx.event.ActionEvent;
+import javafx.fxml.FXML;
+import javafx.fxml.Initializable;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextField;
+import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
+import mbtec.gestaoentradasaida_mbtec.service.Configuracao;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+
+import java.net.URL;
+import java.util.Objects;
+import java.util.ResourceBundle;
+
+public class IvaController implements Initializable {
+    @FXML
+    private Label lbIVA;
+
+    @FXML
+    private TextField txtNomeIVA;
+
+    @FXML
+    private TextField txtValorIVA;
+
+    @FXML
+    void btnAdiconarIVA(ActionEvent event) {
+        if (txtNomeIVA.getText().isBlank() || txtValorIVA.getText().isBlank()){
+            AlertaUtil.mostrarErro("Falha","Campos invalidos");
+            return;
+        }
+        String imposto = txtNomeIVA.getText().trim();
+        String valorIVA = txtValorIVA.getText().trim();
+        Configuracao config = new Configuracao(imposto,valorIVA);
+       ConfiguracaoDAO.salvar(config);
+        AlertaUtil.mostrarConfirmacao("Sucesso","IVA cadastrado");
+        txtValorIVA.clear();
+        txtNomeIVA.clear();
+    }
+
+    @Override
+    public void initialize(URL url, ResourceBundle resourceBundle) {
+        String nomeIVA = "IVA";
+        String buscado = String.valueOf(Objects.requireNonNull(ConfiguracaoDAO.buscarPorChave(nomeIVA)).getValor());
+        if (buscado != null) lbIVA.setText(buscado+"%");
+    }
+}

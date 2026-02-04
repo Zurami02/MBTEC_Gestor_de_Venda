@@ -17,9 +17,10 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import mbtec.gestaoentradasaida_mbtec.DAO.UsuarioDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.Usuario;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.util.PularPaginasUtil;
-import mbtec.gestaoentradasaida_mbtec.util.UsuarioNoSistema;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.PularPaginasUtil;
+import mbtec.gestaoentradasaida_mbtec.service.UsuarioNoSistema;
+import org.jetbrains.annotations.NotNull;
 import org.mindrot.jbcrypt.BCrypt;
 
 import java.io.IOException;
@@ -166,22 +167,7 @@ public class LoginController implements Initializable {
         txtSenha.setOnKeyPressed(enterHandle);
     }
 
-    public void goToPaginas1(Node origem, String fxml) throws IOException {
-        Stage stageAtual = (Stage) telaLogin.getScene().getWindow();
-        FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-        Parent root = loader.load();
-        Scene scene = new Scene(root);
-        Stage stage = (Stage) origem.getScene().getWindow();
-
-        TelaprincipalController controller = loader.getController();
-        controller.registrarControladorTela(scene);
-
-        stage.setScene(scene);
-        stage.show();
-        stageAtual.close();
-    }
-
-    public void goToPaginas(Node origem, String fxml) throws IOException {
+    public void goToPaginas(@NotNull Node origem, String fxml) throws IOException {
 
         FXMLLoader loader =
                 new FXMLLoader(getClass().getResource(fxml));

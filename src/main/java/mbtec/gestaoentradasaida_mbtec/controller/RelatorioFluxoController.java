@@ -11,7 +11,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import mbtec.gestaoentradasaida_mbtec.DAO.FluxodeCaixaDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.FluxodeCaixa;
-import mbtec.gestaoentradasaida_mbtec.util.RelatorioUtil;
+import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
 
 import java.io.InputStream;
 import java.net.URL;

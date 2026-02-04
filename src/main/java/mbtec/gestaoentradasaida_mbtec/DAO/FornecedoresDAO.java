@@ -1,6 +1,7 @@
-package mbtec.gestaoentradasaida_mbtec.domain;
+package mbtec.gestaoentradasaida_mbtec.DAO;
 
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
+import mbtec.gestaoentradasaida_mbtec.domain.Fornecedores;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;

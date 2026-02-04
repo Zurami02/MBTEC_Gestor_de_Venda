@@ -1,4 +1,4 @@
-package mbtec.gestaoentradasaida_mbtec.util;
+package mbtec.gestaoentradasaida_mbtec.service;
 
 import mbtec.gestaoentradasaida_mbtec.domain.FluxodeCaixa;
 import net.sf.jasperreports.engine.JRException;
@@ -12,11 +12,10 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
+import java.sql.Connection;
 import java.time.LocalDate;
-import java.util.Collection;
-import java.util.HashMap;
+import java.util.*;
 import java.util.List;
-import java.util.Map;
 
 public class RelatorioUtil {
 
@@ -111,6 +110,30 @@ public class RelatorioUtil {
             throw new RuntimeException("Erro ao gerar PDF: " + e.getMessage());
         }
     }
+
+    public static void gerarVD(Connection conn, Integer idvenda) {
+        try {
+            Map<String, Object> parametros = new HashMap<>();
+            parametros.put("idvenda", idvenda);
+
+            String subreportDir = Objects.requireNonNull(
+                    RelatorioUtil.class.getResource("/relatoriosjasper/")
+            ).getPath();
+
+            parametros.put("SUBREPORT_DIR", subreportDir);
+
+            InputStream relatorio = Objects.requireNonNull(
+                    RelatorioUtil.class.getResourceAsStream("/relatoriosjasper/VD.jasper")
+            );
+
+            JasperPrint imprimir = JasperFillManager.fillReport(relatorio, parametros, conn);
+            JasperViewer.viewReport(imprimir, true);
+
+        } catch (JRException e) {
+            throw new RuntimeException("Falha ao imprimir VD: " + e.getMessage(), e);
+        }
+    }
+
 
 
 }

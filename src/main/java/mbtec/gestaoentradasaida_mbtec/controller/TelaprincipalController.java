@@ -5,7 +5,6 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Node;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
@@ -15,15 +14,15 @@ import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import javafx.util.Duration;
 import mbtec.gestaoentradasaida_mbtec.domain.Usuario;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.util.IdleMonitor;
-import mbtec.gestaoentradasaida_mbtec.util.TemporizadorConfig;
-import mbtec.gestaoentradasaida_mbtec.util.UsuarioNoSistema;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.IdleMonitor;
+import mbtec.gestaoentradasaida_mbtec.service.TemporizadorConfig;
+import mbtec.gestaoentradasaida_mbtec.service.UsuarioNoSistema;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.net.URL;
 import java.util.Objects;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
 /**
@@ -55,47 +54,11 @@ public class TelaprincipalController implements Initializable {
 
     @FXML
     void menuitemHome(ActionEvent event) {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/telaprincipalCopy.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Tela Padrao", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/telaprincipalCopy.fxml");
     }
 
-    /*
-    void menuitemClose(ActionEvent event) {
-        try {
-            Parent novaPagina = FXMLLoader.load(Objects.requireNonNull(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/hmPage.fxml")));
-            Scene novaScene = new Scene(novaPagina);
-
-
-            Stage appStage = (Stage) ((Node) ((MenuItem) event.getSource()).getParentPopup().getOwnerNode()).getScene().getWindow();
-            appStage.initStyle(StageStyle.UNDECORATED);
-
-            novaPagina.setOnMousePressed(event2 -> {
-                x = event2.getSceneX();
-                y = event2.getSceneY();
-            });
-            novaPagina.setOnMouseDragged(event1 -> {
-                appStage.setX(event1.getSceneX());
-                appStage.setY(event1.getSceneY());
-            });
-            appStage.setScene(novaScene);
-            appStage.show();
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Botao Close", e.getMessage());
-        }
-    }*/
     @FXML
-    void menuitemClose(ActionEvent event) {
+    void menuitemClose(@NotNull ActionEvent event) {
         try {
             Parent root = FXMLLoader.load(
                     Objects.requireNonNull(getClass().getResource(
@@ -142,17 +105,7 @@ public class TelaprincipalController implements Initializable {
 
     @FXML
     void menuitemConfiguracoes(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/config.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro!", "Falha ao acessar configuracoes");
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/config.fxml");
     }
 
     /**
@@ -160,93 +113,43 @@ public class TelaprincipalController implements Initializable {
      */
     @FXML
     void menuitemcadastroServico(ActionEvent event) {
-        //try {
-//            // Carregar o FXML
-//            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/servico.fxml"));
-//            Parent root = loader.load();
-//
-//            // Limpar o AnchorPane atual e adicionar o novo conteúdo
-//            anchorPaneMain.getChildren().clear();
-//            anchorPaneMain.getChildren().add(root);
-//
-//        } catch (IOException e) {
-//            e.printStackTrace(); // Trate a exceção adequadamente
-//        }
+//        carregarTela("/mbtec/gestaoentradasaida_mbtec/servico.fxml");
     }
+
 
     @FXML
     void menuitemcadastroFornecedor(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/cadastroFornecedor.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Cadastro de Fornecedores", String.valueOf(e));
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/cadastroFornecedor.fxml");
     }
 
     @FXML
     void menuitemcadastroEntradaSaida(ActionEvent event) {
-        try {
-
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/gestaoES.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Cadastro de Entradas e Saidas", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/gestaoES.fxml");
     }
 
     @FXML
     void menuitemcadastroProdutos(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/cadastroProdutos.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Cadastro de Produtos", e.getMessage());
-        }
-
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/cadastroProdutos.fxml");
     }
 
     @FXML
     void menuitemUsuario(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/usuarioInfo.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Informacao de Usuario", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/usuarioInfo.fxml");
     }
 
     @FXML
     void menuitemcadastroFluxodeCaixa(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/fluxodecaixa.fxml"));
-            Parent root = loader.load();
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/fluxodecaixa.fxml");
+    }
 
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
+    @FXML
+    void btnMenuItemVendas(ActionEvent event) {
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/vendas.fxml");
+    }
 
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Cadastro de Fluxo de Caixa", e.getMessage());
-        }
-
+    @FXML
+    void menuitemRelatorioHistoricoVendas(ActionEvent event){
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/historicovendas.fxml");
     }
 
     @FXML
@@ -254,46 +157,17 @@ public class TelaprincipalController implements Initializable {
 
     @FXML
     void menuitemMBTEC(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/sobreMBTEC.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Sobre MBTEC", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/sobreMBTEC.fxml");
     }
 
     @FXML
     void menuitemRelatorioFluxodeCaixa(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/relatorioPeriodo.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Relatorio Fluxo de Caixa", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/relatorioPeriodo.fxml");
     }
 
     @FXML
     void menuitemRelatorioGestaoES(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/relatorioGestaoES.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            AlertaUtil.mostrarErro("Erro ao carregar Relatorio GestaoES", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/relatorioGestaoES.fxml");
     }
 
     /**
@@ -301,18 +175,7 @@ public class TelaprincipalController implements Initializable {
      */
     @FXML
     void menuitemcadastrofuncionario(ActionEvent event) {
-        try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource(
-                    "/mbtec/gestaoentradasaida_mbtec/cadastroUsuario.fxml"));
-            Parent root = loader.load();
-
-            anchorPaneMain.getChildren().clear();
-            anchorPaneMain.getChildren().add(root);
-
-        } catch (IOException e) {
-            System.out.println(" TelaPrincipal " + e);
-            AlertaUtil.mostrarErro("Erro ao carregar Cadastro de Usuario", e.getMessage());
-        }
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/cadastroUsuario.fxml");
     }
 
     @Override
@@ -425,6 +288,24 @@ public class TelaprincipalController implements Initializable {
                 AlertaUtil.mostrarErro("Erro ao definir acessibilidade no sistema", e.getMessage());
             }
 
+        }
+    }
+
+    private void carregarTela(String caminho){
+        try {
+            FXMLLoader loader = new FXMLLoader(getClass().getResource(caminho));
+            Parent root = loader.load();
+
+            anchorPaneMain.getChildren().clear();
+            anchorPaneMain.getChildren().add(root);
+
+            AnchorPane.setTopAnchor(root, 0.0);
+            AnchorPane.setBottomAnchor(root, 0.0);
+            AnchorPane.setLeftAnchor(root, 0.0);
+            AnchorPane.setRightAnchor(root, 0.0);
+
+        } catch (IOException e) {
+            AlertaUtil.mostrarErro("Falha ao carregar tela", e.getMessage());
         }
     }
 

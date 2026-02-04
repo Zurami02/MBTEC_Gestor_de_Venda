@@ -10,11 +10,13 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaprincipalController">
-   <children>
-      <MenuBar AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+
+<BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaprincipalController">
+   <top>
+      <MenuBar BorderPane.alignment="CENTER">
         <menus>
           <Menu mnemonicParsing="false" text="File">
             <items>
@@ -25,7 +27,8 @@
                               <Image url="@icones/icons8-home-24.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem fx:id="menuitemUsuario" mnemonicParsing="false" onAction="#menuitemUsuario" text="Usuario">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -33,7 +36,8 @@
                               <Image url="@icones/icons8-client-24.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#menuitemConfiguracoes" text="Configurações">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -50,7 +54,8 @@
                               <Image url="@icones/ifechar-janela.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
             </items>
                <graphic>
                   <ImageView fitHeight="18.0" fitWidth="44.0" pickOnBounds="true" preserveRatio="true">
@@ -69,7 +74,8 @@
                               <Image url="@icones/product-50%20(1).png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" text="Categoria de Produtos" visible="false">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -86,7 +92,8 @@
                               <Image url="@icones/icons8-provider-50%20(1).png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroServico" text="Servicos" visible="false">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -100,7 +107,7 @@
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icones/icons8-service-100.png" />
+                              <Image url="@icones/funcionários-48.png" />
                            </image>
                         </ImageView>
                      </graphic>
@@ -109,7 +116,15 @@
           </Menu>
             <Menu mnemonicParsing="false" text="Processos">
                <items>
-                  <MenuItem mnemonicParsing="false" text="Venda" visible="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#btnMenuItemVendas" text="Venda">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/sell-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" text="Orcamento" visible="false" />
                   <MenuItem mnemonicParsing="false" text="Precificacao" visible="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroFluxodeCaixa" text="Fluxo de Caixa">
@@ -128,7 +143,8 @@
                               <Image url="@icones/product-management.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                </items>
             </Menu>
             <Menu mnemonicParsing="false" text="Relatorios">
@@ -140,7 +156,8 @@
                               <Image url="@icones/icons8-report-50.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
                   <MenuItem mnemonicParsing="false" onAction="#menuitemRelatorioGestaoES" text="Gestao de Entrada e Saida">
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
@@ -148,7 +165,17 @@
                               <Image url="@icones/icons8-report-50.png" />
                            </image>
                         </ImageView>
-                     </graphic></MenuItem>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemRelatorioHistoricoVendas" text="Historico de Vendas">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-report-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
               </items>
             </Menu>
           <Menu fx:id="menuitemMBTEC" mnemonicParsing="false" onAction="#menuitemMBTEC" text="MBTEC">
@@ -174,7 +201,9 @@
             </Menu>
         </menus>
       </MenuBar>
-      <AnchorPane fx:id="anchorPaneMain" layoutY="25.0" prefHeight="476.0" prefWidth="650.0">
+   </top>
+   <center>
+      <AnchorPane fx:id="anchorPaneMain" prefHeight="476.0" prefWidth="650.0" BorderPane.alignment="CENTER">
          <children>
             <Label text="Localizcao: Av. Eduardo Mondlane, Mercado Mbanguia, perto da Escola Primaria">
                <font>
@@ -202,6 +231,7 @@
                </effect>
             </ImageView>
             <Label layoutX="14.0" layoutY="460.0" text="Natite, Mercado de Mbanguia perto da Escola de Natite, Pemba, Cabo Delgado" textFill="#449bc6" />
-         </children></AnchorPane>
-   </children>
-</AnchorPane>
+         </children>
+      </AnchorPane>
+   </center>
+</BorderPane>

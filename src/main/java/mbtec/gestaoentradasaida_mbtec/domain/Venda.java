@@ -1,0 +1,193 @@
+package mbtec.gestaoentradasaida_mbtec.domain;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
+/**
+ * Responsavel em instanciar Venda calculando ou adicionando os
+ * itens de venda, somar os itens, calcular total de venda
+ * Versao de aprendizagem em Venda e Itens de Venda
+ * @version 1.1
+ * @author Mbtec subtecnico Zulo Rajabo mitumba
+ */
+public class Venda {
+
+    private int idVenda;
+    private LocalDateTime dataVenda;
+    private Cliente cliente;
+    private String nomeCliente;//Cliente nao registado no db Null
+    private String nuitCliente;//Cliente nao registado no db Null
+    private boolean pago;
+    private double taxaIva; // ex: 0.17 (17%)
+    private List<Itemvenda> itens = new ArrayList<>();
+    private boolean vd;
+    private String status;
+    private String numerovd;
+    private int idUsuario;
+
+    //somente para leitura do db para historico de venda
+    private double totalDb;
+    private double valorIVA;
+
+    public Venda() {
+        this.dataVenda = LocalDateTime.now();
+    }
+
+    public Venda(int idVenda, String nomeCliente, String nuitCliente,
+                 boolean pago, double taxaIva) {
+        this.idVenda = idVenda;
+        this.nomeCliente = nomeCliente;
+        this.nuitCliente = nuitCliente;
+        this.pago = pago;
+        this.taxaIva = taxaIva;
+    }
+
+    public Venda(int idVenda, Cliente cliente, boolean pago, double taxaIva) {
+        this();
+        this.idVenda = idVenda;
+        this.cliente = cliente;
+        this.pago = pago;
+        this.taxaIva = taxaIva;
+    }
+
+    public int getIdUsuario() {
+        return idUsuario;
+    }
+
+    public void setIdUsuario(int idUsuario) {
+        this.idUsuario = idUsuario;
+    }
+
+    public String getNumerovd() {
+        return numerovd;
+    }
+
+    public void setNumerovd(String numerovd) {
+        this.numerovd = numerovd;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    public boolean isAnulada(){
+        return
+                "ANULADA".equalsIgnoreCase(status);
+    }
+
+    public double getValorIVA() {
+        return valorIVA;
+    }
+
+    public void setValorIVA(double valorIVA) {
+        this.valorIVA = valorIVA;
+    }
+
+    public double getTotalDb() {
+        return totalDb;
+    }
+
+    public void setTotalDb(double totalDb) {
+        this.totalDb = totalDb;
+    }
+
+    public void setDataVenda(LocalDateTime dataVenda) {
+        this.dataVenda = dataVenda;
+    }
+
+    public boolean isVd() {
+        return vd;
+    }
+
+    public void setVd(boolean vd) {
+        this.vd = vd;
+    }
+
+    public int getIdVenda() {
+        return idVenda;
+    }
+
+    public void setIdVenda(int idVenda) {
+        this.idVenda = idVenda;
+    }
+
+    public String getNomeCliente() {
+        return nomeCliente;
+    }
+
+    public void setNomeCliente(String nomeCliente) {
+        this.nomeCliente = nomeCliente;
+    }
+
+    public String getNuitCliente() {
+        return nuitCliente;
+    }
+
+    public void setNuitCliente(String nuitCliente) {
+        this.nuitCliente = nuitCliente;
+    }
+
+    public LocalDateTime getDataVenda() {
+        return dataVenda;
+    }
+
+    public Cliente getCliente() {
+        return cliente;
+    }
+
+    public void setCliente(Cliente cliente) {
+        this.cliente = cliente;
+    }
+
+    public boolean isPago() {
+        return pago;
+    }
+
+    public void setPago(boolean pago) {
+        this.pago = pago;
+    }
+
+    public double getTaxaIva() {
+        return taxaIva;
+    }
+
+    public void setTaxaIva(double taxaIva) {
+        this.taxaIva = taxaIva/100;
+    }
+
+    public List<Itemvenda> getItens() {
+        return itens;
+    }
+
+    //adicionar item
+    public void adicionarItem(Itemvenda item) {
+        itens.add(item);
+    }
+
+    //CÁLCULOS
+    public double getSubtotal() {
+        return itens.stream()
+                .mapToDouble(Itemvenda::getTotalComDesconto)
+                .sum();
+    }
+
+    public double getValorIva() {
+        return getSubtotal() * taxaIva;
+    }
+
+    public double getTotalFinal() {
+        return getSubtotal() + getValorIva();
+    }
+
+    @Override
+    public String toString() {
+        return "Venda: " + idVenda +
+                " | Data: " + dataVenda +
+                " | Total: " + getTotalFinal();
+    }
+}
+

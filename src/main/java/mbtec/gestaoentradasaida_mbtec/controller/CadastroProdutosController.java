@@ -20,12 +20,13 @@ import mbtec.gestaoentradasaida_mbtec.DAO.CategoriaDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.Categoria;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
-import mbtec.gestaoentradasaida_mbtec.util.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.util.RelatorioUtil;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -139,6 +140,10 @@ public class CadastroProdutosController implements Initializable {
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setTitle("Cadastro de Categoria");
             stage.centerOnScreen();
+            stage.getIcons().add(
+                    new Image(Objects.requireNonNull(AlertaUtil.class.
+                            getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
+            );
             stage.showAndWait();
 
         } catch (IOException e) {
@@ -198,7 +203,7 @@ public class CadastroProdutosController implements Initializable {
         limparCampos();
     }
 
-    private boolean houveAlteracao(Produtos produto, String descricao, int quantidade,
+    private boolean houveAlteracao(@NotNull Produtos produto, String descricao, int quantidade,
                                    double preco, Categoria categoria) {
         return !produto.getDescricao_produto().equals(descricao)
                 || produto.getQuantidade_produto() != quantidade
