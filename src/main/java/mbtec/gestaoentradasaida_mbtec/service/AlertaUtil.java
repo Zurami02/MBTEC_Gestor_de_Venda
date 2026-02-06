@@ -34,7 +34,7 @@ public class AlertaUtil {
         Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
         stage.getIcons().add(
                 new Image(Objects.requireNonNull(AlertaUtil.class.
-                        getResourceAsStream("/mbtec/com/mz/itemvendatest/icones/mbtecShort.png")))
+                        getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
         );
         alerta.showAndWait();
     }
@@ -47,7 +47,7 @@ public class AlertaUtil {
         Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
         stage.getIcons().add(
                 new Image(Objects.requireNonNull(AlertaUtil.class.
-                        getResourceAsStream("/mbtec/com/mz/itemvendatest/icones/mbtecShort.png")))
+                        getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
         );
         alerta.showAndWait();
     }
@@ -60,7 +60,7 @@ public class AlertaUtil {
         Stage stage = (Stage) alerta.getDialogPane().getScene().getWindow();
         stage.getIcons().add(
                 new Image(Objects.requireNonNull(AlertaUtil.class.
-                        getResourceAsStream("/mbtec/com/mz/itemvendatest/icones/mbtecShort.png")))
+                        getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
         );
         return alerta.showAndWait();
 

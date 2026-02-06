@@ -12,7 +12,6 @@ import net.sf.jasperreports.view.JasperViewer;
 import java.awt.*;
 import java.io.File;
 import java.io.InputStream;
-import java.sql.Connection;
 import java.time.LocalDate;
 import java.util.*;
 import java.util.List;
@@ -55,7 +54,8 @@ public class RelatorioUtil {
         }
     }
 
-    public static <T> void gerarRelatorioStream(Collection<T> dados, String caminhoJasper, Map<String, Object> parametros) {
+    public static <T> void gerarRelatorioStream(
+            Collection<T> dados, String caminhoJasper, Map<String, Object> parametros) {
         try {
             // Localiza o arquivo .jasper nos resources
             InputStream arquivo = RelatorioUtil.class.getResourceAsStream(caminhoJasper);
@@ -110,30 +110,6 @@ public class RelatorioUtil {
             throw new RuntimeException("Erro ao gerar PDF: " + e.getMessage());
         }
     }
-
-    public static void gerarVD(Connection conn, Integer idvenda) {
-        try {
-            Map<String, Object> parametros = new HashMap<>();
-            parametros.put("idvenda", idvenda);
-
-            String subreportDir = Objects.requireNonNull(
-                    RelatorioUtil.class.getResource("/relatoriosjasper/")
-            ).getPath();
-
-            parametros.put("SUBREPORT_DIR", subreportDir);
-
-            InputStream relatorio = Objects.requireNonNull(
-                    RelatorioUtil.class.getResourceAsStream("/relatoriosjasper/VD.jasper")
-            );
-
-            JasperPrint imprimir = JasperFillManager.fillReport(relatorio, parametros, conn);
-            JasperViewer.viewReport(imprimir, true);
-
-        } catch (JRException e) {
-            throw new RuntimeException("Falha ao imprimir VD: " + e.getMessage(), e);
-        }
-    }
-
 
 
 }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import com.jfoenix.controls.JFXButton?>
+<?import com.jfoenix.controls.JFXComboBox?>
 <?import javafx.scene.Group?>
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Spinner?>
@@ -10,6 +11,7 @@
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.paint.Color?>
+<?import javafx.scene.shape.Line?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane fx:id="anchorPaneMain" prefHeight="476.0" prefWidth="650.0" xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaConfigCotroller">
@@ -57,6 +59,28 @@
                   <Image url="@icones/certo1.png" />
                </image>
             </ImageView>
+            <Line endX="498.0" layoutX="115.0" layoutY="66.0" startX="-100.0" />
+            <Label layoutX="14.0" layoutY="73.0" text="Definição  da Impressora para VD:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <JFXComboBox fx:id="comboboxImpressora" layoutX="173.0" layoutY="105.0" prefHeight="25.0" prefWidth="212.0" />
+            <Label layoutX="14.0" layoutY="108.0" text="Selecione a impressora:">
+               <font>
+                  <Font name="System Bold" size="14.0" />
+               </font>
+            </Label>
+            <JFXButton buttonType="RAISED" layoutX="330.0" layoutY="140.0" onAction="#btnSalvarImpressora" prefHeight="24.0" prefWidth="54.0" style="-fx-background-color: #83D5F7;" text="Salvar" textFill="#171717">
+               <font>
+                  <Font name="System Bold Italic" size="10.0" />
+               </font>
+            </JFXButton>
+            <Label fx:id="lblImpressora" layoutX="80.0" layoutY="172.0" prefHeight="17.0" prefWidth="420.0" />
+            <Label layoutX="15.0" layoutY="172.0" text="Padrão ">
+               <font>
+                  <Font name="System Bold" size="12.0" />
+               </font></Label>
          </children></Pane>
    </children>
 </AnchorPane>

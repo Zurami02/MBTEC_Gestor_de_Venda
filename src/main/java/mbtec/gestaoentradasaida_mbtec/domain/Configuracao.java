@@ -1,4 +1,4 @@
-package mbtec.gestaoentradasaida_mbtec.service;
+package mbtec.gestaoentradasaida_mbtec.domain;
 
 public class Configuracao {
     private final String chave;

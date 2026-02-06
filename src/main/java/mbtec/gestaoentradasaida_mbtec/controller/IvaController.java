@@ -6,7 +6,7 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
-import mbtec.gestaoentradasaida_mbtec.service.Configuracao;
+import mbtec.gestaoentradasaida_mbtec.domain.Configuracao;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
 import java.net.URL;

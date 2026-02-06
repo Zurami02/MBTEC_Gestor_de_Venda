@@ -31,6 +31,8 @@ import mbtec.gestaoentradasaida_mbtec.domain.Itemvenda;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
 import mbtec.gestaoentradasaida_mbtec.domain.Venda;
 import mbtec.gestaoentradasaida_mbtec.service.*;
+import net.sf.jasperreports.engine.JRException;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
@@ -143,8 +145,6 @@ public class VendasController implements Initializable {
     private Label lbFeedBack;
 
     private final ProdutosDAO produtosDAO = new ProdutosDAO();
-    private ItemvendaDAO itemvendaDAO = new ItemvendaDAO();
-    private VendaDAO vendaDAO = new VendaDAO();
 
     private Venda venda = new Venda();
     private Itemvenda itemvenda;
@@ -154,8 +154,6 @@ public class VendasController implements Initializable {
     private ObservableList<Produtos> produtosObservableList; // lista base da TableView
     private FilteredList<Produtos> produtosFilteredList;     // filtro da TableView
     private final ObservableList<Itemvenda> itemvendaObservableList = FXCollections.observableArrayList();
-    private List<Itemvenda> itemvendaList;
-
     private ObservableList<Cliente> clienteObservableList;
 
     @FXML
@@ -715,7 +713,7 @@ public class VendasController implements Initializable {
         }
 
         if (nuit.isEmpty()) {
-            // regra comum: consumidor final
+            //consumidor final
             nuit = "6660002-Indefinido";
         }
 
@@ -745,8 +743,27 @@ public class VendasController implements Initializable {
     }
 
     private void imprimirVD(@NotNull Venda venda) {
-        Connection conn = ConexaoSQLite.getConnection();
-        RelatorioUtil.gerarVD(conn,venda.getIdVenda());
+        //Integer idVenda = vendaSelecionada.getId();
+
+        String impressora = ConfigUtil.get("printer.default");
+
+        if (impressora == null || impressora.isBlank()) {
+            AlertaUtil.mostrarErro("", "Nenhuma impressora configurada!");
+            return;
+        }
+
+        try (Connection conn = ConexaoSQLite.getConnection()) {
+
+            JasperPrint print = RelatorioAPI.gerarVD(conn, venda.getIdVenda());
+
+            RelatorioAPI.imprimir(print, impressora);
+
+            AlertaUtil.mostrarInfo("", "VD enviada para impressão!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD");
+        }
     }
 
     private void mostrarFeedback() {

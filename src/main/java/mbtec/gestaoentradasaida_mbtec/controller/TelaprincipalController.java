@@ -306,6 +306,8 @@ public class TelaprincipalController implements Initializable {
 
         } catch (IOException e) {
             AlertaUtil.mostrarErro("Falha ao carregar tela", e.getMessage());
+            System.out.println(e.getMessage());
+            e.printStackTrace();
         }
     }
 

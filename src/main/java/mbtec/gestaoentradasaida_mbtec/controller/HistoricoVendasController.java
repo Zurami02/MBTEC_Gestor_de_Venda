@@ -4,8 +4,6 @@ import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
-import javafx.collections.ObservableList;
-import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
@@ -18,11 +16,9 @@ import mbtec.gestaoentradasaida_mbtec.DAO.ItemvendaDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.VendaDAO;
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.Itemvenda;
-import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
 import mbtec.gestaoentradasaida_mbtec.domain.Venda;
-import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
-import mbtec.gestaoentradasaida_mbtec.service.VendaService;
+import mbtec.gestaoentradasaida_mbtec.service.*;
+import net.sf.jasperreports.engine.JasperPrint;
 import org.jetbrains.annotations.NotNull;
 
 import java.net.URL;
@@ -113,19 +109,10 @@ public class HistoricoVendasController implements Initializable {
     @FXML
     private CheckBox checkBoxPesqNomeHistorico;
 
-    private Venda venda = new Venda();
-    private Itemvenda itemvenda;
-    private VendaService vs = new VendaService();
+    private VendaService vendaService = new VendaService();
 
     private VendaDAO vendaDAO = new VendaDAO();
     private ItemvendaDAO itemvendaDAO = new ItemvendaDAO();
-
-    private List<Produtos> produtosList;                // lista vinda do DAO
-    private ObservableList<Venda> vendaObservableList = FXCollections.observableArrayList();
-    private FilteredList<Produtos> produtosFilteredList;     // filtro da TableView
-    private final ObservableList<Itemvenda> itemvendaObservableList = FXCollections.observableArrayList();
-    private List<Itemvenda> itemvendaList;
-    private List<Venda> vendaList;
 
     @FXML
     void btnImprimirRecibo(ActionEvent event) {
@@ -158,7 +145,7 @@ public class HistoricoVendasController implements Initializable {
 
         Optional<ButtonType> resultado = alerta.showAndWait();
         if (resultado.isPresent() && resultado.get() == btnSim) {
-            vs.anularVenda(venda);
+            vendaService.anularVenda(venda);
         }
         carregarTableViewVendasHistorico();
         pintarAnulada();
@@ -262,8 +249,26 @@ public class HistoricoVendasController implements Initializable {
     }
 
     private void imprimirVD(@NotNull Venda venda) {
-        Connection conn = ConexaoSQLite.getConnection();
-        RelatorioUtil.gerarVD(conn, venda.getIdVenda());
+
+        String impressora = ConfigUtil.get("printer.default");
+
+        if (impressora == null || impressora.isBlank()) {
+            AlertaUtil.mostrarErro("", "Nenhuma impressora configurada!");
+            return;
+        }
+
+        try (Connection conn = ConexaoSQLite.getConnection()) {
+
+            JasperPrint print = RelatorioAPI.gerarVD(conn, venda.getIdVenda());
+
+            RelatorioAPI.imprimir(print, impressora);
+
+            AlertaUtil.mostrarInfo("", "VD enviada para impressão!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD");
+        }
     }
 
     private void carregarItensVendaSelecionadaListener() {

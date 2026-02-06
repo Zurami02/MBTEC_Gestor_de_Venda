@@ -1,7 +1,7 @@
 package mbtec.gestaoentradasaida_mbtec.DAO;
 
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
-import mbtec.gestaoentradasaida_mbtec.service.Configuracao;
+import mbtec.gestaoentradasaida_mbtec.domain.Configuracao;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
