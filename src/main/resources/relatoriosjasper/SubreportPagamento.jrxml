@@ -1,0 +1,76 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="SubReportPagamento" language="java" columnCount="1" pageWidth="226" pageHeight="1417" columnWidth="210" leftMargin="2" rightMargin="14" topMargin="0" bottomMargin="2" uuid="9b4ef7a0-87bf-4c5f-9467-27e1280b3b7a">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RelatoriosTests"/>
+	<property name="com.jaspersoft.studio.unit." value="pixel"/>
+	<parameter name="idvenda" class="java.lang.Integer"/>
+	<query language="SQL"><![CDATA[SELECT  
+SUM(p.valorpagamento) AS valorPago,
+SUM(p.valorpagamento) - v.valortotal AS Troco,
+v.valortotal - v.taxaiva AS Subtotal,
+v.taxaiva  AS IVA,
+v.valortotal AS Total,
+strftime('%d/%m/%Y %H:%M', p.datapagamento) 
+AS datapagamento,
+p.formapagamento
+FROM pagamento p
+LEFT JOIN venda v ON v.idvenda = p.idvenda
+WHERE v.idvenda = $P{idvenda}
+GROUP BY v.idvenda]]></query>
+	<field name="valorPago" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="valorPago"/>
+		<property name="com.jaspersoft.studio.field.label" value="valorPago"/>
+	</field>
+	<field name="Troco" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="Troco"/>
+		<property name="com.jaspersoft.studio.field.label" value="Troco"/>
+	</field>
+	<field name="Subtotal" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="Subtotal"/>
+		<property name="com.jaspersoft.studio.field.label" value="Subtotal"/>
+	</field>
+	<field name="IVA" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="IVA"/>
+		<property name="com.jaspersoft.studio.field.label" value="IVA"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="Total" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="Total"/>
+		<property name="com.jaspersoft.studio.field.label" value="Total"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="datapagamento" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="datapagamento"/>
+		<property name="com.jaspersoft.studio.field.label" value="datapagamento"/>
+	</field>
+	<field name="formapagamento" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="formapagamento"/>
+		<property name="com.jaspersoft.studio.field.label" value="formapagamento"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="pagamento"/>
+	</field>
+	<background splitType="Stretch"/>
+	<detail>
+		<band height="1" splitType="Stretch"/>
+	</detail>
+	<columnFooter height="61" splitType="Stretch">
+		<printWhenExpression><![CDATA[$V{REPORT_COUNT} >0]]></printWhenExpression>
+		<element kind="staticText" uuid="2015fbca-a57e-425d-8701-197c506712a4" x="0" y="0" width="50" height="12" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Total pago:]]></text>
+		</element>
+		<element kind="textField" uuid="30ced53f-5d6b-43ee-af5f-8d1636c2f6ec" x="50" y="0" width="46" height="12" fontSize="6.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{valorPago}]]></expression>
+		</element>
+		<element kind="textField" uuid="5d505d8c-e153-4ba4-a09a-700800c021f2" x="50" y="12" width="46" height="12" fontSize="6.0" pattern="#,##0.00" vTextAlign="Middle">
+			<expression><![CDATA[$F{Troco}]]></expression>
+		</element>
+		<element kind="staticText" uuid="d9a2b460-2762-4737-b0bb-8b4fb4887b8a" x="0" y="12" width="50" height="12" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Troco:]]></text>
+		</element>
+		<element kind="staticText" uuid="c6bd9efa-5594-4d88-bd44-ca19b3627124" x="0" y="24" width="50" height="16" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Pago via:]]></text>
+		</element>
+		<element kind="textField" uuid="167c87e3-fd7f-44c3-bffd-18f462c2ed82" x="50" y="24" width="46" height="16" fontSize="6.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{formapagamento}]]></expression>
+		</element>
+	</columnFooter>
+</jasperReport>

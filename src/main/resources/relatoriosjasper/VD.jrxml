@@ -1,0 +1,310 @@
+<!-- Created with Jaspersoft Studio version 7.0.1.final using JasperReports Library version 7.0.1-573496633c2b4074e32f433154b543003f7d2498  -->
+<jasperReport name="Venda_Dinheiro" language="java" columnCount="1" pageWidth="226" pageHeight="1417" columnWidth="210" leftMargin="8" rightMargin="8" topMargin="8" bottomMargin="8" uuid="049c5487-e084-440c-8a3c-bba8741d33af">
+	<property name="com.jaspersoft.studio.data.sql.tables" value=""/>
+	<property name="com.jaspersoft.studio.data.defaultdataadapter" value="RelatoriosTests"/>
+	<property name="com.jaspersoft.studio.unit." value="mm"/>
+	<parameter name="REPORT_CLASS" class="java.lang.Class"/>
+	<parameter name="idvenda" class="java.lang.Integer"/>
+	<parameter name="SUBREPORT_DIR" forPrompting="false" class="java.lang.String">
+		<defaultValueExpression><![CDATA[""
+]]></defaultValueExpression>
+	</parameter>
+	<query language="SQL"><![CDATA[SELECT v.numerovd,
+	v.idvenda,
+	strftime('%d/%m/%Y', v.datavenda) AS data_venda,
+	strftime('%H:%M:%S', v.datavenda) AS hora_venda,
+	v.valortotal,
+	v.taxaiva,
+	COALESCE( c.nome,v.nomecliente) AS nomecliente,
+	COALESCE( c.nuit,v.nuitCliente) AS nuitcliente,
+	p.descricao AS produto,
+	u.nome_usuario,
+	iv.iditemvenda,
+	iv.quantidade,
+	iv.precounitario,
+	iv.desconto,
+	iv.quantidade * iv.precounitario - iv.desconto AS subtotal
+FROM venda v
+	LEFT JOIN itemvenda iv ON 
+	 iv.idvenda = v.idvenda 
+	LEFT JOIN produtos p ON 
+	 p.idproduto = iv.idproduto 
+	LEFT JOIN usuario u ON 
+	 u.idusuario = v.idusuario 
+	LEFT JOIN cliente c ON 
+	 c.idcliente = v.idcliente 
+WHERE 
+	 v.idvenda = $P{idvenda}]]></query>
+	<field name="numerovd" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="numerovd"/>
+		<property name="com.jaspersoft.studio.field.label" value="numerovd"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="idvenda" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="idvenda"/>
+		<property name="com.jaspersoft.studio.field.label" value="idvenda"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="data_venda" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="data_venda"/>
+		<property name="com.jaspersoft.studio.field.label" value="data_venda"/>
+	</field>
+	<field name="hora_venda" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="hora_venda"/>
+		<property name="com.jaspersoft.studio.field.label" value="hora_venda"/>
+	</field>
+	<field name="valortotal" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="valortotal"/>
+		<property name="com.jaspersoft.studio.field.label" value="valortotal"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="taxaiva" class="java.lang.Double">
+		<property name="com.jaspersoft.studio.field.name" value="taxaiva"/>
+		<property name="com.jaspersoft.studio.field.label" value="taxaiva"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="venda"/>
+	</field>
+	<field name="nomecliente" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="nomecliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nomecliente"/>
+	</field>
+	<field name="nuitcliente" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="nuitcliente"/>
+		<property name="com.jaspersoft.studio.field.label" value="nuitcliente"/>
+	</field>
+	<field name="produto" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="produto"/>
+		<property name="com.jaspersoft.studio.field.label" value="produto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="produtos"/>
+	</field>
+	<field name="nome_usuario" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="nome_usuario"/>
+		<property name="com.jaspersoft.studio.field.label" value="nome_usuario"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="usuario"/>
+	</field>
+	<field name="iditemvenda" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="iditemvenda"/>
+		<property name="com.jaspersoft.studio.field.label" value="iditemvenda"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="itemvenda"/>
+	</field>
+	<field name="quantidade" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="quantidade"/>
+		<property name="com.jaspersoft.studio.field.label" value="quantidade"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="itemvenda"/>
+	</field>
+	<field name="precounitario" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="precounitario"/>
+		<property name="com.jaspersoft.studio.field.label" value="precounitario"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="itemvenda"/>
+	</field>
+	<field name="desconto" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="desconto"/>
+		<property name="com.jaspersoft.studio.field.label" value="desconto"/>
+		<property name="com.jaspersoft.studio.field.tree.path" value="itemvenda"/>
+	</field>
+	<field name="subtotal" class="java.lang.Object">
+		<property name="com.jaspersoft.studio.field.name" value="subtotal"/>
+		<property name="com.jaspersoft.studio.field.label" value="subtotal"/>
+	</field>
+	<variable name="item_ordem" resetType="Group" calculation="Count" resetGroup="GroupVenda" class="java.lang.Integer">
+		<expression><![CDATA[$V{item_ordem} + 1]]></expression>
+		<initialValueExpression><![CDATA[0]]></initialValueExpression>
+	</variable>
+	<variable name="SubtotalSemIVA" resetType="Group" calculation="Sum" resetGroup="GroupVenda" class="java.lang.Double">
+		<expression><![CDATA[$F{subtotal}]]></expression>
+	</variable>
+	<variable name="IVA" class="java.lang.Double">
+		<expression><![CDATA[$V{SubtotalSemIVA} *$F{taxaiva}]]></expression>
+	</variable>
+	<variable name="TotalComIVA" class="java.lang.Double">
+		<expression><![CDATA[$V{SubtotalSemIVA} +$V{IVA} ]]></expression>
+	</variable>
+	<group name="GroupVenda">
+		<expression><![CDATA[$F{idvenda}]]></expression>
+		<groupHeader>
+			<band/>
+		</groupHeader>
+		<groupFooter>
+			<band height="108">
+				<element kind="line" uuid="22861fb7-dcb3-4e13-8b15-8c2d198373c8" x="0" y="3" width="210" height="1">
+					<pen lineStyle="Dotted"/>
+				</element>
+				<element kind="staticText" uuid="f4f17854-0c4a-4561-92bb-2ffff860dc79" x="108" y="19" width="36" height="12" fontSize="6.0" vTextAlign="Middle">
+					<text><![CDATA[IVA (16%):]]></text>
+				</element>
+				<element kind="staticText" uuid="5443449f-7491-4554-a334-57495bce9de6" x="108" y="7" width="36" height="12" fontSize="6.0" vTextAlign="Middle">
+					<text><![CDATA[Subtotal:]]></text>
+				</element>
+				<element kind="staticText" uuid="d27e7514-e660-4b43-af5a-e60b791b405b" x="108" y="31" width="36" height="12" fontSize="6.0" vTextAlign="Middle">
+					<text><![CDATA[Total:]]></text>
+				</element>
+				<element kind="textField" uuid="4c6e9843-dff7-4db4-b843-44998b6226bb" x="148" y="7" width="62" height="12" fontSize="6.0" pattern="#,##0.00" hTextAlign="Right" vTextAlign="Middle">
+					<expression><![CDATA[$V{SubtotalSemIVA}]]></expression>
+				</element>
+				<element kind="textField" uuid="23b7adc8-9932-44ab-830f-a23911209c72" x="148" y="19" width="62" height="12" fontSize="6.0" pattern="#,##0.00" linkType="None" linkTarget="Self" hTextAlign="Right" vTextAlign="Middle">
+					<expression><![CDATA[$V{IVA}]]></expression>
+				</element>
+				<element kind="textField" uuid="e2d05a4d-868b-4e34-97d3-69b7e1ecd631" x="148" y="31" width="62" height="12" fontSize="6.0" hTextAlign="Right" vTextAlign="Middle">
+					<expression><![CDATA[$V{TotalComIVA}]]></expression>
+				</element>
+				<element kind="line" uuid="486e6010-a00a-42c8-a946-54fae6a124ce" x="0" y="47" width="210" height="1">
+					<pen lineStyle="Dotted"/>
+				</element>
+				<element kind="staticText" uuid="5663529c-d40d-4a3e-af06-ef65b1053db1" x="61" y="70" width="88" height="16" fontSize="7.0" hTextAlign="Center" vTextAlign="Middle">
+					<text><![CDATA[Obrigado pela preferência!]]></text>
+				</element>
+				<element kind="staticText" uuid="a87852f1-28c4-493c-94e6-ce8c3580b2a1" x="0" y="90" width="72" height="8" fontSize="5.0">
+					<text><![CDATA[Processado por Computador]]></text>
+				</element>
+				<element kind="subreport" uuid="d6ae9a0b-36e5-4f15-abbf-ccef362f537f" x="0" y="7" width="108" height="36">
+					<connectionExpression><![CDATA[$P{REPORT_CONNECTION}]]></connectionExpression>
+					<expression><![CDATA[$P{SUBREPORT_DIR} + "SubreportPagamento.jasper"]]></expression>
+					<parameter name="idvenda">
+						<expression><![CDATA[$P{idvenda}]]></expression>
+					</parameter>
+				</element>
+				<element kind="staticText" uuid="4699df4c-58d8-453a-885f-cfcd7a004f66" x="57" y="52" width="100" height="10" forecolor="#050505" fontSize="5.0" hTextAlign="Center" vTextAlign="Middle">
+					<text><![CDATA[MBTEC - a qualidade é a nossa missão ]]></text>
+				</element>
+			</band>
+		</groupFooter>
+	</group>
+	<background splitType="Stretch"/>
+	<title height="144" splitType="Stretch">
+		<element kind="staticText" uuid="0a34574b-787c-438c-beb6-9d91c3243ca2" x="0" y="30" width="210" height="30" forecolor="#030303" fontSize="7.0" hTextAlign="Center">
+			<text><![CDATA[MBTEC E.I
+Consultoria, Serviços de Eletricidade, Tecnologia da Informação e Fornecimento de materiais]]></text>
+			<box topPadding="0" leftPadding="0" bottomPadding="0" rightPadding="0">
+				<pen lineColor="#050505"/>
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="image" uuid="ef3c5dad-29ce-49de-af36-a06631877436" x="91" y="0" width="33" height="30">
+			<expression><![CDATA[$P{REPORT_CLASS}.getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/fotos/mbtecShort.png")
+]]></expression>
+			<box topPadding="1" leftPadding="1" bottomPadding="1" rightPadding="1">
+				<topPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<leftPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<bottomPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+				<rightPen lineWidth="0.0" lineStyle="Solid" lineColor="#000000"/>
+			</box>
+		</element>
+		<element kind="staticText" uuid="eb14ed47-f525-4d4c-b17b-ad38030b1b93" x="0" y="60" width="210" height="50" fontSize="6.0" hTextAlign="Center" vTextAlign="Top">
+			<text><![CDATA[Natite, ao pé da Escola basica de Natite 
+Pemba Cabo Delgado
+Nuit: 153050651
+Tel: 87 666 0002
+Email: mbtectieletricidade02@gmail.com
+VENDA A DINHEIRO]]></text>
+		</element>
+		<element kind="staticText" uuid="c50008ae-f254-4e71-b1ae-d3f15441e2f7" x="130" y="120" width="20" height="9" fontSize="6.0" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Data:
+]]></text>
+			<box padding="0"/>
+		</element>
+		<element kind="staticText" uuid="e5e1e467-f116-4943-a1c3-1ef902ed2d88" x="0" y="130" width="50" height="10" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Emitido por:]]></text>
+		</element>
+		<element kind="textField" uuid="b0343a33-73bb-45cd-9b23-ebefee848adf" x="150" y="110" width="60" height="10" forecolor="#FC0C08" fontSize="6.0" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{numerovd}]]></expression>
+		</element>
+		<element kind="textField" uuid="5a14a8df-0fd9-4986-839d-17b981a15c1a" x="50" y="130" width="69" height="10" fontSize="6.0" vTextAlign="Middle">
+			<expression><![CDATA[$F{nome_usuario}]]></expression>
+			<box leftPadding="1" rightPadding="1"/>
+		</element>
+		<element kind="textField" uuid="2580316b-7deb-44f7-afbc-c21f7a5e6b5a" x="150" y="120" width="60" height="9" fontSize="6.0" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{data_venda}]]></expression>
+		</element>
+		<element kind="staticText" uuid="662a2ecf-38ca-47b2-aeb1-ae7e4778454f" x="0" y="110" width="50" height="10" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Cliente/ Empresa:]]></text>
+		</element>
+		<element kind="textField" uuid="9b0afa70-e7cc-4609-8330-74f61f1118f5" x="50" y="110" width="69" height="10" fontSize="6.0" hTextAlign="Left" vTextAlign="Bottom">
+			<expression><![CDATA[$F{nomecliente}]]></expression>
+			<box leftPadding="1" rightPadding="1"/>
+		</element>
+		<element kind="staticText" uuid="d73ace18-16fa-4113-b077-9c3b2606d70f" x="0" y="120" width="50" height="10" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[Nuit:]]></text>
+		</element>
+		<element kind="textField" uuid="1caf7e5e-9589-4c58-a905-71652e4818da" x="50" y="120" width="69" height="10" fontSize="6.0" hTextAlign="Left" vTextAlign="Bottom">
+			<expression><![CDATA[$F{nuitcliente}]]></expression>
+			<box leftPadding="1" rightPadding="1"/>
+		</element>
+		<element kind="staticText" uuid="c7d9ac9f-30f9-4b43-8e29-fa7be70c66de" x="130" y="110" width="20" height="10" fontSize="6.0" vTextAlign="Middle">
+			<text><![CDATA[VD Nº:]]></text>
+		</element>
+		<element kind="staticText" uuid="15a938bf-2d1b-4c21-9799-2bd760063567" x="130" y="129" width="20" height="11" fontSize="6.0" hTextAlign="Left" vTextAlign="Middle">
+			<text><![CDATA[Hora:]]></text>
+			<box padding="0"/>
+		</element>
+		<element kind="textField" uuid="45b31125-6acd-4f03-93cd-78203594f892" x="150" y="129" width="60" height="11" fontSize="6.0" hTextAlign="Right" vTextAlign="Middle">
+			<expression><![CDATA[$F{hora_venda}]]></expression>
+		</element>
+		<element kind="line" uuid="ae556c0e-6eab-4ebe-b162-bb5021648edf" x="0" y="143" width="210" height="1">
+			<pen lineStyle="Dotted"/>
+		</element>
+		<property name="com.jaspersoft.studio.layout" value="com.jaspersoft.studio.editor.layout.FreeLayout"/>
+	</title>
+	<pageHeader splitType="Stretch"/>
+	<columnHeader height="14" splitType="Stretch">
+		<element kind="staticText" uuid="6196b48d-d61f-4017-a7bc-61eff03584d8" x="18" y="0" width="76" height="11" fontSize="7.0" vTextAlign="Bottom">
+			<text><![CDATA[Produto]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94ea4211-96ab-4edc-b2d5-c62c273759f7"/>
+			<box leftPadding="1"/>
+		</element>
+		<element kind="staticText" uuid="b93b2f37-6b09-4870-907f-c8465ab34052" x="95" y="0" width="24" height="11" fontSize="7.0" hTextAlign="Left" vTextAlign="Bottom">
+			<text><![CDATA[QTD]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c2258dde-d0ab-4cce-b269-47f8bb779584"/>
+		</element>
+		<element kind="staticText" uuid="4deb132e-3b26-45d5-b878-5fc529a6ea44" x="119" y="0" width="31" height="10" fontSize="7.0" vTextAlign="Bottom">
+			<text><![CDATA[Preço ]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ac7ad7b8-be83-4314-9afe-ad5bec52d842"/>
+		</element>
+		<element kind="staticText" uuid="5c7024ec-5ff3-4eff-ab48-94fd8dc3db13" x="150" y="1" width="30" height="10" fontSize="7.0" vTextAlign="Bottom">
+			<text><![CDATA[Desc]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="422f2d2d-bc3b-40c4-8d28-2aad44e75dd9"/>
+		</element>
+		<element kind="staticText" uuid="5e221381-0831-4530-9e54-9233d76a8dd1" x="180" y="0" width="30" height="11" fontSize="7.0" vTextAlign="Bottom">
+			<text><![CDATA[Subtotal]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d5f6c47-d1de-429b-9641-92d8dca34e2c"/>
+		</element>
+		<element kind="staticText" uuid="53d2aaa4-8032-458a-ba1d-de3560c4df63" x="0" y="0" width="18" height="11" fontSize="7.0" hTextAlign="Left" vTextAlign="Bottom">
+			<text><![CDATA[Item]]></text>
+			<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c2258dde-d0ab-4cce-b269-47f8bb779584"/>
+		</element>
+		<element kind="line" uuid="488fe728-1c23-4a92-93ee-f3b55b04af95" x="0" y="12" width="210" height="1">
+			<pen lineStyle="Dotted"/>
+		</element>
+	</columnHeader>
+	<detail>
+		<band height="20" splitType="Stretch">
+			<element kind="textField" uuid="6f8fcaa9-bbd8-42e2-a821-12d47db566d4" x="18" y="0" width="76" height="20" fontSize="7.0">
+				<expression><![CDATA[$F{produto}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="94ea4211-96ab-4edc-b2d5-c62c273759f7"/>
+			</element>
+			<element kind="textField" uuid="cfecbc3f-cc75-4802-9212-eec5ef613402" x="95" y="0" width="24" height="20" fontSize="7.0" hTextAlign="Left" vTextAlign="Bottom">
+				<expression><![CDATA[$F{quantidade}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="c2258dde-d0ab-4cce-b269-47f8bb779584"/>
+				<box leftPadding="1"/>
+			</element>
+			<element kind="textField" uuid="941aef30-ebeb-4b2b-9869-a9e902427743" x="119" y="0" width="31" height="20" fontSize="7.0" hTextAlign="Left" vTextAlign="Bottom">
+				<expression><![CDATA[$F{precounitario}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="ac7ad7b8-be83-4314-9afe-ad5bec52d842"/>
+				<box leftPadding="1"/>
+			</element>
+			<element kind="textField" uuid="6f9cd3ef-5d0a-4b84-9759-d994f33256f8" x="150" y="0" width="30" height="20" fontSize="7.0" hTextAlign="Left" vTextAlign="Bottom">
+				<expression><![CDATA[$F{desconto}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="422f2d2d-bc3b-40c4-8d28-2aad44e75dd9"/>
+				<box leftPadding="1"/>
+			</element>
+			<element kind="textField" uuid="92e874e9-048b-4f21-8374-e4bd04e0874b" x="180" y="0" width="30" height="20" fontSize="7.0" vTextAlign="Bottom">
+				<expression><![CDATA[$F{subtotal}]]></expression>
+				<property name="com.jaspersoft.studio.spreadsheet.connectionID" value="9d5f6c47-d1de-429b-9641-92d8dca34e2c"/>
+			</element>
+			<element kind="textField" uuid="86983f09-5ce0-489b-88ec-d313c9474520" x="0" y="0" width="18" height="20" fontSize="7.0" hTextAlign="Center">
+				<expression><![CDATA[$V{item_ordem}]]></expression>
+			</element>
+		</band>
+	</detail>
+</jasperReport>
