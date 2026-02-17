@@ -30,6 +30,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.*;
 
@@ -160,10 +161,10 @@ public class CadastroProdutosController implements Initializable {
         }
 
         int quantidade;
-        double preco;
+        BigDecimal preco;
         try {
             quantidade = Integer.parseInt(txtquantidade.getText());
-            preco = Double.parseDouble(txtpreco.getText());
+            preco = new BigDecimal(txtpreco.getText());
         } catch (NumberFormatException e) {
             AlertaUtil.mostrarErro("Erro de Entrada", "Quantidade ou preço inválido!");
             return;
@@ -204,10 +205,10 @@ public class CadastroProdutosController implements Initializable {
     }
 
     private boolean houveAlteracao(@NotNull Produtos produto, String descricao, int quantidade,
-                                   double preco, Categoria categoria) {
+                                   BigDecimal preco, Categoria categoria) {
         return !produto.getDescricao_produto().equals(descricao)
                 || produto.getQuantidade_produto() != quantidade
-                || produto.getPreco() != preco
+                || produto.getPreco().compareTo(preco) != 0
                 || !Objects.equals(produto.getCategoria(), categoria);
     }
 
@@ -229,10 +230,11 @@ public class CadastroProdutosController implements Initializable {
                 alert.show();
                 return;
             }
+            BigDecimal precoBig = new BigDecimal(txtpreco.getText());
             produto = new Produtos();
             produto.setDescricao_produto(txtdescricao.getText());
             produto.setQuantidade_produto(Integer.parseInt(txtquantidade.getText()));
-            produto.setPreco(Double.parseDouble(txtpreco.getText()));
+            produto.setPreco(precoBig);
             produto.setCategoria(categoriaSelecionada);
             produtosDAO.inserir(produto);
             limparCampos();

@@ -9,6 +9,7 @@ import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.Configuracao;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.Objects;
 import java.util.ResourceBundle;
@@ -30,7 +31,7 @@ public class IvaController implements Initializable {
             return;
         }
         String imposto = txtNomeIVA.getText().trim();
-        String valorIVA = txtValorIVA.getText().trim();
+        BigDecimal valorIVA = new BigDecimal(txtValorIVA.getText().trim());
         Configuracao config = new Configuracao(imposto,valorIVA);
        ConfiguracaoDAO.salvar(config);
         AlertaUtil.mostrarConfirmacao("Sucesso","IVA cadastrado");

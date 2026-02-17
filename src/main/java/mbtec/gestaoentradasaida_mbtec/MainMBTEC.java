@@ -33,7 +33,8 @@ public class MainMBTEC extends Application {
             Platform.exit();
             return;
         }
-        FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/hmPage.fxml"));
+        //FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/hmPage.fxml"));
+        FXMLLoader loader = new FXMLLoader(getClass().getResource("/mbtec/gestaoentradasaida_mbtec/orcamento.fxml"));
         Scene scene = new Scene(loader.load());
         stage.initStyle(StageStyle.UNDECORATED);
         stage.setTitle("MBTEC Gestor de Venda");

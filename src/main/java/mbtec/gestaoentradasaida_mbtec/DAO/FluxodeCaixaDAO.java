@@ -59,7 +59,7 @@ public class FluxodeCaixaDAO {
                 produto.setIdproduto(rs.getInt("idproduto"));
                 produto.setDescricao_produto(rs.getString("descricao_produto"));
                 produto.setQuantidade_produto(rs.getInt("quantidade_produto"));
-                produto.setPreco(rs.getDouble("preco"));
+                produto.setPreco(rs.getBigDecimal("preco"));
                 produto.setCategoria(categoria);
 
                 // Criar objeto Fluxo de Caixa
@@ -133,7 +133,7 @@ public class FluxodeCaixaDAO {
                 produto.setIdproduto(resultado.getInt("idproduto"));
                 produto.setDescricao_produto(resultado.getString("descricao_produto"));
                 produto.setQuantidade_produto(resultado.getInt("quantidade_produto"));
-                produto.setPreco(resultado.getDouble("preco"));
+                produto.setPreco(resultado.getBigDecimal("preco"));
                 produto.setCategoria(categoria);
 
                 FluxodeCaixa fluxodeCaixa = new FluxodeCaixa();
@@ -180,7 +180,7 @@ public class FluxodeCaixaDAO {
                         rs.getInt("idproduto"),
                         rs.getString("descricao_produto"),
                         rs.getInt("quantidade_produto"),
-                        rs.getDouble("preco"),
+                        rs.getBigDecimal("preco"),
                         categoria
                 );
 

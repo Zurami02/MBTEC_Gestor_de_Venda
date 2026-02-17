@@ -13,18 +13,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class VendaDAO {
-    public int salvarVenda(Connection conn, @NotNull Venda venda) throws SQLException {
 
+    public int salvarVenda(Connection conn, @NotNull Venda venda) throws SQLException {
         String sql = """
-                    INSERT INTO venda 
-                    (datavenda, idcliente, nomecliente, nuitCliente, pago, taxaiva, valortotal, vd, numerovd, idusuario)
-                    VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                INSERT INTO venda 
+                (datavenda, idcliente, nomecliente, nuitCliente, pago, taxaiva, valortotal, vd, numerovd, idusuario)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
-            DateTimeFormatter fmt =
-                    DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-
+            DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
             ps.setString(1, venda.getDataVenda().format(fmt));
 
             if (venda.getCliente() != null) {
@@ -38,18 +36,16 @@ public class VendaDAO {
             }
 
             ps.setBoolean(5, venda.isPago());
-            ps.setDouble(6, venda.getTaxaIva());
-            ps.setDouble(7, venda.getTotalFinal());
+            ps.setBigDecimal(6, venda.getTaxaIva());          // BigDecimal
+            ps.setBigDecimal(7, venda.getTotalFinal());       // BigDecimal
             ps.setBoolean(8, venda.isVd());
             ps.setString(9, venda.getNumerovd());
             ps.setInt(10, venda.getIdUsuario());
 
             ps.executeUpdate();
 
-            //BUSCAR O ID GERADO NO SQLITE
             try (Statement st = conn.createStatement();
                  ResultSet rs = st.executeQuery("SELECT last_insert_rowid()")) {
-
                 if (rs.next()) {
                     return rs.getInt(1);
                 }
@@ -59,38 +55,33 @@ public class VendaDAO {
         }
     }
 
-    public List<Venda> historicoVendas(
-            LocalDate dataInicial,
-            LocalDate dataFinal,
-            String textoCliente
-    ) {
-
+    public List<Venda> historicoVendas(LocalDate dataInicial, LocalDate dataFinal, String textoCliente) {
         List<Venda> lista = new ArrayList<>();
 
         String sql = """
-        SELECT
-            v.idvenda,
-            v.datavenda,
-            v.valortotal,
-            v.pago,
-            v.taxaiva,
-            v.idcliente,
-            v.status,
-            c.nome        AS nome_registado,
-            v.nomecliente AS nome_nao_registado,
-            v.nuitcliente
-        FROM venda v
-        LEFT JOIN cliente c ON c.idcliente = v.idcliente
-        WHERE
-            ( ? IS NULL OR DATE(v.datavenda) >= ? )
-        AND ( ? IS NULL OR DATE(v.datavenda) <= ? )
-        AND (
-               ? IS NULL
-            OR c.nome LIKE ?
-            OR v.nomecliente LIKE ?
-        )
-        ORDER BY v.datavenda DESC
-    """;
+            SELECT
+                v.idvenda,
+                v.datavenda,
+                v.valortotal,
+                v.pago,
+                v.taxaiva,
+                v.idcliente,
+                v.status,
+                c.nome AS nome_registado,
+                v.nomecliente AS nome_nao_registado,
+                v.nuitcliente
+            FROM venda v
+            LEFT JOIN cliente c ON c.idcliente = v.idcliente
+            WHERE
+                ( ? IS NULL OR DATE(v.datavenda) >= ? )
+            AND ( ? IS NULL OR DATE(v.datavenda) <= ? )
+            AND (
+                   ? IS NULL
+                OR c.nome LIKE ?
+                OR v.nomecliente LIKE ?
+            )
+            ORDER BY v.datavenda DESC
+        """;
 
         try (Connection conn = ConexaoSQLite.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -125,20 +116,14 @@ public class VendaDAO {
             ResultSet rs = ps.executeQuery();
 
             while (rs.next()) {
-
                 Venda venda = new Venda();
                 venda.setIdVenda(rs.getInt("idvenda"));
                 venda.setPago(rs.getBoolean("pago"));
-                venda.setValorIVA(rs.getDouble("taxaiva"));
+                venda.setTaxaIva(rs.getBigDecimal("taxaiva"));   // BigDecimal
 
-                LocalDateTime dataPura = LocalDateTime.parse(
-                        rs.getString("datavenda").replace(" ", "T"));
-                LocalDateTime dataLimpa =dataPura.withNano(0);
-                //String dataStr = rs.getString("datavenda");
-                //LocalDateTime data = LocalDateTime.parse(dataStr.replace(" ", "T"));
-                venda.setDataVenda(dataLimpa);
+                LocalDateTime dataPura = LocalDateTime.parse(rs.getString("datavenda").replace(" ", "T"));
+                venda.setDataVenda(dataPura.withNano(0));
 
-                // Cliente registado ou não
                 int idCliente = rs.getInt("idcliente");
                 if (!rs.wasNull()) {
                     Cliente c = new Cliente();
@@ -149,8 +134,9 @@ public class VendaDAO {
                     venda.setNomeCliente(rs.getString("nome_nao_registado"));
                     venda.setNuitCliente(rs.getString("nuitcliente"));
                 }
+
                 venda.setStatus(rs.getString("status"));
-                venda.setTotalDb(rs.getDouble("valortotal"));
+                venda.setTotalDb(rs.getBigDecimal("valortotal")); // BigDecimal
 
                 lista.add(venda);
             }
@@ -162,12 +148,12 @@ public class VendaDAO {
         return lista;
     }
 
-    public void anularVenda(int idvenda, Connection conn){
-        String sql = "UPDATE venda SET status = 'ANULADA' WHERE idvenda =?";
-        try(PreparedStatement ps = conn.prepareStatement(sql)){
+    public void anularVenda(int idvenda, Connection conn) {
+        String sql = "UPDATE venda SET status = 'ANULADA' WHERE idvenda = ?";
+        try (PreparedStatement ps = conn.prepareStatement(sql)) {
             ps.setInt(1, idvenda);
             ps.executeUpdate();
-        }catch (SQLException e){
+        } catch (SQLException e) {
             throw new RuntimeException("Erro ao anular venda", e);
         }
     }
@@ -179,7 +165,4 @@ public class VendaDAO {
             return rs.next() ? rs.getInt(1) : 1;
         }
     }
-
-
-
 }

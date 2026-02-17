@@ -1,5 +1,7 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
+
 public class FluxodeCaixa {
     private int idfluxocaixa;
     private String descricao_produto;
@@ -96,8 +98,8 @@ public class FluxodeCaixa {
         return produto != null ? produto.getQuantidade_produto() : 0;
     }
 
-    public double getPreco() {
-        return produto != null ? produto.getPreco() : 0.0;
+    public BigDecimal getPreco() {
+        return produto != null ? produto.getPreco() : BigDecimal.ZERO;
     }
 
     public int getIdcategoria(){

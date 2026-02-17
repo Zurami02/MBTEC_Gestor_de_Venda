@@ -26,8 +26,8 @@ public class ItemvendaDAO {
             ps.setInt(1, idVenda);
             ps.setInt(2, item.getProduto().getIdproduto());
             ps.setInt(3, item.getQuantidade());
-            ps.setDouble(4, item.getPrecoUnitario());
-            ps.setDouble(5, item.getDesconto());
+            ps.setBigDecimal(4, item.getPrecoUnitario());
+            ps.setBigDecimal(5, item.getDesconto());
             ps.executeUpdate();
         }
     }
@@ -59,13 +59,13 @@ public class ItemvendaDAO {
             while (rs.next()) {
                 Itemvenda item = new Itemvenda();
                 item.setQuantidade(rs.getInt("quantidade"));
-                item.setPrecoUnitario(rs.getDouble("precounitario"));
-                item.setDesconto(rs.getDouble("desconto"));
+                item.setPrecoUnitario(rs.getBigDecimal("precounitario"));
+                item.setDesconto(rs.getBigDecimal("desconto"));
 
                 Produtos p = new Produtos();
                 p.setIdproduto(rs.getInt("idproduto"));
                 p.setDescricao_produto(rs.getString("descricao"));
-                p.setPreco(rs.getDouble("preco"));
+                p.setPreco(rs.getBigDecimal("preco"));
                 item.setProduto(p);
 
                 lista.add(item);
@@ -89,7 +89,7 @@ public class ItemvendaDAO {
             while (rs.next()) {
                 Itemvenda item = new Itemvenda();
                 item.setQuantidade(rs.getInt("quantidade"));
-                item.setPrecoUnitario(rs.getDouble("precounitario"));
+                item.setPrecoUnitario(rs.getBigDecimal("precounitario"));
 
                 Produtos p = new Produtos();
                 p.setIdproduto(rs.getInt("idproduto"));

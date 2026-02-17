@@ -1,4 +1,8 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 /**
  * Metodo responsavel em instanciar objeto itens de venda
  * Contendo calculos de Subtotal e desconto
@@ -11,17 +15,17 @@ public class Itemvenda {
     private int idItemVenda;
     private Produtos produto;
     private int quantidade;
-    private double precoUnitario;
-    private double desconto;
+    private BigDecimal precoUnitario;
+    private BigDecimal desconto;
     private Venda venda;
 
     public Itemvenda() {}
 
-    public Itemvenda(Produtos produto, int quantidade, double precoUnitario, double desconto, Venda venda) {
+    public Itemvenda(Produtos produto, int quantidade, BigDecimal precoUnitario, BigDecimal desconto, Venda venda) {
         this.produto = produto;
         this.quantidade = quantidade;
-        this.precoUnitario = produto.getPreco();
-        this.desconto = desconto;
+        this.precoUnitario = precoUnitario != null ? precoUnitario : produto.getPreco();
+        this.desconto = desconto != null ? desconto : BigDecimal.ZERO;
         this.venda = venda;
     }
 
@@ -53,20 +57,23 @@ public class Itemvenda {
         this.quantidade = quantidade;
     }
 
-    public void setPrecoUnitario(double precoUnitario){
-        this.precoUnitario = precoUnitario;
-    }
-
-    public double getPrecoUnitario() {
+    public BigDecimal getPrecoUnitario() {
         return precoUnitario;
     }
 
-    public double getDesconto() {
+    public void setPrecoUnitario(BigDecimal precoUnitario){
+        if (precoUnitario.compareTo(BigDecimal.ZERO) < 0) {
+            throw new IllegalArgumentException("Preço unitário inválido");
+        }
+        this.precoUnitario = precoUnitario;
+    }
+
+    public BigDecimal getDesconto() {
         return desconto;
     }
 
-    public void setDesconto(double desconto) {
-        if (desconto < 0) {
+    public void setDesconto(BigDecimal desconto) {
+        if (desconto.compareTo(BigDecimal.ZERO) < 0) {
             throw new IllegalArgumentException("Desconto inválido");
         }
         this.desconto = desconto;
@@ -80,13 +87,15 @@ public class Itemvenda {
         this.venda = venda;
     }
 
-    //CÁLCULOS
-    public double getSubtotal() {
-        return quantidade * precoUnitario;
+    // CÁLCULOS
+    public BigDecimal getSubtotal() {
+        return precoUnitario.multiply(BigDecimal.valueOf(quantidade))
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
-    public double getTotalComDesconto() {
-        return getSubtotal() - desconto;
+    public BigDecimal getTotalComDesconto() {
+        BigDecimal total = getSubtotal().subtract(desconto);
+        return total.compareTo(BigDecimal.ZERO) < 0 ? BigDecimal.ZERO : total;
     }
 
     @Override

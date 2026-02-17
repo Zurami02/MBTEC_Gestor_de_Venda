@@ -18,6 +18,8 @@ import mbtec.gestaoentradasaida_mbtec.domain.FluxodeCaixa;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -117,7 +119,7 @@ public class FluxodecaixaController implements Initializable {
     }
 
     @FXML
-    void btnEditarFC(ActionEvent event) {
+    /**void btnEditarFC(ActionEvent event) {
         if (!validarEntradadedados()) return;
 
         try {
@@ -138,17 +140,17 @@ public class FluxodecaixaController implements Initializable {
             Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
             int quantidade = Integer.parseInt(txtquantidadeFC.getText());
             LocalDate dataNova = txtdatapickerFC.getValue();
-            double precoUnitario = produtoSelecionado.getPreco();
+            BigDecimal precoUnitario = produtoSelecionado.getPreco();
 
             // Desconto
-            double desconto = 0.0;
+            BigDecimal desconto = BigDecimal.ZERO;
             String texto = txtdesconto.getText();
             if (texto != null && !texto.trim().isEmpty()) {
                 try {
                     texto = texto.replace(",", ".");
-                    desconto = Double.parseDouble(texto);
+                    desconto = new BigDecimal(texto);
                 } catch (NumberFormatException e) {
-                    desconto = 0.0;
+                    desconto = BigDecimal.ZERO;
                     System.out.println("Desconto inválido, usando 0.0");
                 }
             }
@@ -181,7 +183,76 @@ public class FluxodecaixaController implements Initializable {
             e.printStackTrace();
             AlertaUtil.mostrarErro("Erro", "Ocorreu um erro: " + e.getMessage());
         }
+    }**/
+    void btnEditarFC(ActionEvent event) {
+        if (!validarEntradadedados()) return;
+
+        try {
+            fluxodeCaixa = tableviewFluxodeCaixa.getSelectionModel().getSelectedItem();
+            if (fluxodeCaixa == null) {
+                AlertaUtil.mostrarInfo("Atualização", "Selecione o Fluxo de Caixa na tabela.");
+                return;
+            }
+
+            Optional<ButtonType> resultado = AlertaUtil.mostrarConfirmacao(
+                    "Confirmação de Atualização",
+                    "Tem certeza que deseja atualizar " + fluxodeCaixa.getProduto().getDescricao_produto() + "?"
+            );
+            if (resultado.isEmpty() || resultado.get() != ButtonType.OK) {
+                return; // cancelado
+            }
+
+            Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
+            int quantidade = Integer.parseInt(txtquantidadeFC.getText());
+            LocalDate dataNova = txtdatapickerFC.getValue();
+            BigDecimal precoUnitario = produtoSelecionado.getPreco();
+
+            // Desconto
+            BigDecimal desconto = BigDecimal.ZERO;
+            String texto = txtdesconto.getText();
+            if (texto != null && !texto.trim().isEmpty()) {
+                try {
+                    texto = texto.replace(",", ".");
+                    desconto = new BigDecimal(texto);
+                } catch (NumberFormatException e) {
+                    desconto = BigDecimal.ZERO;
+                    System.out.println("Desconto inválido, usando 0.0");
+                }
+            }
+
+            // Preço total com BigDecimal
+            BigDecimal valorBruto = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+            BigDecimal fatorDesconto = BigDecimal.ONE.subtract(desconto.divide(BigDecimal.valueOf(100), 4, RoundingMode.HALF_UP));
+            BigDecimal precoTotal = valorBruto.multiply(fatorDesconto).setScale(2, RoundingMode.HALF_UP);
+
+            // Comparações
+            boolean alterado =
+                    fluxodeCaixa.getProduto().getIdproduto() != produtoSelecionado.getIdproduto() ||
+                            fluxodeCaixa.getQuantidade() != quantidade ||
+                            !LocalDate.parse(fluxodeCaixa.getData()).equals(dataNova) ||
+                            BigDecimal.valueOf(fluxodeCaixa.getValor()).compareTo(precoTotal) != 0 ||
+                            BigDecimal.valueOf(fluxodeCaixa.getDesconto()).compareTo(desconto) != 0;
+
+            if (alterado) {
+                fluxodeCaixa.setProduto(produtoSelecionado);
+                fluxodeCaixa.setQuantidade(quantidade);
+                fluxodeCaixa.setValor(precoTotal.doubleValue()); // mantém compatibilidade
+                fluxodeCaixa.setData(dataNova.toString());
+                fluxodeCaixa.setDesconto(desconto.doubleValue()); // mantém compatibilidade
+
+                fluxodeCaixaDAO.atualizar(fluxodeCaixa);
+                carregarTableviewFluxodecaixa();
+                limparCampos();
+            } else {
+                AlertaUtil.mostrarInfo("Atualização", "Nenhum dado foi modificado.");
+            }
+
+        } catch (RuntimeException e) {
+            e.printStackTrace();
+            AlertaUtil.mostrarErro("Erro", "Ocorreu um erro: " + e.getMessage());
+        }
     }
+
 
 
     @FXML
@@ -200,7 +271,7 @@ public class FluxodecaixaController implements Initializable {
     }
 
     @FXML
-    void btnSalvarFC(ActionEvent event) {
+    /**void btnSalvarFC(ActionEvent event) {
 
         if (validarEntradadedados()) {
             try {
@@ -254,7 +325,68 @@ public class FluxodecaixaController implements Initializable {
                 System.out.println("Erro ao converter quantidade: " + e.getMessage());
             }
         }
+    }**/
+    void btnSalvarFC(ActionEvent event) {
+        if (validarEntradadedados()) {
+            try {
+                Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
+                int quantidade = Integer.parseInt(txtquantidadeFC.getText());
+                BigDecimal precoUnitario = produtoSelecionado.getPreco();
+
+                // Desconto
+                BigDecimal descontoPercentual = BigDecimal.ZERO;
+                String texto = txtdesconto.getText();
+                if (texto != null && !texto.trim().isEmpty()) {
+                    try {
+                        texto = texto.replace(",", "."); // suporta vírgula como decimal
+                        descontoPercentual = new BigDecimal(texto);
+                    } catch (NumberFormatException e) {
+                        descontoPercentual = BigDecimal.ZERO;
+                        System.out.println("Desconto inválido, usando 0.0");
+                    }
+                }
+
+                // Total com desconto
+                BigDecimal valorBruto = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+                BigDecimal valorDesconto = valorBruto.multiply(descontoPercentual)
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                BigDecimal precoTotal = valorBruto.subtract(valorDesconto).setScale(2, RoundingMode.HALF_UP);
+
+                String precoFormatado = precoTotal.toPlainString();
+                String data = String.valueOf(txtdatapickerFC.getValue());
+
+                // Verifica se há estoque suficiente
+                if (produtoSelecionado.getQuantidade_produto() < quantidade) {
+                    AlertaUtil.mostrarAviso("Estoque insuficiente",
+                            "A quantidade solicitada excede o estoque disponível.");
+                    return;
+                }
+
+                FluxodeCaixa fluxo = new FluxodeCaixa();
+                fluxo.setProduto(produtoSelecionado);
+                fluxo.setQuantidade(quantidade);
+                fluxo.setValor(precoTotal.doubleValue());   // mantém compatibilidade
+                fluxo.setData(data);
+                fluxo.setDesconto(descontoPercentual.doubleValue()); // mantém compatibilidade
+                fluxodeCaixaDAO.inserir(fluxo);
+
+                // Atualiza estoque do produto
+                int novaQuantidade = produtoSelecionado.getQuantidade_produto() - quantidade;
+                produtoSelecionado.setQuantidade_produto(novaQuantidade);
+                produtosDAO.editar(produtoSelecionado);
+
+                carregarTableviewFluxodecaixa();
+                limparCampos();
+
+                precoTotalLabel.setText(precoFormatado + " MZN");
+                descontoLabel.setText(valorDesconto.toPlainString() + " MZN");
+
+            } catch (NumberFormatException e) {
+                System.out.println("Erro ao converter quantidade: " + e.getMessage());
+            }
+        }
     }
+
 
     private final FluxodeCaixaDAO fluxodeCaixaDAO = new FluxodeCaixaDAO();
     private final ProdutosDAO produtosDAO = new ProdutosDAO();
@@ -277,7 +409,7 @@ public class FluxodecaixaController implements Initializable {
 
     }
 
-    private void tableviewFluxodeCaixaListener() {
+    /**private void tableviewFluxodeCaixaListener() {
         tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((
                 obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
@@ -294,11 +426,11 @@ public class FluxodecaixaController implements Initializable {
                 txtdesconto.setText(String.valueOf(newSelection.getDesconto()));
 
                 // 3. Calcular valores para exibição
-                double precoUnitario = newSelection.getProduto().getPreco();
+                BigDecimal precoUnitario = newSelection.getProduto().getPreco();
                 int quantidade = newSelection.getQuantidade();
                 double descontoPercentual = newSelection.getDesconto();
 
-                double valorBruto = precoUnitario * quantidade;
+                BigDecimal valorBruto = precoUnitario.multiply(new BigDecimal(quantidade));
                 double valorDesconto = valorBruto * (descontoPercentual / 100);
                 double precoTotal = valorBruto - valorDesconto;
 
@@ -335,7 +467,67 @@ public class FluxodecaixaController implements Initializable {
                                                     oldVal, newVal) -> {
             atualizarPrecoTotal();
         });
+    }**/
+
+    private void tableviewFluxodeCaixaListener() {
+        tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((
+                obs, oldSelection, newSelection) -> {
+            if (newSelection != null) {
+                // 1. Converter a data string para LocalDate
+                String dataString = newSelection.getData();
+                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+                LocalDate data = LocalDate.parse(dataString, formatter);
+                txtdatapickerFC.setValue(data);
+
+                // 2. Preencher os campos com dados do objeto selecionado
+                txtcomboboxProdutoFC.setValue(newSelection.getProduto());
+                txtquantidadeFC.setText(String.valueOf(newSelection.getQuantidade()));
+                txtprecoUnitarioFC.setText(newSelection.getProduto().getPreco().setScale(2, RoundingMode.HALF_UP).toPlainString());
+                txtdesconto.setText(String.valueOf(newSelection.getDesconto()));
+
+                // 3. Calcular valores para exibição com BigDecimal
+                BigDecimal precoUnitario = newSelection.getProduto().getPreco();
+                int quantidade = newSelection.getQuantidade();
+                BigDecimal descontoPercentual = BigDecimal.valueOf(newSelection.getDesconto());
+
+                BigDecimal valorBruto = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+                BigDecimal valorDesconto = valorBruto.multiply(descontoPercentual)
+                        .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+                BigDecimal precoTotal = valorBruto.subtract(valorDesconto);
+
+                // 4. Atualiza os labels
+                precoTotalLabel.setText(precoTotal.setScale(2, RoundingMode.HALF_UP) + " MZN");
+                descontoLabel.setText(valorDesconto.setScale(2, RoundingMode.HALF_UP) + " MZN");
+
+                // 5. Estoque atual
+                estoqueLabel.setText(newSelection.getProduto().getDescricao_produto() + ": " +
+                        newSelection.getProduto().getQuantidade_produto());
+            }
+        });
+
+        txtcomboboxProdutoFC.setOnAction(e -> {
+            Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
+            if (produtoSelecionado != null) {
+                txtprecoUnitarioFC.setText(produtoSelecionado.getPreco().setScale(2, RoundingMode.HALF_UP).toPlainString());
+                atualizarPrecoTotal(); // atualizar o total se já tiver quantidade
+                estoqueLabel.setText(produtoSelecionado.getDescricao_produto() + ": " +
+                        produtoSelecionado.getQuantidade_produto());
+            }
+        });
+
+        txtquantidadeFC.setTextFormatter(new TextFormatter<>(change -> {
+            String novoTexto = change.getControlNewText();
+            if (novoTexto.matches("\\d*")) { // apenas dígitos
+                return change;
+            }
+            return null; // rejeita a entrada
+        }));
+
+        txtquantidadeFC.textProperty().addListener((obs, oldVal, newVal) -> {
+            atualizarPrecoTotal();
+        });
     }
+
 
     private void limparCampos() {
         txtcomboboxProdutoFC.setValue(null);
@@ -476,7 +668,7 @@ public class FluxodecaixaController implements Initializable {
         }
     }
 
-    private void atualizarPrecoTotal() {
+    /**private void atualizarPrecoTotal() {
         Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
         String quantidadeTexto = txtquantidadeFC.getText();
 
@@ -488,10 +680,32 @@ public class FluxodecaixaController implements Initializable {
         } else {
             txtprecototalFC.clear();
         }
+    }**/
+
+    private void atualizarPrecoTotal() {
+        Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
+        String quantidadeTexto = txtquantidadeFC.getText();
+
+        if (produtoSelecionado != null && quantidadeTexto.matches("\\d+")) {
+            int quantidade = Integer.parseInt(quantidadeTexto);
+
+            // Preço unitário como BigDecimal
+            BigDecimal precoUnitario = produtoSelecionado.getPreco();
+
+            // Total = preço unitário * quantidade
+            BigDecimal total = precoUnitario.multiply(BigDecimal.valueOf(quantidade))
+                    .setScale(2, RoundingMode.HALF_UP);
+
+            // Atualiza campo de texto com valor formatado
+            txtprecototalFC.setText(total.toPlainString());
+        } else {
+            txtprecototalFC.clear();
+        }
     }
 
+
     //Para mostrar assim que o usuario digita desconto antes de executar venda
-    private void atualizarValoresCalculados() {
+    /**private void atualizarValoresCalculados() {
         Produtos produto = txtcomboboxProdutoFC.getValue();
         if (produto == null) return;
 
@@ -521,7 +735,45 @@ public class FluxodecaixaController implements Initializable {
 
         descontoLabel.setText(String.format(" %.2f MZN", valorDesconto));
         precoTotalLabel.setText(String.format(" %.2f MZN", valorFinal));
+    }**/
+    private void atualizarValoresCalculados() {
+        Produtos produto = txtcomboboxProdutoFC.getValue();
+        if (produto == null) return;
+
+        BigDecimal precoUnitario = produto.getPreco(); // já é BigDecimal
+
+        int quantidade = 0;
+        try {
+            quantidade = Integer.parseInt(txtquantidadeFC.getText());
+        } catch (NumberFormatException e) {
+            quantidade = 0; // quantidade inválida, considerar 0
+        }
+
+        BigDecimal descontoPercentual = BigDecimal.ZERO;
+        String texto = txtdesconto.getText();
+        if (texto != null && !texto.trim().isEmpty()) {
+            try {
+                texto = texto.replace(",", ".");
+                descontoPercentual = new BigDecimal(texto);
+            } catch (NumberFormatException e) {
+                descontoPercentual = BigDecimal.ZERO;
+            }
+        }
+
+        // valor bruto = preço unitário * quantidade
+        BigDecimal valorBruto = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+
+        // valor desconto = valor bruto * (descontoPercentual / 100)
+        BigDecimal valorDesconto = valorBruto.multiply(descontoPercentual)
+                .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
+
+        // valor final = valor bruto - desconto
+        BigDecimal valorFinal = valorBruto.subtract(valorDesconto).setScale(2, RoundingMode.HALF_UP);
+
+        descontoLabel.setText(valorDesconto.toPlainString() + " MZN");
+        precoTotalLabel.setText(valorFinal.toPlainString() + " MZN");
     }
+
 
     private void emtemporealDesconto(){
             txtdesconto.textProperty().addListener((observable, oldValue, newValue) -> {

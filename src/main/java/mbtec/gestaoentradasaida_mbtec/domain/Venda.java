@@ -1,5 +1,7 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -15,26 +17,25 @@ public class Venda {
     private int idVenda;
     private LocalDateTime dataVenda;
     private Cliente cliente;
-    private String nomeCliente;//Cliente nao registado no db Null
-    private String nuitCliente;//Cliente nao registado no db Null
+    private String nomeCliente;
+    private String nuitCliente;
     private boolean pago;
-    private double taxaIva; // ex: 0.17 (17%)
+    private BigDecimal taxaIva;
     private List<Itemvenda> itens = new ArrayList<>();
     private boolean vd;
     private String status;
     private String numerovd;
     private int idUsuario;
 
-    //somente para leitura do db para historico de venda
-    private double totalDb;
-    private double valorIVA;
+    private BigDecimal totalDb;
+    private BigDecimal valorIVA;
 
     public Venda() {
         this.dataVenda = LocalDateTime.now();
     }
 
     public Venda(int idVenda, String nomeCliente, String nuitCliente,
-                 boolean pago, double taxaIva) {
+                 boolean pago, BigDecimal taxaIva) {
         this.idVenda = idVenda;
         this.nomeCliente = nomeCliente;
         this.nuitCliente = nuitCliente;
@@ -42,7 +43,7 @@ public class Venda {
         this.taxaIva = taxaIva;
     }
 
-    public Venda(int idVenda, Cliente cliente, boolean pago, double taxaIva) {
+    public Venda(int idVenda, Cliente cliente, boolean pago, BigDecimal taxaIva) {
         this();
         this.idVenda = idVenda;
         this.cliente = cliente;
@@ -75,23 +76,22 @@ public class Venda {
     }
 
     public boolean isAnulada(){
-        return
-                "ANULADA".equalsIgnoreCase(status);
+        return "ANULADA".equalsIgnoreCase(status);
     }
 
-    public double getValorIVA() {
-        return valorIVA;
+    public BigDecimal getValorIVA() {
+        return valorIVA != null ? valorIVA : BigDecimal.ZERO;
     }
 
-    public void setValorIVA(double valorIVA) {
+    public void setValorIVA(BigDecimal valorIVA) {
         this.valorIVA = valorIVA;
     }
 
-    public double getTotalDb() {
-        return totalDb;
+    public BigDecimal getTotalDb() {
+        return totalDb != null ? totalDb : BigDecimal.ZERO;
     }
 
-    public void setTotalDb(double totalDb) {
+    public void setTotalDb(BigDecimal totalDb) {
         this.totalDb = totalDb;
     }
 
@@ -151,36 +151,45 @@ public class Venda {
         this.pago = pago;
     }
 
-    public double getTaxaIva() {
+    public BigDecimal getTaxaIva() {
         return taxaIva;
     }
 
-    public void setTaxaIva(double taxaIva) {
-        this.taxaIva = taxaIva/100;
+    public void setTaxaIva(BigDecimal taxaIva) {
+        this.taxaIva = taxaIva.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
     }
 
     public List<Itemvenda> getItens() {
         return itens;
     }
 
-    //adicionar item
     public void adicionarItem(Itemvenda item) {
         itens.add(item);
     }
 
-    //CÁLCULOS
-    public double getSubtotal() {
+    public BigDecimal getSubtotal() {
         return itens.stream()
-                .mapToDouble(Itemvenda::getTotalComDesconto)
-                .sum();
+                .map(Itemvenda::getTotalComDesconto)
+                .reduce(BigDecimal.ZERO, BigDecimal::add)
+                .setScale(2, RoundingMode.HALF_UP);
     }
 
-    public double getValorIva() {
-        return getSubtotal() * taxaIva;
+    public BigDecimal calcularValorIva() {
+        BigDecimal subtotal = getSubtotal();
+        return taxaIva != null
+                ? subtotal.multiply(taxaIva).setScale(2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
     }
 
-    public double getTotalFinal() {
-        return getSubtotal() + getValorIva();
+    public BigDecimal getTotalFinal() {
+        return getSubtotal().add(calcularValorIva()).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    public BigDecimal getValorIva() {
+        BigDecimal subtotal = getSubtotal();
+        return taxaIva != null
+                ? subtotal.multiply(taxaIva).setScale(2, RoundingMode.HALF_UP)
+                : BigDecimal.ZERO;
     }
 
     @Override

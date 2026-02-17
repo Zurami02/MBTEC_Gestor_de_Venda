@@ -2,8 +2,7 @@ package mbtec.gestaoentradasaida_mbtec.controller;
 
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
-import javafx.animation.FadeTransition;
-import javafx.beans.property.ReadOnlyObjectWrapper;
+import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -14,7 +13,10 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
-import javafx.scene.control.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -22,34 +24,26 @@ import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.util.Duration;
-import javafx.util.StringConverter;
-import mbtec.gestaoentradasaida_mbtec.DAO.*;
-import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
+import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
+import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.Cliente;
 import mbtec.gestaoentradasaida_mbtec.domain.Itemvenda;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
 import mbtec.gestaoentradasaida_mbtec.domain.Venda;
-import mbtec.gestaoentradasaida_mbtec.service.*;
-import net.sf.jasperreports.engine.JasperPrint;
-import org.jetbrains.annotations.NotNull;
+import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.VendaCompletaService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
-import java.sql.Connection;
-import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
-
+import java.util.List;
+import java.util.Objects;
+import java.util.ResourceBundle;
 /**
- * @version 1.1
- * Metodo responsavel para cadastrar a venda
- */
-
-public class VendasController implements Initializable {
+public class VendasController2 implements Initializable {
 
     @FXML
     private AnchorPane anchorPaneMain;
@@ -70,7 +64,7 @@ public class VendasController implements Initializable {
     private TableColumn<Produtos, Integer> colunaEstoqueProdutoDoSistema;
 
     @FXML
-    private TableColumn<Produtos, Double> colunaPrecoProdutoDoSistema;
+    private TableColumn<Produtos, BigDecimal> colunaPrecoProdutoDoSistema;
 
     @FXML
     private TableColumn<Produtos, String> colunaProdutoProdutoDoSistema;
@@ -82,7 +76,7 @@ public class VendasController implements Initializable {
     private TableColumn<Itemvenda, BigDecimal> colunaDescontoCarrinho;
 
     @FXML
-    private TableColumn<Itemvenda, Integer> colunaPrecoUnitarioCarrinho;
+    private TableColumn<Itemvenda, BigDecimal> colunaPrecoUnitarioCarrinho;
 
     @FXML
     private TableColumn<Itemvenda, String> colunaProdutoCarrinho;
@@ -146,13 +140,13 @@ public class VendasController implements Initializable {
 
     private final ProdutosDAO produtosDAO = new ProdutosDAO();
 
-    private Venda venda = new Venda();
+    private Venda venda;
     private Itemvenda itemvenda;
     private BigDecimal iva;
 
-    private List<Produtos> produtosList;                // lista vinda do DAO
-    private ObservableList<Produtos> produtosObservableList; // lista base da TableView
-    private FilteredList<Produtos> produtosFilteredList;     // filtro da TableView
+    private List<Produtos> produtosList;
+    private ObservableList<Produtos> produtosObservableList;
+    private FilteredList<Produtos> produtosFilteredList;
     private final ObservableList<Itemvenda> itemvendaObservableList = FXCollections.observableArrayList();
     private ObservableList<Cliente> clienteObservableList;
 
@@ -172,7 +166,6 @@ public class VendasController implements Initializable {
             stage.getIcons().add(new Image(Objects.requireNonNull(AlertaUtil.class.getResourceAsStream(
                     "mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png"))));
             stage.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -180,7 +173,6 @@ public class VendasController implements Initializable {
 
     @FXML
     void btnAdicionarCarrinho(ActionEvent event) {
-
         Produtos produto = tableviewProdutoDoSistema.getSelectionModel().getSelectedItem();
 
         if (produto == null) {
@@ -205,13 +197,12 @@ public class VendasController implements Initializable {
 
         if (!produtosDAO.temEstoqueSuficiente(produto.getIdproduto(), qtd)) {
             AlertaUtil.piscarVermelho(txtQuantidade);
-            AlertaUtil.mostrarErro
-                    ("Stock insuficiente", "Quantidade disponível: " +
-                            produto.getQuantidade_produto());
+            AlertaUtil.mostrarErro("Stock insuficiente", "Quantidade disponível: " +
+                    produto.getQuantidade_produto());
             return;
         }
-        itemvenda = new Itemvenda(produto, qtd, produto.getPreco(), desconto, venda);
-
+        BigDecimal produtoBig = new BigDecimal( produto.getPreco());
+        itemvenda = new Itemvenda(produto, qtd,produtoBig, desconto, venda);
         venda.adicionarItem(itemvenda);
         itemvendaObservableList.add(itemvenda);
 
@@ -236,7 +227,6 @@ public class VendasController implements Initializable {
                     (Objects.requireNonNull(AlertaUtil.class.
                             getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png"))));
             stage.showAndWait();
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -244,18 +234,15 @@ public class VendasController implements Initializable {
 
     @FXML
     void pesquisarProdutoPorCodigo(KeyEvent event) {
-
         String texto = txtCodigoProdutoPesquisa.getText();
         if (texto.isEmpty()) {
             if (produtosFilteredList != null) {
-                produtosFilteredList.setPredicate(p -> true); // mostra todos
+                produtosFilteredList.setPredicate(p -> true);
                 tableviewProdutoDoSistema.getSelectionModel().clearSelection();
             }
             return;
         }
         if (event.getCode() != KeyCode.ENTER) return;
-
-        if (texto.isBlank()) return;
 
         int codigo;
         try {
@@ -267,11 +254,9 @@ public class VendasController implements Initializable {
         }
 
         boolean encontrado = false;
-
         for (Produtos p : produtosList) {
             if (p.getIdproduto() == codigo) {
                 produtosFilteredList.setPredicate(prod -> prod.getIdproduto() == codigo);
-
                 tableviewProdutoDoSistema.getSelectionModel().select(p);
                 encontrado = true;
                 break;
@@ -286,7 +271,6 @@ public class VendasController implements Initializable {
 
     @FXML
     void btnFinalizar(ActionEvent event) {
-
         String valorPago = txtDinheiroPago.getText().trim();
         String pagamento = comboboxFormapagamento.getValue();
 
@@ -298,14 +282,13 @@ public class VendasController implements Initializable {
             return;
         }
 
-        double valorPagamento;
+        BigDecimal valorPagamento;
         try {
-            valorPagamento = Double.parseDouble(valorPago);
+            valorPagamento = new BigDecimal(valorPago);
         } catch (NumberFormatException e) {
             AlertaUtil.mostrarErro("Erro", "Valor pago inválido");
             return;
         }
-
 
         try {
             VendaCompletaService vendacompleta = new VendaCompletaService();
@@ -342,7 +325,6 @@ public class VendasController implements Initializable {
         venda.getItens().remove(itemSelecionado);
         itemvendaObservableList.remove(itemSelecionado);
         atualizarValoresVenda();
-
     }
 
     @Override
@@ -350,8 +332,7 @@ public class VendasController implements Initializable {
         venda = new Venda();
         LocalDate dataAtual = LocalDate.now();
         DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        String datareal = dataAtual.format(dataFormatada);
-        lbDataHora.setText(datareal);
+        lbDataHora.setText(dataAtual.format(dataFormatada));
         carregarTableViewProdutosNoSistema();
         carregarProdutosNoSistema();
         pesquisarProdutoPorNome();
@@ -381,10 +362,8 @@ public class VendasController implements Initializable {
 
         } else {
             comboBoxClientenoSistema.setDisable(false);
-
             txtCliente.clear();
             txtNuit.clear();
-
             txtCliente.setDisable(true);
             txtNuit.setDisable(true);
         }
@@ -398,26 +377,11 @@ public class VendasController implements Initializable {
     }
 
     private void carregarTableViewCarrinho() {
-        colunaProdutoCarrinho.setCellValueFactory
-                (data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao_produto()));
+        colunaProdutoCarrinho.setCellValueFactory(data -> new SimpleStringProperty(data.getValue().getProduto().getDescricao_produto()));
         colunaQTDCarrinho.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
         colunaPrecoUnitarioCarrinho.setCellValueFactory(new PropertyValueFactory<>("precoUnitario"));
         colunaDescontoCarrinho.setCellValueFactory(new PropertyValueFactory<>("desconto"));
-        colunaTotalCarrinho.setCellValueFactory(data ->
-                new ReadOnlyObjectWrapper<>(data.getValue().getTotalComDesconto())
-        );
-
-        colunaTotalCarrinho.setCellFactory(col -> new TableCell<Itemvenda, BigDecimal>() {
-            @Override
-            protected void updateItem(BigDecimal item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty || item == null) {
-                    setText(null);
-                } else {
-                    setText(NumberFormat.getCurrencyInstance(Locale.of("pt", "MZ")).format(item));
-                }
-            }
-        });
+        colunaTotalCarrinho.setCellValueFactory(data -> new SimpleObjectProperty<>(data.getValue().getTotalComDesconto()));
     }
 
     private void limparCamposItem() {
@@ -426,172 +390,7 @@ public class VendasController implements Initializable {
         tableviewProdutoDoSistema.getSelectionModel().clearSelection();
     }
 
-    public void carregarCombboxClienteNoSistema() {
-        List<Cliente> clienteList = new ClienteDAO().listar();
-        clienteObservableList = FXCollections.observableArrayList(clienteList);
-        comboBoxClientenoSistema.setItems(clienteObservableList);
-        // Define um filtro dinâmico
-        FilteredList<Cliente> clienteFiltrados = new FilteredList<>(clienteObservableList, c -> true);
-
-        comboBoxClientenoSistema.setItems(clienteFiltrados);
-
-        // Adiciona um listener para o editor de texto do ComboBox
-        comboBoxClientenoSistema.setEditable(true);
-        comboBoxClientenoSistema.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            final String filtro = newValue.toLowerCase().trim();
-
-            clienteFiltrados.setPredicate(cliente -> {
-                if (filtro.isEmpty()) {
-                    return true;
-                }
-                return cliente.getNome().toLowerCase().contains(filtro);
-            });
-
-            if (!comboBoxClientenoSistema.isShowing()) {
-                comboBoxClientenoSistema.show();
-            }
-        });
-
-        // Corrige o comportamento de seleção para manter o objeto Cliente real
-        comboBoxClientenoSistema.setConverter(new StringConverter<Cliente>() {
-            @Override
-            public String toString(Cliente cliente) {
-                return cliente != null ? cliente.getNome() : "";
-            }
-
-            @Override
-            public Cliente fromString(String string) {
-                return clienteObservableList.stream().filter(c -> c.getNome().equals(string)).findFirst().orElse(null);
-            }
-        });
-    }
-
-    public void carregarCombboxFormaPagamento() {
-        List<String> formasPag = Arrays.asList("Dinheiro", "E-mola", "M-Pesa", "Transferencia Bancaria");
-        ObservableList<String> pagamentoList = FXCollections.observableArrayList(formasPag);
-        // Define um filtro dinâmico
-        FilteredList<String> pagamentoFiltrados = new FilteredList<>(pagamentoList, p -> true);
-
-        comboboxFormapagamento.setItems(pagamentoFiltrados);
-
-        // Adiciona um listener para o editor de texto do ComboBox
-        comboboxFormapagamento.setEditable(true);
-
-        comboboxFormapagamento.getEditor().textProperty().addListener(
-                (obs, oldValue, newValue) -> {
-                    final String filtro = newValue.toLowerCase().trim();
-
-                    pagamentoFiltrados.setPredicate(pagamento -> {
-                        if (filtro.isEmpty()) {
-                            return true;
-                        }
-                        return pagamento.toLowerCase().contains(filtro);
-                    });
-
-                    if (!pagamentoFiltrados.isEmpty()) {
-                        comboboxFormapagamento.show();
-                    } else {
-                        comboboxFormapagamento.hide();
-                    }
-                });
-
-        comboboxFormapagamento.setCellFactory(listView -> new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(item);
-                    setStyle("-fx-text-fill: Black;"); // all items white
-                }
-            }
-        });
-
-        // Ensure the selected item also shows in white
-        comboboxFormapagamento.setButtonCell(new ListCell<String>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-
-                if (empty || item == null) {
-                    setText(null);
-                    setStyle("");
-                } else {
-                    setText(item);
-                    setStyle("-fx-text-fill: White;"); // selected item white
-                }
-            }
-        });
-
-    }
-
-    private void pesquisarProdutoPorNome() {
-
-        txtNomeProdutoPesquisa.textProperty().addListener((obs, oldValue, newValue) -> {
-
-            produtosFilteredList.setPredicate(produto -> {
-
-                if (newValue == null || newValue.isBlank()) {
-                    return true;
-                }
-
-                return produto.getDescricao_produto().toLowerCase().contains(newValue.toLowerCase());
-            });
-        });
-    }
-
-    private void inicializarListeners() {
-        VendaService vs = new VendaService();
-        anchorPaneMain.setStyle("-fx-border-color: red;");
-        if (vs.isAnuladaVenda()) {
-            carregarProdutosNoSistema();
-            tableviewProdutoDoSistema.refresh();
-        }
-        listenerPesquisaProduto();
-        listenerCliente();
-        listenerIVA();
-        listenerVD();
-        listenerPagamento();
-        txtCliente.setDisable(true);
-        txtNuit.setDisable(true);
-    }
-
-    private void listenerVD() {
-        checkBoxVD.selectedProperty().addListener((obs, oldValue,
-                                                   marcado) -> {
-            venda.setVd(marcado);
-        });
-    }
-
-    private void listenerPesquisaProduto() {
-        txtNomeProdutoPesquisa.focusedProperty().addListener((obs, old, focou) -> {
-            if (focou) {
-                txtCodigoProdutoPesquisa.clear();
-            }
-        });
-
-        txtCodigoProdutoPesquisa.focusedProperty().addListener((obs, old, focou) -> {
-            if (focou) {
-                txtNomeProdutoPesquisa.clear();
-            }
-        });
-    }
-
-    private void listenerPagamento() {
-        txtDinheiroPago.setOnKeyPressed(e -> {
-            if (e.getCode() == KeyCode.ENTER) calcularTroco();
-        });
-
-        txtDinheiroPago.focusedProperty().addListener((obs, o, focou) -> {
-            if (!focou) calcularTroco();
-        });
-    }
-
     private void listenerIVA() {
-
         iva = Objects.requireNonNull(ConfiguracaoDAO.buscarPorChave("IVA")).getValor();
         lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
         checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
@@ -601,76 +400,19 @@ public class VendasController implements Initializable {
             } else {
                 venda.setTaxaIva(BigDecimal.ZERO);
             }
-
             atualizarValoresVenda();
         });
-
-    }
-
-    private void listenerCliente() {
-
-        comboBoxClientenoSistema.valueProperty().addListener((obs, antigo, novo) -> {
-            if (novo != null) {
-                txtCliente.setText(novo.getNome());
-                txtNuit.setText(novo.getNuit());
-                txtCliente.setDisable(true);
-                txtNuit.setDisable(true);
-                venda.setCliente(novo);
-            }
-        });
-    }
-
-    //Ainda nao funciona
-    private void listenerAtualizarTabelaProdutosNoSistema() {
-        Stage stage = new Stage();
-        stage.focusedProperty().addListener((obs, old, atualizado) ->
-                {
-                    if (atualizado) {
-                        carregarProdutosNoSistema();
-                        tableviewProdutoDoSistema.refresh();
-                    }
-                }
-        );
-    }
-
-    private void calcularTroco() {
-        String texto = txtDinheiroPago.getText();
-
-        if (texto == null || texto.isBlank()) {
-            txtTroco.clear();
-            return;
-        }
-
-        try {
-            BigDecimal pago = new BigDecimal(texto);
-            BigDecimal total = venda.getTotalFinal();
-
-            if (pago.compareTo(total) < 0) {
-                AlertaUtil.piscarVermelho(txtDinheiroPago);
-                txtTroco.clear();
-                return;
-            }
-
-            BigDecimal troco = pago.subtract(total).setScale(2, RoundingMode.HALF_UP);
-            txtTroco.setText(troco.toString());
-
-        } catch (NumberFormatException e) {
-            AlertaUtil.mostrarErro("Valor inválido", "Digite apenas números");
-            txtTroco.clear();
-        }
     }
 
     private void atualizarValoresVenda() {
         txtSubtotal.setText(venda.getSubtotal().setScale(2, RoundingMode.HALF_UP).toString());
         txtIVA.setText(venda.getValorIva().setScale(2, RoundingMode.HALF_UP).toString());
         txtTotal.setText(venda.getTotalFinal().setScale(2, RoundingMode.HALF_UP).toString());
-
         recalcularTrocoSePossivel();
     }
 
     private void recalcularTrocoSePossivel() {
         String texto = txtDinheiroPago.getText();
-
         if (texto == null || texto.isBlank()) {
             txtTroco.clear();
             return;
@@ -679,132 +421,57 @@ public class VendasController implements Initializable {
         try {
             BigDecimal pago = new BigDecimal(texto);
             BigDecimal total = venda.getTotalFinal();
-
             if (pago.compareTo(total) >= 0) {
-                BigDecimal troco = pago.subtract(total).setScale(2, RoundingMode.HALF_UP);
-                txtTroco.setText(troco.toString());
+                txtTroco.setText(pago.subtract(total).setScale(2, RoundingMode.HALF_UP).toString());
             } else {
                 txtTroco.clear();
             }
+        } catch (NumberFormatException e) {
+            txtTroco.clear();
+        }
+    }
 
+    private void calcularTroco() {
+        String texto = txtDinheiroPago.getText();
+        if (texto == null || texto.isBlank()) {
+            txtTroco.clear();
+            return;
+        }
+
+        try {
+            BigDecimal pago = new BigDecimal(texto);
+            BigDecimal total = venda.getTotalFinal();
+            if (pago.compareTo(total) < 0) {
+                AlertaUtil.piscarVermelho(txtDinheiroPago);
+                txtTroco.clear();
+                return;
+            }
+            txtTroco.setText(pago.subtract(total).setScale(2, RoundingMode.HALF_UP).toString());
         } catch (NumberFormatException e) {
             txtTroco.clear();
             AlertaUtil.mostrarErro("Valor inválido", "Digite apenas números");
         }
     }
 
-    private void limparFiltro() {
-        produtosFilteredList.setPredicate(p -> true);
-    }
-
-    private void carregarProdutosNoSistema() {
-
-        produtosList = produtosDAO.listar();
-
-        produtosObservableList = FXCollections.observableArrayList(produtosList);
-
-        produtosFilteredList = new FilteredList<>(produtosObservableList, p -> true);
-
-        tableviewProdutoDoSistema.setItems(produtosFilteredList);
-    }
-
     private boolean validarCliente() {
-
-        // Cliente registado
         if (venda.getCliente() != null) {
             venda.setNomeCliente(null);
             venda.setNuitCliente(null);
             return true;
         }
-
-        // Cliente não registado
         String nome = txtCliente.getText().trim();
         String nuit = txtNuit.getText().trim();
-
         if (nome.isEmpty()) {
             AlertaUtil.piscarVermelho(comboBoxClientenoSistema);
             AlertaUtil.piscarVermelho(txtCliente);
             return false;
         }
-
         if (nuit.isEmpty()) {
-            //consumidor final
             nuit = "6660002-Indefinido";
         }
-
         venda.setNomeCliente(nome);
         venda.setNuitCliente(nuit);
         venda.setCliente(null);
-
         return true;
     }
-
-    private void limparFormulario() {
-        venda = new Venda();
-        tableViewCarrinho.getItems().clear();
-        itemvendaObservableList.clear();
-        txtTotal.setText("0.00");
-        txtSubtotal.clear();
-        txtCliente.clear();
-        txtNuit.clear();
-        txtDinheiroPago.clear();
-        txtIVA.clear();
-        txtTroco.clear();
-        checkBoxVD.setSelected(false);
-        checkBoxIVA.setSelected(false);
-        checkBoxClienteNaoRegistado.setSelected(false);
-        comboBoxClientenoSistema.getSelectionModel().clearSelection();
-        comboboxFormapagamento.getSelectionModel().clearSelection();
-    }
-
-    private void imprimirVD(@NotNull Venda venda) {
-        //Integer idVenda = vendaSelecionada.getId();
-
-        String impressora = ConfigUtil.get("printer.default");
-
-        if (impressora == null || impressora.isBlank()) {
-            AlertaUtil.mostrarErro("", "Nenhuma impressora configurada!");
-            return;
-        }
-
-        try (Connection conn = ConexaoSQLite.getConnection()) {
-
-            JasperPrint print = RelatorioAPI.gerarVD(conn, venda.getIdVenda());
-
-            RelatorioAPI.imprimir(print, impressora);
-
-            AlertaUtil.mostrarInfo("", "VD enviada para impressão!");
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD");
-        }
-    }
-
-    private void mostrarFeedback() {
-
-        lbFeedBack.setText("Venda finalizada com sucesso");
-        lbFeedBack.setStyle(
-                "-fx-background-color:" + "#2ecc71" + ";" +
-                        "-fx-padding:12 30;" +
-                        "-fx-background-radius:8;" +
-                        "-fx-text-fill:white;" +
-                        "-fx-font-size:14px;"
-        );
-
-        lbFeedBack.setOpacity(1);
-        lbFeedBack.setVisible(true);
-
-        // Piscar 2 vezes
-        FadeTransition fade = new FadeTransition(Duration.seconds(3), lbFeedBack);
-        fade.setFromValue(1.0);
-        fade.setToValue(0.0);
-        fade.setCycleCount(3); // 2 piscas
-        fade.setAutoReverse(true);
-
-        fade.setOnFinished(e -> lbFeedBack.setVisible(false));
-
-        fade.play();
-    }
-
-}
+}**/

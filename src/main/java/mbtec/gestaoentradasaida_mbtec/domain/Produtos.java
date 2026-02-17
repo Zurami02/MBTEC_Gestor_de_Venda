@@ -1,19 +1,23 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
+
 public class Produtos {
     private int idproduto;
     private String descricao_produto;
     private int quantidade_produto;
-    private double preco;
+    private BigDecimal preco;
     private Categoria categoria;
 
-    public Produtos() {}
+    public Produtos() {
+        this.preco = BigDecimal.ZERO;
+    }
 
-    public Produtos(int idproduto, String descricao_produto, int quantidade_produto, double preco, Categoria categoria) {
+    public Produtos(int idproduto, String descricao_produto, int quantidade_produto, BigDecimal preco, Categoria categoria) {
         this.idproduto = idproduto;
         this.descricao_produto = descricao_produto;
         this.quantidade_produto = quantidade_produto;
-        this.preco = preco;
+        this.preco = preco != null ? preco : BigDecimal.ZERO;
         this.categoria = categoria;
     }
 
@@ -41,12 +45,12 @@ public class Produtos {
         this.quantidade_produto = quantidade_produto;
     }
 
-    public double getPreco() {
+    public BigDecimal getPreco() {
         return preco;
     }
 
-    public void setPreco(double preco) {
-        this.preco = preco;
+    public void setPreco(BigDecimal preco) {
+       this.preco = preco != null ? preco : BigDecimal.ZERO;
     }
 
     public Categoria getCategoria() {

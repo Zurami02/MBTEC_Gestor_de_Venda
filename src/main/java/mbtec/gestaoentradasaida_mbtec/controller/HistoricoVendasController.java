@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleDoubleProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -21,6 +22,7 @@ import mbtec.gestaoentradasaida_mbtec.service.*;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.jetbrains.annotations.NotNull;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.sql.Connection;
 import java.time.LocalDate;
@@ -48,7 +50,7 @@ public class HistoricoVendasController implements Initializable {
     private TableColumn<Itemvenda, String> colunaPrecoDetalheVenda;
 
     @FXML
-    private TableColumn<Itemvenda, Double> colunaDescontoDetalheVenda;
+    private TableColumn<Itemvenda, BigDecimal> colunaDescontoDetalheVenda;
 
     @FXML
     private TableColumn<Itemvenda, String> colunaProdutoDetalheVenda;
@@ -348,9 +350,9 @@ public class HistoricoVendasController implements Initializable {
         );
 
         colunaDescontoDetalheVenda.setCellValueFactory(cell ->
-                new SimpleDoubleProperty(
+                new ReadOnlyObjectWrapper<>(
                         cell.getValue().getDesconto()
-                ).asObject()
+                )
         );
     }
 }

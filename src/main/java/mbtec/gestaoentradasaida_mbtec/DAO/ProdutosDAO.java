@@ -23,7 +23,7 @@ public class ProdutosDAO {
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, produto.getDescricao_produto());
             stmt.setInt(2, produto.getQuantidade_produto());
-            stmt.setDouble(3, produto.getPreco());
+            stmt.setBigDecimal(3, produto.getPreco());
             stmt.setInt(4, produto.getCategoria().getIdcategoria());
             stmt.execute();
             return true;
@@ -70,7 +70,7 @@ public class ProdutosDAO {
                 produto.setIdproduto(resultado.getInt("idproduto"));
                 produto.setDescricao_produto(resultado.getString("descricao"));
                 produto.setQuantidade_produto(resultado.getInt("quantidade"));
-                produto.setPreco(resultado.getDouble("preco"));
+                produto.setPreco(resultado.getBigDecimal("preco"));
                 produto.setCategoria(categoria);
 
                 retorno.add(produto);
@@ -90,7 +90,7 @@ public class ProdutosDAO {
             //PreparedStatement stmt = connection.prepareStatement(sql);
             stmt.setString(1, produto.getDescricao_produto());
             stmt.setInt(2, produto.getQuantidade_produto());
-            stmt.setDouble(3, produto.getPreco());
+            stmt.setBigDecimal(3, produto.getPreco());
             stmt.setInt(4, produto.getCategoria().getIdcategoria());//observe
             stmt.setInt(5, produto.getIdproduto());
             stmt.execute();
@@ -133,7 +133,7 @@ public class ProdutosDAO {
                 produto.setIdproduto(resultado.getInt("idproduto"));
                 produto.setDescricao_produto(resultado.getString("descricao"));
                 produto.setQuantidade_produto(resultado.getInt("quantidade"));
-                produto.setPreco(resultado.getDouble("preco"));
+                produto.setPreco(resultado.getBigDecimal("preco"));
 
                 int idCategoria = resultado.getInt("idcategoria");
                 Categoria categoria = categoriasMap.get(idCategoria);

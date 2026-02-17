@@ -13,7 +13,6 @@
 <?import javafx.scene.layout.BorderPane?>
 <?import javafx.scene.text.Font?>
 
-
 <BorderPane xmlns="http://javafx.com/javafx/23.0.1" xmlns:fx="http://javafx.com/fxml/1" fx:controller="mbtec.gestaoentradasaida_mbtec.controller.TelaprincipalController">
    <top>
       <MenuBar BorderPane.alignment="CENTER">
@@ -125,7 +124,14 @@
                         </ImageView>
                      </graphic>
                   </MenuItem>
-                  <MenuItem mnemonicParsing="false" text="Orcamento" visible="false" />
+                  <MenuItem mnemonicParsing="false" onAction="#menuItemOrcamento" text="Orcamento">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/recibo-e-mudança-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic></MenuItem>
                   <MenuItem mnemonicParsing="false" text="Precificacao" visible="false" />
                   <MenuItem mnemonicParsing="false" onAction="#menuitemcadastroFluxodeCaixa" text="Fluxo de Caixa">
                      <graphic>
@@ -140,7 +146,7 @@
                      <graphic>
                         <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
                            <image>
-                              <Image url="@icones/product-management.png" />
+                              <Image url="@icones/icons8-grocery-store-48.png" />
                            </image>
                         </ImageView>
                      </graphic>
