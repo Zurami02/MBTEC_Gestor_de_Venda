@@ -43,6 +43,10 @@ public class Orcamento {
         return idorcamento;
     }
 
+    public void setIdorcamento(int idorcamento) {
+        this.idorcamento = idorcamento;
+    }
+
     public BigDecimal getTaxaIVA() {
         return taxaIVA != null ?taxaIVA : BigDecimal.ZERO;
     }

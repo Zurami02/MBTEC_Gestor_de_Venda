@@ -16,20 +16,20 @@ public class OrcamentoDAO {
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             DateTimeFormatter fmt = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
-            ps.setString(1, orc.getData().format(fmt));
+            ps.setString(6, orc.getData().format(fmt));
             ps.setString(2, orc.getNumero_orcamento());
             if (orc.getCliente() != null) {
                 ps.setInt(3, orc.getCliente().getIdcliente());
                 ps.setNull(4, Types.VARCHAR);
                 ps.setNull(5, Types.VARCHAR);
             } else {
-                ps.setNull(2, Types.INTEGER);
+                ps.setNull(3, Types.INTEGER);
                 ps.setString(4, orc.getCliente_nome());
                 ps.setString(5, orc.getNuit());
             }
 
-            ps.setBigDecimal(6, orc.getTotalComIVA());
-            ps.setInt(7, orc.getIdusuario());
+            ps.setBigDecimal(7, orc.getTotalComIVA());
+            ps.setInt(1, orc.getIdusuario());
 
             ps.executeUpdate();
 

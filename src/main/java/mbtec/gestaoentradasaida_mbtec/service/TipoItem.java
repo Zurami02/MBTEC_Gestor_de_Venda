@@ -18,4 +18,13 @@ public enum TipoItem {
     public String toString() {
         return descricao;
     }
+
+    public static TipoItem fromDescricao(String descricao) {
+        for (TipoItem tipo : values()) {
+            if (tipo.getDescricao().equalsIgnoreCase(descricao)) {
+                return tipo;
+            }
+        }
+        throw new IllegalArgumentException("TipoItem inválido: " + descricao);
+    }
 }

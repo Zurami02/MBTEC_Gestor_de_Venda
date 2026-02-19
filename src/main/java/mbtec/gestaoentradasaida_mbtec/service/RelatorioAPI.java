@@ -32,6 +32,9 @@ public class RelatorioAPI {
 
             params.put("SUBREPORT_DIR", subreportDir);
 
+            // Adiciona a referência da classe para localizar a imagem
+            params.put("REPORT_CLASS", RelatorioUtil.class);
+
             InputStream relatorio =
                     RelatorioAPI.class.getResourceAsStream(
                             "/relatoriosjasper/VD.jasper"

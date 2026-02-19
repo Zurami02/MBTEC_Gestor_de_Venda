@@ -21,6 +21,7 @@ import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.*;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.OrcamentoService;
 import mbtec.gestaoentradasaida_mbtec.service.TipoItem;
 
 import java.math.BigDecimal;
@@ -190,7 +191,15 @@ public class OrcamentoController implements Initializable {
     @FXML
     void btnOrcar(ActionEvent event) {
         if (!validarCliente()) return;
-
+        try {
+            OrcamentoService orcamentoService = new OrcamentoService();
+            orcamentoService.finalizarOrcamento(orcamento);
+            imprimirOrcamento(orcamento);
+           AlertaUtil.mostrarInfo("","OK!");
+            limparFormulario();
+        } catch (Exception e) {
+            AlertaUtil.mostrarErro("Erro", e.getMessage());
+        }
     }
 
     @FXML
@@ -567,6 +576,24 @@ public class OrcamentoController implements Initializable {
                 }
             }
         });
+
+    }
+
+    private void limparFormulario(){
+        orcamento = new Orcamento();
+        tableViewCarrinho.getItems().clear();
+        itemOrcamentoObservableList.clear();
+        txtSubtotal.clear();
+        txtCliente.clear();
+        txtIVA.clear();
+        txtNuit.clear();
+        comboBoxTipoDescricao.getSelectionModel().clearSelection();
+        comboBoxClientenoSistema.getSelectionModel().clearSelection();
+        checkBoxIVA.setSelected(false);
+
+    }
+
+    private void imprimirOrcamento(Orcamento orcamento){
 
     }
 }
