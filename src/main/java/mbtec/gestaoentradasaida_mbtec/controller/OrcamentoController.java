@@ -3,8 +3,10 @@ package mbtec.gestaoentradasaida_mbtec.controller;
 import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
 import javafx.event.ActionEvent;
@@ -195,7 +197,7 @@ public class OrcamentoController implements Initializable {
             OrcamentoService orcamentoService = new OrcamentoService();
             orcamentoService.finalizarOrcamento(orcamento);
             imprimirOrcamento(orcamento);
-           AlertaUtil.mostrarInfo("","OK!");
+            AlertaUtil.mostrarInfo("", "OK!");
             limparFormulario();
         } catch (Exception e) {
             AlertaUtil.mostrarErro("Erro", e.getMessage());
@@ -265,6 +267,10 @@ public class OrcamentoController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+        btnOrcar.disableProperty().bind(
+                Bindings.isEmpty(itemOrcamentoObservableList)
+        );
+
         LocalDate dataAtual = LocalDate.now();
         DateTimeFormatter dataFormatada = DateTimeFormatter.ofPattern("dd/MM/yyyy");
         String datareal = dataAtual.format(dataFormatada);
@@ -386,11 +392,6 @@ public class OrcamentoController implements Initializable {
             }
         });
 
-        tableViewCarrinho.focusModelProperty().addListener((obs,old, comItens)->{
-            if (comItens == null){
-                btnOrcar.setDisable(true);
-            }
-        });
     }
 
     private boolean validarCliente() {
@@ -427,10 +428,6 @@ public class OrcamentoController implements Initializable {
     private void atualizarValoresOrcamento() {
         NumberFormat nf = NumberFormat.getCurrencyInstance(Locale.of("pt", "MZ"));
         nf.setCurrency(Currency.getInstance("MZN"));
-        /**txtSubtotal.setText(nf.format(orcamento.getSubtotal()));
-        txtIVA.setText(nf.format(orcamento.getValorIva()));
-        txtTotal.setText(nf.format(orcamento.getTotal()));
-        lbTotalComIVA.setText("Total com IVA: " + nf.format(orcamento.getTotalComIVA()));**/
         txtSubtotal.setText(orcamento.getSubtotal().toString());
         txtIVA.setText(orcamento.getValorIva().toString());
         txtTotal.setText(orcamento.getTotalComIVA().toString());
@@ -522,21 +519,21 @@ public class OrcamentoController implements Initializable {
 
     /**private void listenerIVA() {
 
-        BigDecimal iva = ConfiguracaoDAO.buscarPorChave("IVA").getValor();
-        lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-        checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
-            if (marcado) {
-                BigDecimal taxa = new BigDecimal(iva).divide(new BigDecimal("100"));
-                orcamento.setTaxaIVA(taxa);
-                lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-            } else {
-                orcamento.setTaxaIVA(new BigDecimal("0.0"));
-            }
+     BigDecimal iva = ConfiguracaoDAO.buscarPorChave("IVA").getValor();
+     lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
+     checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
+     if (marcado) {
+     BigDecimal taxa = new BigDecimal(iva).divide(new BigDecimal("100"));
+     orcamento.setTaxaIVA(taxa);
+     lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
+     } else {
+     orcamento.setTaxaIVA(new BigDecimal("0.0"));
+     }
 
-            atualizarValoresOrcamento();
-        });
+     atualizarValoresOrcamento();
+     });
 
-    }**/
+     }**/
 
     private void listenerIVA() {
 
@@ -546,7 +543,7 @@ public class OrcamentoController implements Initializable {
 
         checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
             if (marcado) {
-                BigDecimal taxa = iva.divide(new BigDecimal("100"), RoundingMode.HALF_UP);
+                BigDecimal taxa = iva.divide(new BigDecimal("100"), 4, RoundingMode.HALF_UP);
                 orcamento.setTaxaIVA(taxa);
                 lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
             } else {
@@ -579,7 +576,7 @@ public class OrcamentoController implements Initializable {
 
     }
 
-    private void limparFormulario(){
+    private void limparFormulario() {
         orcamento = new Orcamento();
         tableViewCarrinho.getItems().clear();
         itemOrcamentoObservableList.clear();
@@ -593,7 +590,7 @@ public class OrcamentoController implements Initializable {
 
     }
 
-    private void imprimirOrcamento(Orcamento orcamento){
+    private void imprimirOrcamento(Orcamento orcamento) {
 
     }
 }

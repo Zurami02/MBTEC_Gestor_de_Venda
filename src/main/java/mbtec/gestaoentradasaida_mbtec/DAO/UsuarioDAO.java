@@ -47,12 +47,12 @@ public class UsuarioDAO {
         }
     }
 
-    public List<Usuario> listar(){
+    public List<Usuario> listar() {
         String sql = "SELECT * FROM usuario";
         List<Usuario> retorno = new ArrayList<>();
-        try(Connection connection = ConexaoSQLite.getConnection();
-            PreparedStatement stmt = connection.prepareStatement(sql);
-            ResultSet rs = stmt.executeQuery()) {
+        try (Connection connection = ConexaoSQLite.getConnection();
+             PreparedStatement stmt = connection.prepareStatement(sql);
+             ResultSet rs = stmt.executeQuery()) {
 
             while (rs.next()) {
                 retorno.add(criarUsuarioAPartirDoResultSet(rs));
@@ -64,18 +64,18 @@ public class UsuarioDAO {
         return retorno;
     }
 
-    public void remover(@NotNull Usuario usuario){
+    public void remover(@NotNull Usuario usuario) {
         String sql = "DELETE FROM usuario WHERE idusuario =?";
         try (Connection connection = ConexaoSQLite.getConnection();
-             PreparedStatement stmt = connection.prepareStatement(sql)){
-            stmt.setInt(1,usuario.getIdusuario());
+             PreparedStatement stmt = connection.prepareStatement(sql)) {
+            stmt.setInt(1, usuario.getIdusuario());
             stmt.execute();
         } catch (SQLException e) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, e);
         }
     }
 
-    public boolean atualizar(@NotNull Usuario usuario){
+    public boolean atualizar(@NotNull Usuario usuario) {
         String sql = "UPDATE usuario SET nome_usuario=?, sexo=?, data_nascimento=?, bilhete=?, email=?, telefone=?, cargo=?, " +
                 "salario=?, data_admissao=?, status=?, perfil=? WHERE idusuario=?";
 
@@ -147,7 +147,7 @@ public class UsuarioDAO {
             ResultSet rs = stmt.executeQuery();
 
             while (rs.next()) {
-                usuarios.add( criarUsuarioAPartirDoResultSet(rs));
+                usuarios.add(criarUsuarioAPartirDoResultSet(rs));
             }
         } catch (SQLException e) {
             Logger.getLogger(UsuarioDAO.class.getName()).log(Level.SEVERE, null, e);
@@ -195,10 +195,15 @@ public class UsuarioDAO {
 
     // Autenticar verificando também a senha
     public Usuario autenticar(String usuarioOuEmail, String senha) {
-        Usuario usuario = buscarPorUsuarioOuEmail(usuarioOuEmail);
-        if (usuario != null && BCrypt.checkpw(senha, usuario.getSenha())) {
-            atualizarUltimoAcesso(usuario.getIdusuario());
-            return usuario;
+        try {
+            Usuario usuario = buscarPorUsuarioOuEmail(usuarioOuEmail);
+            if (usuario != null && BCrypt.checkpw(senha, usuario.getSenha())) {
+                atualizarUltimoAcesso(usuario.getIdusuario());
+                return usuario;
+            }
+        } catch (Exception e) {
+            System.err.println("Erro ao autenticar usuário: " + e.getMessage());
+            e.printStackTrace();
         }
         return null;
     }
@@ -269,7 +274,7 @@ public class UsuarioDAO {
         return null;
     }
 
-    public boolean atualizarSenhaPorId(int idUsuario, String senhaCriptografada){
+    public boolean atualizarSenhaPorId(int idUsuario, String senhaCriptografada) {
         String sql = """
                 UPDATE usuario SET senha = ?
                 WHERE idusuario =?

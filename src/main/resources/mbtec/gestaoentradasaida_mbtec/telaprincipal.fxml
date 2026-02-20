@@ -182,6 +182,15 @@
                         </ImageView>
                      </graphic>
                   </MenuItem>
+                  <MenuItem mnemonicParsing="false" onAction="#menuitemRelatorioHistoricoOrcamento" text="Historico de Orçamento ">
+                     <graphic>
+                        <ImageView fitHeight="20.0" fitWidth="40.0" pickOnBounds="true" preserveRatio="true">
+                           <image>
+                              <Image url="@icones/icons8-report-50.png" />
+                           </image>
+                        </ImageView>
+                     </graphic>
+                  </MenuItem>
               </items>
             </Menu>
           <Menu fx:id="menuitemMBTEC" mnemonicParsing="false" onAction="#menuitemMBTEC" text="MBTEC">

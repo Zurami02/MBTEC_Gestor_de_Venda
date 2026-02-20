@@ -9,12 +9,22 @@ import mbtec.gestaoentradasaida_mbtec.domain.Usuario;
 
 import java.math.BigDecimal;
 import java.sql.Connection;
-import java.sql.SQLException;
+import java.time.LocalDate;
+import java.util.List;
 
 public class OrcamentoService {
 
-    private OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
-    private ItemOrcamentoDAO itemOrcamentoDAO = new ItemOrcamentoDAO();
+    private final OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
+    private final ItemOrcamentoDAO itemOrcamentoDAO = new ItemOrcamentoDAO();
+
+    public List<Orcamento> buscarOrcamento(LocalDate datainicial, LocalDate datafinal, String nomeCliente){
+        return orcamentoDAO.historicoOrcamento(datainicial, datafinal, nomeCliente);
+
+    }
+
+    public  List<ItemOrcamento> buscarItensOrc(int idOrcamento){
+        return itemOrcamentoDAO.listarPorOrcamento(idOrcamento);
+    }
 
     public static BigDecimal parsePreco(String valor) {
         if (valor == null || valor.isBlank()) return BigDecimal.ZERO;

@@ -16,6 +16,7 @@ public class Orcamento {
     private BigDecimal total;
     private BigDecimal taxaIVA;
     private int idusuario;
+    private BigDecimal valorIVA;
     List<ItemOrcamento> itens = new ArrayList<>();
 
     public Orcamento() {
@@ -109,6 +110,14 @@ public class Orcamento {
 
     public void setTotal(BigDecimal total) {
         this.total = total;
+    }
+
+    public BigDecimal getValorIVA() {
+        return valorIVA;
+    }
+
+    public void setValorIVA(BigDecimal valorIVA) {
+        this.valorIVA = valorIVA;
     }
 
     public void calculartotal(List<ItemOrcamento> itens) {

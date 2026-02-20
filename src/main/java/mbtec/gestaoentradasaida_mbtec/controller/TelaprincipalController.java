@@ -158,6 +158,11 @@ public class TelaprincipalController implements Initializable {
     }
 
     @FXML
+    void menuitemRelatorioHistoricoOrcamento(ActionEvent event){
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/historicoorcamento.fxml");
+    }
+
+    @FXML
     private Menu menuitemMBTEC;
 
     @FXML

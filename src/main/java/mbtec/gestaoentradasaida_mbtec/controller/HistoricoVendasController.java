@@ -323,11 +323,16 @@ public class HistoricoVendasController implements Initializable {
     }
 
     private void carregarTableViewItensvendas() {
-        colunaCodigoDetalheVenda.setCellValueFactory(cell ->
+        /**colunaCodigoDetalheVenda.setCellValueFactory(cell ->
                 new SimpleIntegerProperty(
                         cell.getValue().getProduto().getIdproduto()
                 ).asObject()
-        );
+        );**/
+        colunaCodigoDetalheVenda.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableViewDetalheVenda.getItems().indexOf(cell.getValue()) + 1));
+        colunaCodigoDetalheVenda.setSortable(false);
+
         colunaProdutoDetalheVenda.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getProduto().getDescricao_produto()
