@@ -17,8 +17,8 @@ public class VendaDAO {
     public int salvarVenda(Connection conn, @NotNull Venda venda) throws SQLException {
         String sql = """
                 INSERT INTO venda 
-                (datavenda, idcliente, nomecliente, nuitCliente, pago, taxaiva, valortotal, vd, numerovd, idusuario)
-                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+                (datavenda, idcliente, nomecliente, nuitCliente, pago, taxaiva, valortotal, vd, numerovd, idusuario, valoriva)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement ps = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
@@ -41,6 +41,7 @@ public class VendaDAO {
             ps.setBoolean(8, venda.isVd());
             ps.setString(9, venda.getNumerovd());
             ps.setInt(10, venda.getIdUsuario());
+            ps.setBigDecimal(11, venda.getValorIva());
 
             ps.executeUpdate();
 
@@ -67,6 +68,7 @@ public class VendaDAO {
                 v.taxaiva,
                 v.idcliente,
                 v.status,
+                v.valoriva,
                 c.nome AS nome_registado,
                 v.nomecliente AS nome_nao_registado,
                 v.nuitcliente
@@ -119,7 +121,8 @@ public class VendaDAO {
                 Venda venda = new Venda();
                 venda.setIdVenda(rs.getInt("idvenda"));
                 venda.setPago(rs.getBoolean("pago"));
-                venda.setTaxaIva(rs.getBigDecimal("taxaiva"));   // BigDecimal
+                venda.setTaxaIvaDB(rs.getBigDecimal("taxaiva"));
+                venda.setValorIVA(rs.getBigDecimal("valoriva"));
 
                 LocalDateTime dataPura = LocalDateTime.parse(rs.getString("datavenda").replace(" ", "T"));
                 venda.setDataVenda(dataPura.withNano(0));

@@ -301,6 +301,10 @@ public class TelaprincipalController implements Initializable {
         }
     }
 
+    /**
+     * Metodo para carregar as telas dos itens de MenuBar
+     * @param caminho
+     */
     private void carregarTela(String caminho){
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(caminho));

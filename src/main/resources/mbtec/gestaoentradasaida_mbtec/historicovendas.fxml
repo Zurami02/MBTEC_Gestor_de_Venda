@@ -83,7 +83,7 @@
          <children>
             <TableView fx:id="tableViewDetalheVenda" prefHeight="178.0" prefWidth="623.0">
                <columns>
-                  <TableColumn fx:id="colunaCodigoDetalheVenda" prefWidth="56.0" text="Codigo" />
+                  <TableColumn fx:id="colunaCodigoDetalheVenda" prefWidth="56.0" text="Item" />
                   <TableColumn fx:id="colunaProdutoDetalheVenda" prefWidth="161.0" text="Produto" />
                   <TableColumn fx:id="colunaQTDDetalheVenda" prefWidth="55.0" text="QTD" />
                   <TableColumn fx:id="colunaPrecoDetalheVenda" prefWidth="57.0" text="Preco" />

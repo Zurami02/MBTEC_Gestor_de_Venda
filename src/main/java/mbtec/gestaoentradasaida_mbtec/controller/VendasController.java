@@ -620,7 +620,6 @@ public class VendasController implements Initializable {
         });
     }
 
-    //Ainda nao funciona
     private void listenerAtualizarTabelaProdutosNoSistema() {
         Stage stage = new Stage();
         stage.focusedProperty().addListener((obs, old, atualizado) ->
@@ -758,7 +757,6 @@ public class VendasController implements Initializable {
     }
 
     private void imprimirVD(@NotNull Venda venda) {
-        //Integer idVenda = vendaSelecionada.getId();
 
         String impressora = ConfigUtil.get("printer.default");
 

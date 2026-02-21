@@ -29,6 +29,7 @@ public class Venda {
 
     private BigDecimal totalDb;
     private BigDecimal valorIVA;
+    private BigDecimal taxaIvaDB;
 
     public Venda() {
         this.dataVenda = LocalDateTime.now();
@@ -80,11 +81,13 @@ public class Venda {
     }
 
     public BigDecimal getValorIVA() {
-        return valorIVA != null ? valorIVA : BigDecimal.ZERO;
+        return valorIVA != null  ? valorIVA : BigDecimal.ZERO;
+
     }
 
     public void setValorIVA(BigDecimal valorIVA) {
         this.valorIVA = valorIVA;
+        System.out.println(valorIVA);
     }
 
     public BigDecimal getTotalDb() {
@@ -149,6 +152,14 @@ public class Venda {
 
     public void setPago(boolean pago) {
         this.pago = pago;
+    }
+
+    public BigDecimal getTaxaIvaDB() {
+        return taxaIvaDB;
+    }
+
+    public void setTaxaIvaDB(BigDecimal taxaIvaDB) {
+        this.taxaIvaDB = taxaIvaDB;
     }
 
     public BigDecimal getTaxaIva() {

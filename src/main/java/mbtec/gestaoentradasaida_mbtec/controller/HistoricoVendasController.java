@@ -61,7 +61,6 @@ public class HistoricoVendasController implements Initializable {
     @FXML
     private TableView<Itemvenda> tableViewDetalheVenda;
 
-
     @FXML
     private TableColumn<Venda, String> colunaDataVendaHistorico;
 
@@ -72,14 +71,13 @@ public class HistoricoVendasController implements Initializable {
     private TableColumn<Venda, Double> colunaTotalVendaHistorico;
 
     @FXML
-    private TableColumn<Venda, Double> colunaIVAVendaHistorico;
+    private TableColumn<Venda, BigDecimal> colunaIVAVendaHistorico;
 
     @FXML
     private TableColumn<Venda, String> colunaclienteVendaHistorico;
 
     @FXML
     private TableView<Venda> tableviewVendaHistorico;
-
 
     @FXML
     private DatePicker datPickerFinalHistorico;
@@ -152,7 +150,6 @@ public class HistoricoVendasController implements Initializable {
         carregarTableViewVendasHistorico();
         pintarAnulada();
     }
-
 
     @FXML
     void checkboxMarcado(ActionEvent event) {
@@ -227,6 +224,15 @@ public class HistoricoVendasController implements Initializable {
         );
         pintarAnulada();
         carregarItensVendaSelecionadaListener();
+
+        tableviewVendaHistorico.getSelectionModel().selectedItemProperty().addListener((obs, old, vendaselecionada)->
+        {
+            if (vendaselecionada != null){
+                System.out.println(vendaselecionada.getTaxaIva());
+                System.out.println("IVA db:" +vendaselecionada.getTaxaIvaDB().multiply(new BigDecimal("100"))+"%");
+                System.out.println(vendaselecionada.getSubtotal());
+            }
+        });
     }
 
     private void pintarAnulada() {
@@ -308,7 +314,7 @@ public class HistoricoVendasController implements Initializable {
         colunaDataVendaHistorico.setCellValueFactory(cell ->
                 new SimpleStringProperty(
                         cell.getValue().getDataVenda().format(DateTimeFormatter.ofPattern(
-                                "dd/MM/yyyy HH:HH"
+                                "dd/MM/yyyy HH:mm"
                         ))
                 )
         );
@@ -317,17 +323,14 @@ public class HistoricoVendasController implements Initializable {
                 new PropertyValueFactory<>("totalDb")
         );
 
-        colunaIVAVendaHistorico.setCellValueFactory(
-                new PropertyValueFactory<>("valorIVA")
+        colunaIVAVendaHistorico.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        cell.getValue().getValorIVA()
+                )
         );
     }
 
     private void carregarTableViewItensvendas() {
-        /**colunaCodigoDetalheVenda.setCellValueFactory(cell ->
-                new SimpleIntegerProperty(
-                        cell.getValue().getProduto().getIdproduto()
-                ).asObject()
-        );**/
         colunaCodigoDetalheVenda.setCellValueFactory(cell ->
                 new ReadOnlyObjectWrapper<>(
                         tableViewDetalheVenda.getItems().indexOf(cell.getValue()) + 1));

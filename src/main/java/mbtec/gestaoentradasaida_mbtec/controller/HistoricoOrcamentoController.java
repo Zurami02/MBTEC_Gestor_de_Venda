@@ -1,7 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -10,15 +9,10 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import mbtec.gestaoentradasaida_mbtec.DAO.ItemOrcamentoDAO;
-import mbtec.gestaoentradasaida_mbtec.DAO.OrcamentoDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.ItemOrcamento;
-import mbtec.gestaoentradasaida_mbtec.domain.Itemvenda;
 import mbtec.gestaoentradasaida_mbtec.domain.Orcamento;
-import mbtec.gestaoentradasaida_mbtec.domain.Venda;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 import mbtec.gestaoentradasaida_mbtec.service.OrcamentoService;
-import mbtec.gestaoentradasaida_mbtec.service.TipoItem;
 
 import java.math.BigDecimal;
 import java.net.URL;
@@ -30,13 +24,18 @@ import java.util.List;
 import java.util.Locale;
 import java.util.ResourceBundle;
 
+/**
+ * @version 1.1
+ * @author Mbtec, tecnico TI Zulo Rajabo Mitumba
+ * Metodo responsavel pela emissao de historico de orcamento
+ */
+
 public class HistoricoOrcamentoController implements Initializable {
     @FXML
     private AnchorPane anchorPaneMain;
 
     @FXML
     private CheckBox checkBoxPesqNomeHistorico;
-
 
     @FXML
     private TableColumn<Orcamento, Integer> colunaCodigoOrcHistorico;
@@ -52,7 +51,6 @@ public class HistoricoOrcamentoController implements Initializable {
 
     @FXML
     private TableColumn<Orcamento, String> colunaclienteOrcHistorico;
-
 
     @FXML
     private TableColumn<ItemOrcamento, Integer> colunaCodigoItemOrc;
@@ -91,15 +89,16 @@ public class HistoricoOrcamentoController implements Initializable {
     private TextField txtPesquisaNomeClienteHistorico;
 
     OrcamentoService service = new OrcamentoService();
-    OrcamentoDAO orcDAO = new OrcamentoDAO();
-    ItemOrcamentoDAO itemDAO = new ItemOrcamentoDAO();
-
 
     @FXML
     void btnImprimirOrcamento(ActionEvent event) {
 
     }
 
+    /**
+     * Metodo filtra data inicial, final ou por nome do cliente
+     * @param event
+     */
     @FXML
     void btnPesquisarOrcHistorico(ActionEvent event) {
         boolean porNome = checkBoxPesqNomeHistorico.isSelected();
