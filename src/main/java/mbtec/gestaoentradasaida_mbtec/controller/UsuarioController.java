@@ -19,6 +19,7 @@ import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.view.JasperViewer;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -134,9 +135,10 @@ public class UsuarioController implements Initializable {
                         !usuario.getEmail().equals(txtEmail.getText()) ||
                         !usuario.getTelefone().equals(txtTelefone.getText()) ||
                         !usuario.getCargo().equals(txtCargo.getText()) ||
-                        Math.abs(usuario.getSalario() - Double.parseDouble(txtSalario.getText())) > 0.0001 ||
+                        usuario.getSalario().subtract(new BigDecimal(txtSalario.getText()))
+                                .abs() .compareTo(new BigDecimal("0.0001")) > 0 ||
                         !LocalDate.parse(usuario.getData_admissao()).equals(datapickerDataAdmissao.getValue()) ||
-                        usuario.getStatus() != Integer.parseInt(txtEstado.getText()) ||
+                        !Objects.equals(usuario.getStatus(), txtEstado.getText()) ||
                         !usuario.getPerfil().equals(txtPerfil.getText());
 
         if (!houveAlteracao) {
@@ -151,9 +153,9 @@ public class UsuarioController implements Initializable {
         usuario.setEmail(txtEmail.getText());
         usuario.setTelefone(txtTelefone.getText());
         usuario.setCargo(txtCargo.getText());
-        usuario.setSalario(Double.parseDouble(txtSalario.getText()));
+        usuario.setSalario(new BigDecimal(txtSalario.getText()));
         usuario.setData_admissao(datapickerDataAdmissao.getValue().toString());
-        usuario.setStatus(Integer.parseInt(txtEstado.getText()));
+        usuario.setStatus(txtEstado.getText());
         usuario.setPerfil(txtPerfil.getText());
 
         usuarioDAO.atualizar(usuario);
@@ -203,18 +205,18 @@ public class UsuarioController implements Initializable {
             usuario.setEmail(txtEmail.getText());
             usuario.setTelefone(txtTelefone.getText());
             usuario.setCargo(txtCargo.getText());
-            usuario.setSalario(Double.parseDouble(txtSalario.getText()));
-            usuario.setStatus(Integer.parseInt(txtEstado.getText()));
+            usuario.setSalario(new BigDecimal(txtSalario.getText()));
+            usuario.setStatus(txtEstado.getText());
             usuario.setPerfil(txtPerfil.getText());
-            usuario.setUsuario(nomeUsuario);  // Utiliza o nome de usuário validado
+            usuario.setUsuario(nomeUsuario);
             usuario.setSenha(senha);  // A senha será criptografada no DAO
             usuario.setData_admissao(String.valueOf(datapickerDataAdmissao.getValue()));
 
             // Tenta inserir o usuário no banco de dados
             if (usuarioDAO.inserir(usuario)) {
                 AlertaUtil.mostrarInfo("Sucesso", "Usuário cadastrado com sucesso!");
-                limparCampos();  // Limpa os campos de entrada
-                carregarTableviewUsuario();  // Atualiza a tabela de usuários
+                limparCampos();
+                carregarTableviewUsuario();
             } else {
                 AlertaUtil.mostrarErro("Erro", "Erro ao cadastrar usuário.");
             }

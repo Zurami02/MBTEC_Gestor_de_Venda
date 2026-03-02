@@ -23,10 +23,10 @@ public class FluxodeCaixaDAO {
         try (Connection connection = ConexaoSQLite.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, fluxodeCaixa.getQuantidade());
-            stmt.setDouble(2, fluxodeCaixa.getValor());
+            stmt.setBigDecimal(2, fluxodeCaixa.getValor());
             stmt.setString(3, fluxodeCaixa.getData());
             stmt.setInt(4, fluxodeCaixa.getProduto().getIdproduto());
-            stmt.setDouble(5, fluxodeCaixa.getDesconto());
+            stmt.setBigDecimal(5, fluxodeCaixa.getDesconto());
             stmt.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
@@ -66,9 +66,9 @@ public class FluxodeCaixaDAO {
                 FluxodeCaixa fluxo = new FluxodeCaixa();
                 fluxo.setIdfluxocaixa(rs.getInt("idfluxocaixa"));
                 fluxo.setQuantidade(rs.getInt("quantidade"));
-                fluxo.setValor(rs.getDouble("valor"));
+                fluxo.setValor(rs.getBigDecimal("valor"));
                 fluxo.setData(rs.getString("data"));
-                fluxo.setDesconto(rs.getDouble("desconto"));
+                fluxo.setDesconto(rs.getBigDecimal("desconto"));
                 fluxo.setProduto(produto);
 
                 lista.add(fluxo);
@@ -97,10 +97,10 @@ public class FluxodeCaixaDAO {
         try (Connection connection = ConexaoSQLite.getConnection();
              PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setInt(1, fluxo.getQuantidade());
-            stmt.setDouble(2, fluxo.getValor());
+            stmt.setBigDecimal(2, fluxo.getValor());
             stmt.setString(3, fluxo.getData());
             stmt.setInt(4, fluxo.getProduto().getIdproduto());
-            stmt.setDouble(5, fluxo.getDesconto());
+            stmt.setBigDecimal(5, fluxo.getDesconto());
             stmt.setInt(6, fluxo.getIdfluxocaixa());
             stmt.executeUpdate();
         } catch (SQLException e) {
@@ -139,9 +139,9 @@ public class FluxodeCaixaDAO {
                 FluxodeCaixa fluxodeCaixa = new FluxodeCaixa();
                 fluxodeCaixa.setIdfluxocaixa(resultado.getInt("idfluxocaixa"));
                 fluxodeCaixa.setQuantidade(resultado.getInt("quantidade_fc"));
-                fluxodeCaixa.setValor(resultado.getDouble("valor"));
+                fluxodeCaixa.setValor(resultado.getBigDecimal("valor"));
                 fluxodeCaixa.setData(resultado.getString("data"));
-                fluxodeCaixa.setDesconto(resultado.getDouble("desconto"));
+                fluxodeCaixa.setDesconto(resultado.getBigDecimal("desconto"));
                 fluxodeCaixa.setProduto(produto);
 
                 fluxodeCaixas.add(fluxodeCaixa);
@@ -187,9 +187,9 @@ public class FluxodeCaixaDAO {
                 FluxodeCaixa fluxo = new FluxodeCaixa();
                 fluxo.setIdfluxocaixa(rs.getInt("idfluxocaixa"));
                 fluxo.setQuantidade(rs.getInt("quantidade"));
-                fluxo.setValor(rs.getDouble("valor"));
+                fluxo.setValor(rs.getBigDecimal("valor"));
                 fluxo.setData(rs.getString("data"));
-                fluxo.setDesconto(rs.getDouble("desconto"));
+                fluxo.setDesconto(rs.getBigDecimal("desconto"));
                 fluxo.setProduto(produto);
 
                 lista.add(fluxo);

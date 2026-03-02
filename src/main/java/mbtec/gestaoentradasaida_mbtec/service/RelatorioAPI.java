@@ -22,6 +22,12 @@ import java.util.Objects;
  */
 public class RelatorioAPI {
 
+    /**
+     * Impressao de Vd para venda
+     * @param conn
+     * @param idvenda
+     * @return
+     */
     public static JasperPrint gerarVD(Connection conn, Integer idvenda) {
         try {
             Map<String, Object> params = new HashMap<>();
@@ -48,6 +54,31 @@ public class RelatorioAPI {
 
         } catch (JRException e) {
             throw new RuntimeException("Falha ao gerar relatório VD", e);
+        }
+    }
+
+    /**
+     * Gera relatório de Orçamento
+     */
+    public static JasperPrint gerarOrcamento(Connection conn, Integer idOrcamento) {
+        try {
+            Map<String, Object> params = new HashMap<>();
+            params.put("idorcamento", idOrcamento);
+
+            params.put("REPORT_CLASS", RelatorioAPI.class);
+
+            InputStream relatorio = RelatorioAPI.class.getResourceAsStream(
+                    "/relatoriosjasper/Orcamento.jasper"
+            );
+
+            if (relatorio == null) {
+                throw new RuntimeException("Orcamento.jasper não encontrado");
+            }
+
+            return JasperFillManager.fillReport(relatorio, params, conn);
+
+        } catch (JRException e) {
+            throw new RuntimeException("Falha ao gerar relatório de Orçamento", e);
         }
     }
 
@@ -79,5 +110,77 @@ public class RelatorioAPI {
         exporter.setConfiguration(config);
 
         exporter.exportReport();
+    }
+
+    /**
+     * Imprime VD usando a impressora configurada (80mm)
+     */
+    public static void imprimirVD(JasperPrint print) throws JRException {
+        String impressora = ConfigUtil.getImpressoraVenda();
+
+        if (impressora == null || impressora.isEmpty()) {
+            throw new RuntimeException(
+                    "Impressora para vendas não configurada. " +
+                            "Configure em: Configurações > Impressoras"
+            );
+        }
+
+        imprimir(print, impressora);
+    }
+
+    /**
+     * Imprime Orçamento usando a impressora configurada (A4)
+     */
+    public static void imprimirOrcamento(JasperPrint print) throws JRException {
+        String impressora = ConfigUtil.getImpressoraOrcamento();
+
+        if (impressora == null || impressora.isEmpty()) {
+            throw new RuntimeException(
+                    "Impressora para orçamentos não configurada. " +
+                            "Configure em: Configurações > Impressoras"
+            );
+        }
+
+        imprimir(print, impressora);
+    }
+
+    /**
+     * Imprime Relatório usando a impressora configurada (A4)
+     */
+    public static void imprimirRelatorio(JasperPrint print) throws JRException {
+        String impressora = ConfigUtil.getImpressoraRelatorio();
+
+        if (impressora == null || impressora.isEmpty()) {
+            throw new RuntimeException(
+                    "Impressora para relatórios não configurada. " +
+                            "Configure em: Configurações > Impressoras"
+            );
+        }
+
+        imprimir(print, impressora);
+    }
+
+    /**
+     * Gera e imprime VD em um único método
+     */
+    public static void gerarEImprimirVD(Connection conn, Integer idvenda) {
+        try {
+            JasperPrint print = gerarVD(conn, idvenda);
+            imprimirVD(print);
+        } catch (JRException e) {
+            throw new RuntimeException("Erro ao imprimir venda", e);
+        }
+    }
+
+    /**
+     * Gera e imprime Orçamento em um único método
+     */
+    public static void gerarEImprimirOrcamento(Connection conn, Integer idOrcamento) {
+        try {
+            JasperPrint print = gerarOrcamento(conn, idOrcamento);
+            imprimirOrcamento(print);
+        } catch (JRException e) {
+            throw new RuntimeException("Erro ao imprimir orçamento", e);
+        }
     }
 }

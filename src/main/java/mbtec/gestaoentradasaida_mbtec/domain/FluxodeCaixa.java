@@ -6,9 +6,9 @@ public class FluxodeCaixa {
     private int idfluxocaixa;
     private String descricao_produto;
     private int quantidade;
-    private double valor;
+    private BigDecimal valor;
     private String data;
-    private double desconto;
+    private BigDecimal desconto;
 
     private int idproduto;//comunicacao a banco de dados.
     private Produtos produto;//somente para exibicao na tela.
@@ -19,7 +19,7 @@ public class FluxodeCaixa {
     }
 
     public FluxodeCaixa(int idfluxocaixa, String descricao_produto, int quantidade,
-                        double valor, String data, double desconto, int idproduto, Produtos produto) {
+                        BigDecimal valor, String data, BigDecimal desconto, int idproduto, Produtos produto) {
         this.idfluxocaixa = idfluxocaixa;
         this.descricao_produto = descricao_produto;
         this.quantidade = quantidade;
@@ -38,11 +38,11 @@ public class FluxodeCaixa {
         this.categoria = categoria;
     }
 
-    public double getDesconto() {
-        return desconto;
+    public BigDecimal getDesconto() {
+        return desconto != null ? desconto : BigDecimal.ZERO;
     }
 
-    public void setDesconto(double desconto) {
+    public void setDesconto(BigDecimal desconto) {
         this.desconto = desconto;
     }
 
@@ -66,11 +66,11 @@ public class FluxodeCaixa {
         this.quantidade = quantidade;
     }
 
-    public double getValor() {
-        return valor;
+    public BigDecimal getValor() {
+        return valor != null ? valor : BigDecimal.ZERO;
     }
 
-    public void setValor(double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 
@@ -102,15 +102,15 @@ public class FluxodeCaixa {
         return produto != null ? produto.getPreco() : BigDecimal.ZERO;
     }
 
-    public int getIdcategoria(){
+    public int getIdcategoria() {
         return categoria != null ? categoria.getIdcategoria() : 0;
     }
 
-    public String getDescricao_categoria(){
-        return categoria != null? categoria.getDescricao_categoria() : null;
+    public String getDescricao_categoria() {
+        return categoria != null ? categoria.getDescricao_categoria() : null;
     }
 
-    public String getDescricao_produto(){
+    public String getDescricao_produto() {
         return produto != null ? produto.getDescricao_produto() : descricao_produto;
     }
 

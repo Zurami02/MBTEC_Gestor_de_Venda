@@ -1,5 +1,7 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
+
 public class Usuario {
     private int idusuario;
     private String nome_usuario;
@@ -9,9 +11,9 @@ public class Usuario {
     private String email;
     private String telefone;
     private String cargo;
-    private double salario;
+    private BigDecimal salario;
     private String data_admissao;
-    private int status;
+    private String status;
     private String perfil;
     private String usuario;
     private String senha;
@@ -21,8 +23,8 @@ public class Usuario {
     }
 
     public Usuario(int idusuario, String nome_usuario, String sexo, String data_nascimento,
-                   String bilhete, String email, String telefone, String cargo, double salario, String data_admissao,
-                   int status, String perfil, String usuario, String senha, String ultimo_acesso) {
+                   String bilhete, String email, String telefone, String cargo, BigDecimal salario, String data_admissao,
+                   String status, String perfil, String usuario, String senha, String ultimo_acesso) {
         this.idusuario = idusuario;
         this.nome_usuario = nome_usuario;
         this.sexo = sexo;
@@ -104,11 +106,11 @@ public class Usuario {
         this.cargo = cargo;
     }
 
-    public double getSalario() {
-        return salario;
+    public BigDecimal getSalario() {
+        return salario != null ? salario : BigDecimal.ZERO;
     }
 
-    public void setSalario(double salario) {
+    public void setSalario(BigDecimal salario) {
         this.salario = salario;
     }
 
@@ -120,11 +122,11 @@ public class Usuario {
         this.data_admissao = dat_admissao;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 

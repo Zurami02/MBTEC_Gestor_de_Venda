@@ -24,7 +24,7 @@ public class PagamentoDAO {
                     DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
             ps.setInt(1, p.getVenda().getIdVenda());
-            ps.setDouble(2, p.getValorPagamento());
+            ps.setBigDecimal(2, p.getValorPagamento());
             ps.setString(3, p.getFormaPagamento());
             ps.setString(4, p.getDataPagamento().format(fmt));
 

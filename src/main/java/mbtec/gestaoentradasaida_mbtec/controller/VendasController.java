@@ -298,9 +298,9 @@ public class VendasController implements Initializable {
             return;
         }
 
-        double valorPagamento;
+        BigDecimal valorPagamento;
         try {
-            valorPagamento = Double.parseDouble(valorPago);
+            valorPagamento = new BigDecimal(valorPago);
         } catch (NumberFormatException e) {
             AlertaUtil.mostrarErro("Erro", "Valor pago inválido");
             return;
@@ -758,7 +758,7 @@ public class VendasController implements Initializable {
 
     private void imprimirVD(@NotNull Venda venda) {
 
-        String impressora = ConfigUtil.get("printer.default");
+        String impressora = ConfigUtil1.get("printer.default");
 
         if (impressora == null || impressora.isBlank()) {
             AlertaUtil.mostrarErro("", "Nenhuma impressora configurada!");

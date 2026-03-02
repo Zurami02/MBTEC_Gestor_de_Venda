@@ -9,13 +9,16 @@ import javafx.fxml.Initializable;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.ItemOrcamento;
 import mbtec.gestaoentradasaida_mbtec.domain.Orcamento;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 import mbtec.gestaoentradasaida_mbtec.service.OrcamentoService;
+import mbtec.gestaoentradasaida_mbtec.service.RelatorioAPI;
 
 import java.math.BigDecimal;
 import java.net.URL;
+import java.sql.Connection;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -25,9 +28,9 @@ import java.util.Locale;
 import java.util.ResourceBundle;
 
 /**
- * @version 1.1
  * @author Mbtec, tecnico TI Zulo Rajabo Mitumba
  * Metodo responsavel pela emissao de historico de orcamento
+ * @version 1.1
  */
 
 public class HistoricoOrcamentoController implements Initializable {
@@ -92,11 +95,13 @@ public class HistoricoOrcamentoController implements Initializable {
 
     @FXML
     void btnImprimirOrcamento(ActionEvent event) {
-
+        Orcamento orc = tableviewOrcHistorico.getSelectionModel().getSelectedItem();
+        imprimirOrcamento(orc);
     }
 
     /**
      * Metodo filtra data inicial, final ou por nome do cliente
+     *
      * @param event
      */
     @FXML
@@ -256,5 +261,16 @@ public class HistoricoOrcamentoController implements Initializable {
         tableViewItemOrc.setItems(
                 FXCollections.observableArrayList(itens)
         );
+    }
+
+    private void imprimirOrcamento(Orcamento orcamento) {
+        try (Connection conn = ConexaoSQLite.getConnection()) {
+            RelatorioAPI.gerarEImprimirOrcamento(conn, orcamento.getIdorcamento());
+            AlertaUtil.mostrarInfo("", "Orcamento enviado para impressão!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
+        }
     }
 }

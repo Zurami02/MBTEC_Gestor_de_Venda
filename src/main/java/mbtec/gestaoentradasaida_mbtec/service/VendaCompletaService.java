@@ -3,6 +3,7 @@ package mbtec.gestaoentradasaida_mbtec.service;
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.Venda;
 
+import java.math.BigDecimal;
 import java.sql.Connection;
 
 public class VendaCompletaService {
@@ -10,7 +11,7 @@ public class VendaCompletaService {
     private final VendaService vendaService = new VendaService();
     private final PagamentoService pagamentoService = new PagamentoService();
 
-    public void finalizarVendaComPagamento(Venda venda, double valor, String forma) throws Exception {
+    public void finalizarVendaComPagamento(Venda venda, BigDecimal valor, String forma) throws Exception {
         Connection conn = null;
         try {
             conn = ConexaoSQLite.getConnection();

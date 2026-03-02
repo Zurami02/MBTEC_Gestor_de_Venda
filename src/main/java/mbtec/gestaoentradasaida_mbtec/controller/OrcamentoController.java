@@ -21,14 +21,15 @@ import javafx.util.StringConverter;
 import mbtec.gestaoentradasaida_mbtec.DAO.ClienteDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ConfiguracaoDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
+import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.*;
-import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
-import mbtec.gestaoentradasaida_mbtec.service.OrcamentoService;
-import mbtec.gestaoentradasaida_mbtec.service.TipoItem;
+import mbtec.gestaoentradasaida_mbtec.service.*;
+import net.sf.jasperreports.engine.JasperPrint;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.net.URL;
+import java.sql.Connection;
 import java.text.NumberFormat;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -70,7 +71,6 @@ public class OrcamentoController implements Initializable {
 
     @FXML
     private TableColumn<ItemOrcamento, String> colunaDescricaoItens;
-
 
     @FXML
     private TableColumn<ItemOrcamento, BigDecimal> colunaPrecoItens;
@@ -517,23 +517,25 @@ public class OrcamentoController implements Initializable {
         tableviewProdutoDoSistema.getSelectionModel().clearSelection();
     }
 
-    /**private void listenerIVA() {
-
-     BigDecimal iva = ConfiguracaoDAO.buscarPorChave("IVA").getValor();
-     lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-     checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
-     if (marcado) {
-     BigDecimal taxa = new BigDecimal(iva).divide(new BigDecimal("100"));
-     orcamento.setTaxaIVA(taxa);
-     lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-     } else {
-     orcamento.setTaxaIVA(new BigDecimal("0.0"));
-     }
-
-     atualizarValoresOrcamento();
-     });
-
-     }**/
+    /**
+     * private void listenerIVA() {
+     * <p>
+     * BigDecimal iva = ConfiguracaoDAO.buscarPorChave("IVA").getValor();
+     * lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
+     * checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
+     * if (marcado) {
+     * BigDecimal taxa = new BigDecimal(iva).divide(new BigDecimal("100"));
+     * orcamento.setTaxaIVA(taxa);
+     * lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
+     * } else {
+     * orcamento.setTaxaIVA(new BigDecimal("0.0"));
+     * }
+     * <p>
+     * atualizarValoresOrcamento();
+     * });
+     * <p>
+     * }
+     **/
 
     private void listenerIVA() {
 
@@ -591,6 +593,13 @@ public class OrcamentoController implements Initializable {
     }
 
     private void imprimirOrcamento(Orcamento orcamento) {
+            try (Connection conn = ConexaoSQLite.getConnection()) {
+                RelatorioAPI.gerarEImprimirOrcamento(conn, orcamento.getIdorcamento());
+                AlertaUtil.mostrarInfo("", "Orcamento enviado para impressão!");
 
+            } catch (Exception e) {
+                e.printStackTrace();
+                AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
+            }
     }
 }

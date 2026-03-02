@@ -13,6 +13,7 @@ import mbtec.gestaoentradasaida_mbtec.domain.GestaoES;
 import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -26,7 +27,7 @@ public class RelatorioGestaoController implements Initializable {
     private TableColumn<GestaoES, Integer> colunaQTDTableviewgestao;
 
     @FXML
-    private TableColumn<GestaoES, Double> colunaValorTableviewgestao;
+    private TableColumn<GestaoES, BigDecimal> colunaValorTableviewgestao;
 
     @FXML
     private TableColumn<GestaoES, String> colunadataTableviewgestao;
@@ -156,7 +157,7 @@ public class RelatorioGestaoController implements Initializable {
         colunaValorTableviewgestao.setCellValueFactory(new PropertyValueFactory<>("valor"));
         colunaValorTableviewgestao.setCellFactory(column -> new TableCell<>() {
             @Override
-            protected void updateItem(Double valor, boolean empty) {
+            protected void updateItem(BigDecimal valor, boolean empty) {
                 super.updateItem(valor, empty);
                 if (empty || valor == null) {
                     setText(null);

@@ -1,12 +1,13 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Pagamento {
     private int idpagamento;
     private Venda venda;
-    private double valorPagamento;
+    private BigDecimal valorPagamento;
     private String formaPagamento;
     private LocalDateTime dataPagamento;
 
@@ -16,7 +17,7 @@ public class Pagamento {
         this.dataPagamento = LocalDateTime.now();
     }
 
-    public Pagamento(int idpagamento, Venda venda, double valorPagamento, String formaPagamento, LocalDateTime dataPagamento) {
+    public Pagamento(int idpagamento, Venda venda, BigDecimal valorPagamento, String formaPagamento, LocalDateTime dataPagamento) {
         this.idpagamento = idpagamento;
         this.venda = venda;
         this.valorPagamento = valorPagamento;
@@ -40,11 +41,11 @@ public class Pagamento {
         this.venda = venda;
     }
 
-    public double getValorPagamento() {
-        return valorPagamento;
+    public BigDecimal getValorPagamento() {
+        return valorPagamento != null ? valorPagamento : BigDecimal.ZERO;
     }
 
-    public void setValorPagamento(double valorPagamento) {
+    public void setValorPagamento(BigDecimal valorPagamento) {
         this.valorPagamento = valorPagamento;
     }
 

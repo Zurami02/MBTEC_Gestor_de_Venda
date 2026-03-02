@@ -1,8 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
 import javafx.beans.property.ReadOnlyObjectWrapper;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.event.ActionEvent;
@@ -258,7 +256,7 @@ public class HistoricoVendasController implements Initializable {
 
     private void imprimirVD(@NotNull Venda venda) {
 
-        String impressora = ConfigUtil.get("printer.default");
+        String impressora = ConfigUtil1.get("printer.default");
 
         if (impressora == null || impressora.isBlank()) {
             AlertaUtil.mostrarErro("", "Nenhuma impressora configurada!");

@@ -17,12 +17,12 @@ public class OrcamentoService {
     private final OrcamentoDAO orcamentoDAO = new OrcamentoDAO();
     private final ItemOrcamentoDAO itemOrcamentoDAO = new ItemOrcamentoDAO();
 
-    public List<Orcamento> buscarOrcamento(LocalDate datainicial, LocalDate datafinal, String nomeCliente){
+    public List<Orcamento> buscarOrcamento(LocalDate datainicial, LocalDate datafinal, String nomeCliente) {
         return orcamentoDAO.historicoOrcamento(datainicial, datafinal, nomeCliente);
 
     }
 
-    public  List<ItemOrcamento> buscarItensOrc(int idOrcamento){
+    public List<ItemOrcamento> buscarItensOrc(int idOrcamento) {
         return itemOrcamentoDAO.listarPorOrcamento(idOrcamento);
     }
 
@@ -31,14 +31,14 @@ public class OrcamentoService {
         return new BigDecimal(valor.replace(",", "."));
     }
 
-    public void finalizarOrcamento(Orcamento orcamento) throws Exception{
+    public void finalizarOrcamento(Orcamento orcamento) throws Exception {
         Connection conn = null;
         try {
             conn = ConexaoSQLite.getConnection();
             conn.setAutoCommit(false);
 
             int proximoNumero = orcamentoDAO.buscarProximoNumeroOrcamento(conn);
-            String numeroOrcamento = "orc-" + String.format("%06d", proximoNumero);
+            String numeroOrcamento = String.format("%04d", proximoNumero) + "/" + LocalDate.now().getYear();
             orcamento.setNumero_orcamento(numeroOrcamento);
             Usuario u = UsuarioNoSistema.getInstance().getUsuarioLogado();
             orcamento.setIdusuario(u.getIdusuario());
@@ -50,7 +50,7 @@ public class OrcamentoService {
                 itemOrcamentoDAO.salvarItemOrcamento(conn, idorcamento, item);
             }
             conn.commit();
-        }catch (Exception e) {
+        } catch (Exception e) {
             if (conn != null) conn.rollback();
             throw e;
         } finally {

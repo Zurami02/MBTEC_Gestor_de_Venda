@@ -14,6 +14,7 @@ import mbtec.gestaoentradasaida_mbtec.domain.FluxodeCaixa;
 import mbtec.gestaoentradasaida_mbtec.service.RelatorioUtil;
 
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -27,7 +28,7 @@ public class RelatorioFluxoController implements Initializable {
     private TableColumn<FluxodeCaixa, String> colunaDatatableviewRelatorio;
 
     @FXML
-    private TableColumn<FluxodeCaixa, Double> colunaDescontotableviewRelatorio;
+    private TableColumn<FluxodeCaixa, BigDecimal> colunaDescontotableviewRelatorio;
 
     @FXML
     private TableColumn<FluxodeCaixa, String> colunaProdutotableviewRelatorio;
@@ -36,7 +37,7 @@ public class RelatorioFluxoController implements Initializable {
     private TableColumn<FluxodeCaixa, Integer> colunaQuantidadetableviewRelatorio;
 
     @FXML
-    private TableColumn<FluxodeCaixa, Double> colunaValortableviewRelatorio;
+    private TableColumn<FluxodeCaixa, BigDecimal> colunaValortableviewRelatorio;
 
     @FXML
     private TableView<FluxodeCaixa> tableviewRelatorio;
@@ -134,7 +135,7 @@ public class RelatorioFluxoController implements Initializable {
         colunaValortableviewRelatorio.setCellValueFactory(new PropertyValueFactory<>("preco"));
         colunaValortableviewRelatorio.setCellFactory(column -> new TableCell<>() {
             @Override
-            protected void updateItem(Double valor, boolean empty) {
+            protected void updateItem(BigDecimal valor, boolean empty) {
                 super.updateItem(valor, empty);
                 if (empty || valor == null) {
                     setText(null);

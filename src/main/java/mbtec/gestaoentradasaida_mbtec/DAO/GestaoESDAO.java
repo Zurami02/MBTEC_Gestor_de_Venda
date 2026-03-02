@@ -24,7 +24,7 @@ public class GestaoESDAO {
             stmt.setString(2, gestaoES.getPlanoconta());
             stmt.setString(3, gestaoES.getDescricao());
             stmt.setInt(4, gestaoES.getQuantidade());
-            stmt.setDouble(5, gestaoES.getValor());
+            stmt.setBigDecimal(5, gestaoES.getValor());
             stmt.execute();
             return true;
         } catch (SQLException e) {
@@ -47,7 +47,7 @@ public class GestaoESDAO {
                 gestaoES.setPlanoconta(resultado.getString("planoconta"));
                 gestaoES.setDescricao(resultado.getString("descricao"));
                 gestaoES.setQuantidade(resultado.getInt("quantidade"));
-                gestaoES.setValor(resultado.getDouble("valor"));
+                gestaoES.setValor(resultado.getBigDecimal("valor"));
                 retorno.add(gestaoES);
             }
         } catch (SQLException e) {
@@ -65,7 +65,7 @@ public class GestaoESDAO {
             stmt.setString(2, gestaoES.getPlanoconta());
             stmt.setString(3, gestaoES.getDescricao());
             stmt.setInt(4, gestaoES.getQuantidade());
-            stmt.setDouble(5, gestaoES.getValor());
+            stmt.setBigDecimal(5, gestaoES.getValor());
             stmt.setInt(6, gestaoES.getIdgestao());
             stmt.execute();
             return true;
@@ -103,7 +103,7 @@ public class GestaoESDAO {
                 retorno.setPlanoconta(resultado.getString("planoconta"));
                 retorno.setDescricao(resultado.getString("descricao"));
                 retorno.setQuantidade(resultado.getInt("quantidade"));
-                retorno.setValor(resultado.getDouble("valor"));
+                retorno.setValor(resultado.getBigDecimal("valor"));
             }
         } catch (SQLException ex) {
             Logger.getLogger(GestaoESDAO.class.getName()).log(Level.SEVERE, null, ex);
@@ -128,7 +128,7 @@ public class GestaoESDAO {
                 gestaoES.setPlanoconta(resultado.getString("planoconta"));
                 gestaoES.setDescricao(resultado.getString("descricao"));
                 gestaoES.setQuantidade(resultado.getInt("quantidade"));
-                gestaoES.setValor(resultado.getDouble("valor"));
+                gestaoES.setValor(resultado.getBigDecimal("valor"));
                 gestaoESList.add(gestaoES);
             }
         } catch (SQLException ex) {
@@ -159,7 +159,7 @@ public class GestaoESDAO {
                 gestaoES.setPlanoconta(rs.getString("planoconta"));
                 gestaoES.setDescricao(rs.getString("descricao"));
                 gestaoES.setQuantidade(rs.getInt("quantidade"));
-                gestaoES.setValor(rs.getDouble("valor"));
+                gestaoES.setValor(rs.getBigDecimal("valor"));
 
                 lista.add(gestaoES);
             }

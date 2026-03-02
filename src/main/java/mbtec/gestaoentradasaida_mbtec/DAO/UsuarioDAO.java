@@ -28,9 +28,9 @@ public class UsuarioDAO {
             stmt.setString(5, usuario.getEmail());
             stmt.setString(6, usuario.getTelefone());
             stmt.setString(7, usuario.getCargo());
-            stmt.setDouble(8, usuario.getSalario());
+            stmt.setBigDecimal(8, usuario.getSalario());
             stmt.setString(9, usuario.getData_admissao());
-            stmt.setInt(10, usuario.getStatus());
+            stmt.setString(10, usuario.getStatus());
             stmt.setString(11, usuario.getPerfil());
             stmt.setString(12, usuario.getUsuario());
 
@@ -90,9 +90,9 @@ public class UsuarioDAO {
             stmt.setString(5, usuario.getEmail());
             stmt.setString(6, usuario.getTelefone());
             stmt.setString(7, usuario.getCargo());
-            stmt.setDouble(8, usuario.getSalario());
+            stmt.setBigDecimal(8, usuario.getSalario());
             stmt.setString(9, usuario.getData_admissao());
-            stmt.setInt(10, usuario.getStatus());
+            stmt.setString(10, usuario.getStatus());
             stmt.setString(11, usuario.getPerfil());
             stmt.setInt(12, usuario.getIdusuario());
             stmt.execute();
@@ -234,8 +234,8 @@ public class UsuarioDAO {
         usuario.setEmail(rs.getString("email"));
         usuario.setTelefone(rs.getString("telefone"));
         usuario.setCargo(rs.getString("cargo"));
-        usuario.setSalario(rs.getDouble("salario"));
-        usuario.setStatus(rs.getInt("status"));
+        usuario.setSalario(rs.getBigDecimal("salario"));
+        usuario.setStatus(rs.getString("status"));
         usuario.setPerfil(rs.getString("perfil"));
         usuario.setUsuario(rs.getString("usuario"));
         usuario.setSenha(rs.getString("senha"));

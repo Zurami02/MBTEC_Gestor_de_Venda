@@ -13,6 +13,7 @@ import mbtec.gestaoentradasaida_mbtec.domain.Fornecedores;
 import mbtec.gestaoentradasaida_mbtec.DAO.FornecedoresDAO;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -33,7 +34,7 @@ public class CadastroFornecedorController implements Initializable {
     private TableColumn<Fornecedores, Integer> colunaquantidadeFornecedor;
 
     @FXML
-    private TableColumn<Fornecedores, Double> colunaprecoFornecedor;
+    private TableColumn<Fornecedores, BigDecimal> colunaprecoFornecedor;
 
     @FXML
     private TableView<Fornecedores> tableviewFornecedor;
@@ -133,7 +134,7 @@ public class CadastroFornecedorController implements Initializable {
             String fornecedorNovo = txtFornecedor.getText().trim();
             String dProdutoNovo = txtdescricaoFornecedor.getText().trim();
             int quantidadeNova = Integer.parseInt(txtquantidadeDPFornecedor.getText());
-            double precoNovo = Double.parseDouble(txtprecoFornecedor.getText());
+            BigDecimal precoNovo = new BigDecimal(txtprecoFornecedor.getText());
 
             // Verifica se já existe outro registro com mesma combinação fornecedor + descrição
             if (fornecedoresDAO.existeOutroCombinacao(fornecedorNovo, dProdutoNovo, idAtual)) {
@@ -155,7 +156,7 @@ public class CadastroFornecedorController implements Initializable {
                     !fornecedorAtual.equals(fornecedorNovo) ||
                             !dProdutoAtual.equals(dProdutoNovo) ||
                             fornecedores.getQuantidade() != quantidadeNova ||
-                            fornecedores.getPreco() != precoNovo;
+                            fornecedores.getPreco().compareTo(precoNovo) != 0;
 
             if (houveAlteracao) {
                 // Atualiza o objeto
@@ -210,7 +211,7 @@ public class CadastroFornecedorController implements Initializable {
             fornecedores.setDescricaoProduto(txtdescricaoFornecedor.getText());
             fornecedores.setQuantidade(Integer.parseInt(txtquantidadeDPFornecedor.getText()));
             fornecedores.setFornecedor((txtFornecedor.getText()));
-            fornecedores.setPreco(Double.parseDouble(txtprecoFornecedor.getText()));
+            fornecedores.setPreco(new BigDecimal(txtprecoFornecedor.getText()));
             fornecedoresDAO.inserir(fornecedores);
             limparCampos();
             carregarTableViewFornecedores();

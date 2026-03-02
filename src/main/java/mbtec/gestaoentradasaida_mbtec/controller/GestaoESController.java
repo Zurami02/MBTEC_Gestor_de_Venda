@@ -13,6 +13,7 @@ import mbtec.gestaoentradasaida_mbtec.DAO.GestaoESDAO;
 import mbtec.gestaoentradasaida_mbtec.domain.GestaoES;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 
+import java.math.BigDecimal;
 import java.net.URL;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -85,7 +86,7 @@ public class GestaoESController implements Initializable {
                             getResourceAsStream("/mbtec/gestaoentradasaida_mbtec/icones/mbtecShort.png")))
             );
             alert.showAndWait();
-        }else{
+        } else {
             AlertaUtil.mostrarErro("Erro de pesquisa", "Campo de pesquisa em branco!");
         }
 
@@ -119,6 +120,7 @@ public class GestaoESController implements Initializable {
     @FXML
     void btneditar(ActionEvent event) {
         gestaoES = tableviewGestaoes.getSelectionModel().getSelectedItem();
+        BigDecimal valorES = new BigDecimal(txtvalor.getText());
         if (gestaoES != null) {
             Alert alert = new Alert(Alert.AlertType.CONFIRMATION);
             alert.setTitle("Confirmacao de atualizacao");
@@ -136,20 +138,24 @@ public class GestaoESController implements Initializable {
                 if (!gestaoES.getPlanoconta().equals(comboboxTipoGestao.getValue()) ||
                         !gestaoES.getDescricao().equals(txtdescricao.getText()) ||
                         gestaoES.getQuantidade() != Integer.parseInt(txtquantidade.getText()) ||
-                        gestaoES.getValor() != Double.parseDouble(txtvalor.getText())) {
+                        gestaoES.getValor().compareTo(valorES) != 0) {
 
                     gestaoES.setData(String.valueOf(dataPicker.getValue()));
                     gestaoES.setPlanoconta(comboboxTipoGestao.getValue());
                     gestaoES.setDescricao(txtdescricao.getText());
                     gestaoES.setQuantidade(Integer.parseInt(txtquantidade.getText()));
 
-                    double valorDigitado = Double.parseDouble(txtvalor.getText());
-                    //AQUI DEFINIMOS O SINAL
+                    BigDecimal valorDigitado = new BigDecimal(txtvalor.getText());
+
+                    // Definimos o sinal
                     if ("Saida".equalsIgnoreCase(comboboxTipoGestao.getValue())) {
-                        gestaoES.setValor(-Math.abs(valorDigitado));//negativo
+                        // negativo
+                        gestaoES.setValor(valorDigitado.abs().negate());
                     } else {
-                        gestaoES.setValor(Math.abs(valorDigitado));//positivo
+                        // positivo
+                        gestaoES.setValor(valorDigitado.abs());
                     }
+
                     gestaoESDAO.editar(gestaoES);
                     carregarTableViewGestaoES();
                 } else {
@@ -180,14 +186,18 @@ public class GestaoESController implements Initializable {
             gestaoES.setPlanoconta(comboboxTipoGestao.getValue());
             gestaoES.setDescricao(txtdescricao.getText());
             gestaoES.setQuantidade(Integer.parseInt(txtquantidade.getText()));
-            double valorDigitado = Double.parseDouble(txtvalor.getText());
 
-            //AQUI DEFINIMOS O SINAL
+            BigDecimal valorDigitado = new BigDecimal(txtvalor.getText());
+
+            // Definimos o sinal
             if ("Saida".equalsIgnoreCase(comboboxTipoGestao.getValue())) {
-                gestaoES.setValor(-Math.abs(valorDigitado));//negativo
+                // negativo
+                gestaoES.setValor(valorDigitado.abs().negate());
             } else {
-                gestaoES.setValor(Math.abs(valorDigitado));//positivo
+                // positivo
+                gestaoES.setValor(valorDigitado.abs());
             }
+
             gestaoESDAO.inserir(gestaoES);
             limparCampos();
             carregarTableViewGestaoES();
@@ -219,7 +229,7 @@ public class GestaoESController implements Initializable {
         carregarComboBoxGestaoTipo();
     }
 
-    public void carregarComboBoxGestaoTipo(){
+    public void carregarComboBoxGestaoTipo() {
         comboboxTipoGestao.getItems().addAll("Entrada", "Saida");
     }
 
@@ -263,7 +273,7 @@ public class GestaoESController implements Initializable {
         DateTimeFormatter dataEntrada = DateTimeFormatter.ofPattern("yyy-MM-dd");
         DateTimeFormatter datasaida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-        colunaData.setCellFactory(column ->new TableCell<GestaoES, String>(){
+        colunaData.setCellFactory(column -> new TableCell<GestaoES, String>() {
             @Override
             protected void updateItem(String data, boolean empty) {
                 super.updateItem(data, empty);
@@ -275,7 +285,7 @@ public class GestaoESController implements Initializable {
                 try {
                     LocalDate d = LocalDate.parse(data, dataEntrada);
                     setText(datasaida.format(d));
-                }catch (Exception e){
+                } catch (Exception e) {
                     setText(data);
                 }
             }

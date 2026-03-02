@@ -60,7 +60,7 @@ public class OrcamentoDAO {
         }
     }
 
-    public List<Orcamento> historicoOrcamento(LocalDate dataInicial, LocalDate dataFinal, String textoCliente) {
+    public List<Orcamento> historicoOrcamento1(LocalDate dataInicial, LocalDate dataFinal, String textoCliente) {
         List<Orcamento> lista = new ArrayList<>();
 
         String sql = """
@@ -156,11 +156,150 @@ public class OrcamentoDAO {
         return lista;
     }
 
+    public List<Orcamento> historicoOrcamento(LocalDate dataInicial, LocalDate dataFinal, String textoCliente) {
+        List<Orcamento> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT
+            o.idorcamento,
+            o.numero_orcamento,
+            o.data,
+            o.total,
+            o.taxaiva,
+            o.idcliente,
+            o.cliente_nome,
+            o.valor_iva,
+            o.nuit,
+            c.nome AS nome_registado
+        FROM orcamento o
+        LEFT JOIN cliente c ON c.idcliente = o.idcliente
+        WHERE 1=1
+    """;
+
+        if (dataInicial != null) sql += " AND DATE(o.data) >= ? ";
+        if (dataFinal != null) sql += " AND DATE(o.data) <= ? ";
+        if (textoCliente != null && !textoCliente.isBlank()) sql += " AND (c.nome LIKE ? OR o.cliente_nome LIKE ?) ";
+
+        sql += " ORDER BY o.data DESC ";
+
+        try (Connection conn = ConexaoSQLite.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            int idx = 1;
+
+            if (dataInicial != null) ps.setDate(idx++, java.sql.Date.valueOf(dataInicial));
+            if (dataFinal != null) ps.setDate(idx++, java.sql.Date.valueOf(dataFinal));
+            if (textoCliente != null && !textoCliente.isBlank()) {
+                String like = "%" + textoCliente + "%";
+                ps.setString(idx++, like);
+                ps.setString(idx++, like);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                Orcamento orc = new Orcamento();
+                orc.setIdorcamento(rs.getInt("idorcamento"));
+                orc.setNumero_orcamento(rs.getString("numero_orcamento"));
+                orc.setData(rs.getTimestamp("data").toLocalDateTime().withNano(0));
+                orc.setTotal(rs.getBigDecimal("total"));
+                orc.setTaxaIVA(rs.getBigDecimal("taxaiva"));
+                orc.setValorIVA(rs.getBigDecimal("valor_iva"));
+
+                int idCliente = rs.getInt("idcliente");
+                if (!rs.wasNull()) {
+                    Cliente c = new Cliente();
+                    c.setIdcliente(idCliente);
+                    c.setNome(rs.getString("nome_registado"));
+                    orc.setCliente(c);
+                } else {
+                    orc.setCliente_nome(rs.getString("cliente_nome"));
+                    orc.setNuit(rs.getString("nuit"));
+                }
+
+                lista.add(orc);
+            }
+
+        } catch (SQLException e) {
+            throw new RuntimeException("Erro ao consultar histórico de orçamentos", e);
+        }
+        return lista;
+    }
+
     public int buscarProximoNumeroOrcamento(Connection conn) throws SQLException {
         String sql = "SELECT COALESCE(MAX(idorcamento), 0) + 1 FROM orcamento";
         try (PreparedStatement ps = conn.prepareStatement(sql);
              ResultSet rs = ps.executeQuery()) {
             return rs.next() ? rs.getInt(1) : 1;
+        }
+    }
+
+        /**
+         * Deleta orçamento e seus itens (em cascata)
+         * Reservado e funcional se tabela no db nao ter Delete on Cascade
+         */
+        public boolean deletarOrcamento(Integer idOrcamento) {
+            Connection conn = null;
+            try {
+                conn = ConexaoSQLite.getConnection();
+                conn.setAutoCommit(false); // Iniciar transação
+
+                // 1. Deletar itens do orçamento primeiro
+                String sqlItens = "DELETE FROM orcamento_itens WHERE idorcamento = ?";
+                try (PreparedStatement stmtItens = conn.prepareStatement(sqlItens)) {
+                    stmtItens.setInt(1, idOrcamento);
+                    stmtItens.executeUpdate();
+                }
+
+                // 2. Deletar o orçamento
+                String sqlOrcamento = "DELETE FROM orcamento WHERE idorcamento = ?";
+                try (PreparedStatement stmtOrcamento = conn.prepareStatement(sqlOrcamento)) {
+                    stmtOrcamento.setInt(1, idOrcamento);
+                    stmtOrcamento.executeUpdate();
+                }
+
+                conn.commit(); // Confirmar transação
+                return true;
+
+            } catch (SQLException e) {
+                if (conn != null) {
+                    try {
+                        conn.rollback(); // Reverter em caso de erro
+                    } catch (SQLException ex) {
+                        ex.printStackTrace();
+                    }
+                }
+                e.printStackTrace();
+                return false;
+            } finally {
+                if (conn != null) {
+                    try {
+                        conn.setAutoCommit(true);
+                        conn.close();
+                    } catch (SQLException e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+        }
+
+    /**
+     * Com delete on Cascade
+     * @param idOrcamento
+     * @return
+     */
+    public boolean deletarOrcamentoSimples(Integer idOrcamento) {
+        String sql = "DELETE FROM orcamento WHERE idorcamento = ?";
+
+        try (Connection conn = ConexaoSQLite.getConnection();
+             PreparedStatement stmt = conn.prepareStatement(sql)) {
+
+            stmt.setInt(1, idOrcamento);
+            return stmt.executeUpdate() > 0;
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
         }
     }
 }

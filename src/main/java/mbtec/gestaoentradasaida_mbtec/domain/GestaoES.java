@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.domain;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -10,12 +11,12 @@ public class GestaoES {
     private String planoconta;
     private String descricao;
     private int quantidade;
-    private double valor;
+    private BigDecimal valor;
 
     public GestaoES() {
     }
 
-    public GestaoES(int idGestaoES, String data, String planoConta, String descricao, int quantidade, double valor) {
+    public GestaoES(int idGestaoES, String data, String planoConta, String descricao, int quantidade, BigDecimal valor) {
         this.idgestao = idGestaoES;
         this.data = data;
         this.planoconta = planoConta;
@@ -37,7 +38,7 @@ public class GestaoES {
     }
 
     public void setData(String data) {
-            this.data = data;
+        this.data = data;
     }
 
     private boolean isDataValida(String data) {
@@ -73,11 +74,11 @@ public class GestaoES {
         this.quantidade = quantidade;
     }
 
-    public double getValor() {
-        return valor;
+    public BigDecimal getValor() {
+        return valor != null ? valor : BigDecimal.ZERO;
     }
 
-    public void setValor(double valor) {
+    public void setValor(BigDecimal valor) {
         this.valor = valor;
     }
 }

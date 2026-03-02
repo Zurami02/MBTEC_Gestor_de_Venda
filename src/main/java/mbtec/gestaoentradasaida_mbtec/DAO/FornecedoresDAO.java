@@ -25,7 +25,7 @@ public class FornecedoresDAO {
             stmt.setString(1, fornecedores.getDescricaoProduto());
             stmt.setInt(2, fornecedores.getQuantidade());
             stmt.setString(3, fornecedores.getFornecedor());
-            stmt.setDouble(4, fornecedores.getPreco());
+            stmt.setBigDecimal(4, fornecedores.getPreco());
             stmt.execute();
             return true;
         } catch (SQLException e) {
@@ -62,7 +62,7 @@ public class FornecedoresDAO {
                 fornecedores.setDescricaoProduto(resultado.getString("descricao_produto"));
                 fornecedores.setQuantidade(resultado.getInt("quantidade"));
                 fornecedores.setFornecedor(resultado.getString("fornecedor"));
-                fornecedores.setPreco(resultado.getDouble("preco"));
+                fornecedores.setPreco(resultado.getBigDecimal("preco"));
                 retorno.add(fornecedores);
             }
         } catch (SQLException e) {
@@ -78,7 +78,7 @@ public class FornecedoresDAO {
             stmt.setString(1, fornecedores.getDescricaoProduto());
             stmt.setInt(2, fornecedores.getQuantidade());
             stmt.setString(3, fornecedores.getFornecedor());
-            stmt.setDouble(4, fornecedores.getPreco());
+            stmt.setBigDecimal(4, fornecedores.getPreco());
             stmt.setInt(5, fornecedores.getIdfornecedor());
             stmt.execute();
             return true;
@@ -116,7 +116,7 @@ public class FornecedoresDAO {
                 fornecedores.setDescricaoProduto(resultado.getString("descricao_produto"));
                 fornecedores.setQuantidade(resultado.getInt("quantidade"));
                 fornecedores.setFornecedor(resultado.getString("fornecedor"));
-                fornecedores.setPreco(resultado.getDouble("preco"));
+                fornecedores.setPreco(resultado.getBigDecimal("preco"));
                 fornecedoresList.add(fornecedores);
             }
         } catch (SQLException ex) {
