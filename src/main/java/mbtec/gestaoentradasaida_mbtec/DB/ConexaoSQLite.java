@@ -1,6 +1,7 @@
 package mbtec.gestaoentradasaida_mbtec.DB;
 
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
+import mbtec.gestaoentradasaida_mbtec.service.EstadoApp;
 
 import java.io.File;
 import java.io.IOException;
@@ -48,8 +49,10 @@ public class ConexaoSQLite {
 
                 String url = "jdbc:sqlite:" + arquivoDestino.getAbsolutePath();
                 connection = DriverManager.getConnection(url);
+                EstadoApp.setDbConectado(true);
             }
         }catch (SQLException e){
+            EstadoApp.setDbConectado(false);
             AlertaUtil.mostrarErro("Erro de Conexao com DB",
                     "Contacte a assistencia tecnica");
         }

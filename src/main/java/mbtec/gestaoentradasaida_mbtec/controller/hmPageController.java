@@ -12,12 +12,14 @@ import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import mbtec.gestaoentradasaida_mbtec.DAO.UsuarioDAO;
+import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
 import mbtec.gestaoentradasaida_mbtec.service.EstadoApp;
 import mbtec.gestaoentradasaida_mbtec.service.PularPaginasUtil;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Connection;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.ResourceBundle;
@@ -85,13 +87,15 @@ public class hmPageController implements Initializable {
     }
 
     void verificarConexao(){
-        if (EstadoApp.isDbConectado()) {
+        Connection conn = ConexaoSQLite.getConnection();
+
+        if (conn != null && EstadoApp.isDbConectado()) {
             imageDBConnection.setImage(new Image("/mbtec/gestaoentradasaida_mbtec/icones/db_connected.png"));
-            imageDBConnection.setVisible(true);
         } else {
             imageDBConnection.setImage(new Image("/mbtec/gestaoentradasaida_mbtec/icones/db_Desconnected.png"));
-            imageDBConnection.setVisible(true);
         }
+
+        imageDBConnection.setVisible(true);
     }
 
     @Override
