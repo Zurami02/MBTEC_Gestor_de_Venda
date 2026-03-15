@@ -49,7 +49,11 @@ public class hmPageController implements Initializable {
      */
     @FXML
     void entrar(MouseEvent event) throws IOException {
-
+        Connection conn = ConexaoSQLite.getConnection();
+        if (conn == null){
+            AlertaUtil.mostrarErro("Falha na Conexao", "Solicite assistencia caso persista o problema");
+            return;
+        }
         UsuarioDAO usuarioDAO = new UsuarioDAO();
         if (usuarioDAO.countUsuarios() == 0) {
             AlertaUtil.mostrarInfo("Primeiro cadastro", "Lembra 'Perfil' deve ser autorizado a cadastro de funcionarios");
