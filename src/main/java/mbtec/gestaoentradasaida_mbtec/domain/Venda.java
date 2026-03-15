@@ -163,7 +163,7 @@ public class Venda {
     }
 
     public BigDecimal getTaxaIva() {
-        return taxaIva;
+        return taxaIva != null ? taxaIva : BigDecimal.ZERO;
     }
 
     public void setTaxaIva(BigDecimal taxaIva) {

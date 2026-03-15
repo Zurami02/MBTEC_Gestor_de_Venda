@@ -36,8 +36,8 @@ public class VendaDAO {
             }
 
             ps.setBoolean(5, venda.isPago());
-            ps.setBigDecimal(6, venda.getTaxaIva());          // BigDecimal
-            ps.setBigDecimal(7, venda.getTotalFinal());       // BigDecimal
+            ps.setBigDecimal(6, venda.getTaxaIva());
+            ps.setBigDecimal(7, venda.getTotalFinal());
             ps.setBoolean(8, venda.isVd());
             ps.setString(9, venda.getNumerovd());
             ps.setInt(10, venda.getIdUsuario());

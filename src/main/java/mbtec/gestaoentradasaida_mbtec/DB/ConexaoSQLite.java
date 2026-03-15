@@ -42,7 +42,7 @@ public class ConexaoSQLite {
 
                     } catch (IOException e) {
                         AlertaUtil.mostrarErro("Erro a conexao",
-                                "Banco de nao encontrado"+e.getMessage());
+                                "Banco de dados nao encontrado"+e.getMessage());
                     }
                 }
 

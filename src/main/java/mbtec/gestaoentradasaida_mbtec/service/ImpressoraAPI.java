@@ -1,10 +1,9 @@
-package mbtec.gestaoentradasaida_mbtec;
+package mbtec.gestaoentradasaida_mbtec.service;
 
 import mbtec.gestaoentradasaida_mbtec.domain.Cliente;
 import mbtec.gestaoentradasaida_mbtec.domain.ItemOrcamento;
 import mbtec.gestaoentradasaida_mbtec.domain.Orcamento;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
-import mbtec.gestaoentradasaida_mbtec.service.TipoItem;
 
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
