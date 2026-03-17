@@ -24,6 +24,7 @@ public class RelatorioAPI {
 
     /**
      * Impressao de Vd para venda
+     *
      * @param conn
      * @param idvenda
      * @return
@@ -32,13 +33,24 @@ public class RelatorioAPI {
         try {
             Map<String, Object> params = new HashMap<>();
             params.put("idvenda", idvenda);
-            String subreportDir = Objects.requireNonNull(
-                    RelatorioUtil.class.getResource("/relatoriosjasper/")
-            ).getPath();
 
-            params.put("SUBREPORT_DIR", subreportDir);
+            //Foi trocado os parametros dentro do VD.jasper para corresponder com inputStream
+            /**String subreportDir = Objects.requireNonNull(
+                    //RelatorioUtil.class.getResource("/relatoriosjasper/")
+            //).getPath();
+             params.put("SUBREPORT_DIR", subreportDir);
+             **/
 
-            // Adiciona a referência da classe para localizar a imagem
+            InputStream subReport = RelatorioUtil.class
+                    .getResourceAsStream("/relatoriosjasper/SubreportPagamento.jasper");
+
+            if (subReport == null) {
+                throw new RuntimeException("SubreportPagamento.jasper não encontrado");
+            }
+
+            params.put("SUBREPORT_PAGAMENTO", subReport);
+
+            //a referência da classe para localizar a imagem
             params.put("REPORT_CLASS", RelatorioUtil.class);
 
             InputStream relatorio =
