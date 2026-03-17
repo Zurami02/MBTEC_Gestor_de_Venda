@@ -273,7 +273,7 @@ public class HistoricoVendasController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD");
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD:" +e.getMessage());
         }
     }
 
