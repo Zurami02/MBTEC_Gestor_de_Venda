@@ -34,22 +34,6 @@ public class RelatorioAPI {
             Map<String, Object> params = new HashMap<>();
             params.put("idvenda", idvenda);
 
-            //Foi trocado os parametros dentro do VD.jasper para corresponder com inputStream
-            /**String subreportDir = Objects.requireNonNull(
-                    //RelatorioUtil.class.getResource("/relatoriosjasper/")
-            //).getPath();
-             params.put("SUBREPORT_DIR", subreportDir);
-             **/
-
-            InputStream subReport = RelatorioUtil.class
-                    .getResourceAsStream("/relatoriosjasper/SubreportPagamento.jasper");
-
-            if (subReport == null) {
-                throw new RuntimeException("SubreportPagamento.jasper não encontrado");
-            }
-
-            params.put("SUBREPORT_PAGAMENTO", subReport);
-
             //a referência da classe para localizar a imagem
             params.put("REPORT_CLASS", RelatorioUtil.class);
 
@@ -65,6 +49,7 @@ public class RelatorioAPI {
             return JasperFillManager.fillReport(relatorio, params, conn);
 
         } catch (JRException e) {
+
             throw new RuntimeException("Falha ao gerar relatório VD", e);
         }
     }

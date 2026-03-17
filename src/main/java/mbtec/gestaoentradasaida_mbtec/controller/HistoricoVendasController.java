@@ -223,11 +223,11 @@ public class HistoricoVendasController implements Initializable {
         pintarAnulada();
         carregarItensVendaSelecionadaListener();
 
-        tableviewVendaHistorico.getSelectionModel().selectedItemProperty().addListener((obs, old, vendaselecionada)->
+        tableviewVendaHistorico.getSelectionModel().selectedItemProperty().addListener((obs, old, vendaselecionada) ->
         {
-            if (vendaselecionada != null){
+            if (vendaselecionada != null) {
                 System.out.println(vendaselecionada.getTaxaIva());
-                System.out.println("IVA db:" +vendaselecionada.getTaxaIvaDB().multiply(new BigDecimal("100"))+"%");
+                System.out.println("IVA db:" + vendaselecionada.getTaxaIvaDB().multiply(new BigDecimal("100")) + "%");
                 System.out.println(vendaselecionada.getSubtotal());
             }
         });
@@ -273,7 +273,7 @@ public class HistoricoVendasController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD:" +e.getMessage());
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir VD:" + e.getMessage());
         }
     }
 
