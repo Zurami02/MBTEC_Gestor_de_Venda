@@ -26,10 +26,7 @@ import javafx.util.Duration;
 import javafx.util.StringConverter;
 import mbtec.gestaoentradasaida_mbtec.DAO.*;
 import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
-import mbtec.gestaoentradasaida_mbtec.domain.Cliente;
-import mbtec.gestaoentradasaida_mbtec.domain.Itemvenda;
-import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
-import mbtec.gestaoentradasaida_mbtec.domain.Venda;
+import mbtec.gestaoentradasaida_mbtec.domain.*;
 import mbtec.gestaoentradasaida_mbtec.service.*;
 import net.sf.jasperreports.engine.JasperPrint;
 import org.jetbrains.annotations.NotNull;
@@ -45,7 +42,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 /**
- * @version 1.1
+ * @version 1.1.1
  * Metodo responsavel para cadastrar a venda
  */
 
@@ -591,8 +588,13 @@ public class VendasController implements Initializable {
     }
 
     private void listenerIVA() {
-
-        iva = Objects.requireNonNull(ConfiguracaoDAO.buscarPorChave("IVA")).getValor();
+        BigDecimal iva;
+        Configuracao config = ConfiguracaoDAO.buscarPorChave("IVA");
+        if (config != null) {
+            iva = config.getValor();
+        }else {
+            iva = new BigDecimal("17");
+        }
         lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
         checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
             if (marcado) {

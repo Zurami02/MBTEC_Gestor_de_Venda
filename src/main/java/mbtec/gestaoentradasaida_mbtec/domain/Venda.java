@@ -9,7 +9,7 @@ import java.util.List;
  * Responsavel em instanciar Venda calculando ou adicionando os
  * itens de venda, somar os itens, calcular total de venda
  * Versao de aprendizagem em Venda e Itens de Venda
- * @version 1.1
+ * @version 1.1.1
  * @author Mbtec subtecnico Zulo Rajabo mitumba
  */
 public class Venda {
@@ -87,7 +87,6 @@ public class Venda {
 
     public void setValorIVA(BigDecimal valorIVA) {
         this.valorIVA = valorIVA;
-        System.out.println(valorIVA);
     }
 
     public BigDecimal getTotalDb() {

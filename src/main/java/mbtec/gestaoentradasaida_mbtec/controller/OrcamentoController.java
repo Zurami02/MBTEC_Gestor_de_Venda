@@ -538,9 +538,13 @@ public class OrcamentoController implements Initializable {
      **/
 
     private void listenerIVA() {
-
-        BigDecimal iva = Objects.requireNonNull(ConfiguracaoDAO.buscarPorChave("IVA")).getValor();
-
+        BigDecimal iva;
+        Configuracao config = ConfiguracaoDAO.buscarPorChave("IVA");
+        if (config != null) {
+            iva = config.getValor();
+        }else {
+            iva = new BigDecimal("17");
+        }
         lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
 
         checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
@@ -593,13 +597,13 @@ public class OrcamentoController implements Initializable {
     }
 
     private void imprimirOrcamento(Orcamento orcamento) {
-            try (Connection conn = ConexaoSQLite.getConnection()) {
-                RelatorioAPI.gerarEImprimirOrcamento(conn, orcamento.getIdorcamento());
-                AlertaUtil.mostrarInfo("", "Orcamento enviado para impressão!");
+        try (Connection conn = ConexaoSQLite.getConnection()) {
+            RelatorioAPI.gerarEImprimirOrcamento(conn, orcamento.getIdorcamento());
+            AlertaUtil.mostrarInfo("", "Orcamento enviado para impressão!");
 
-            } catch (Exception e) {
-                e.printStackTrace();
-                AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
-            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
+        }
     }
 }
