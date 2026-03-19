@@ -57,6 +57,10 @@ public class Produtos {
         return categoria;
     }
 
+    public String getDescricao_categoria() {
+        return categoria != null ? categoria.getDescricao_categoria() : "";
+    }
+
     public void setCategoria(Categoria categoria) {
         this.categoria = categoria;
     }

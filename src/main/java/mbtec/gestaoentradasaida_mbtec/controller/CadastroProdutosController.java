@@ -18,6 +18,7 @@ import javafx.stage.Stage;
 import javafx.util.StringConverter;
 import mbtec.gestaoentradasaida_mbtec.DAO.CategoriaDAO;
 import mbtec.gestaoentradasaida_mbtec.DAO.ProdutosDAO;
+import mbtec.gestaoentradasaida_mbtec.DB.ConexaoSQLite;
 import mbtec.gestaoentradasaida_mbtec.domain.Categoria;
 import mbtec.gestaoentradasaida_mbtec.domain.Produtos;
 import mbtec.gestaoentradasaida_mbtec.service.AlertaUtil;
@@ -246,7 +247,6 @@ public class CadastroProdutosController implements Initializable {
     void gerarRelatorioProdutos(ActionEvent event) {
         try {
             InputStream is = getClass().getResourceAsStream("/relatoriosjasper/Relatorio_de_produtos.jasper");
-            System.out.println("Arquivo encontrado? " + (is != null));
             ProdutosDAO dao = new ProdutosDAO();
             List<Produtos> dados = dao.listar();
             if (dados.isEmpty()) {
@@ -263,8 +263,8 @@ public class CadastroProdutosController implements Initializable {
             parametros.put("REPORT_CLASS", RelatorioUtil.class);
 
             // Preencher relatório
-            JasperPrint jp = JasperFillManager.fillReport(is, parametros, dataSource);
-
+            //JasperPrint jp = JasperFillManager.fillReport(is, parametros, dataSource);
+            JasperPrint jp = JasperFillManager.fillReport(is, parametros, ConexaoSQLite.getConnection());
             // Mostrar o relatório na tela
             JasperViewer viewer = new JasperViewer(jp, false);
             viewer.setTitle("Relatório de Produtos");

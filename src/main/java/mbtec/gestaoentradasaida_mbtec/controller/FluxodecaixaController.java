@@ -36,7 +36,7 @@ public class FluxodecaixaController implements Initializable {
     private TableColumn<FluxodeCaixa, Double> colunaDesconto;
 
     @FXML
-    private TableColumn<FluxodeCaixa, Double> colunaPrecoTotalFC;
+    private TableColumn<FluxodeCaixa, BigDecimal> colunaPrecoTotalFC;
 
     @FXML
     private TableColumn<FluxodeCaixa, String> colunaProdutoFC;
@@ -180,8 +180,6 @@ public class FluxodecaixaController implements Initializable {
         }
     }
 
-
-
     @FXML
     void btnPesquisaFC(ActionEvent event) {
         String pesquisa = txtpesquisaFC.getText();
@@ -198,61 +196,6 @@ public class FluxodecaixaController implements Initializable {
     }
 
     @FXML
-    /**void btnSalvarFC(ActionEvent event) {
-
-        if (validarEntradadedados()) {
-            try {
-                Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
-                int quantidade = Integer.parseInt(txtquantidadeFC.getText());
-                double precoUnitario = produtoSelecionado.getPreco();
-                double desconto = 0.0;
-                String texto = txtdesconto.getText();
-                if (texto != null && !texto.trim().isEmpty()) {
-                    try {
-                        texto = texto.replace(",", "."); // suporta vírgula como decimal
-                        desconto = Double.parseDouble(texto);
-                    } catch (NumberFormatException e) {
-                        desconto = 0.0;
-                        System.out.println("Desconto inválido, usando 0.0");
-                    }
-                }
-                //total com desconto
-                double precoTotal = precoUnitario * quantidade * (1 - (desconto / 100));
-                double valorDesconto = precoUnitario * quantidade * (desconto / 100);
-                String precoFormatado = String.format("%.2f", precoTotal);
-
-                String data = String.valueOf(txtdatapickerFC.getValue());
-
-                // Verifica se há estoque suficiente
-                if (produtoSelecionado.getQuantidade_produto() < quantidade) {
-                    AlertaUtil.mostrarAviso("Estoque insuficiente",
-                            "A quantidade solicitada excede o estoque disponível.");
-                    return;
-                }
-
-                FluxodeCaixa fluxo = new FluxodeCaixa();
-                fluxo.setProduto(produtoSelecionado);
-                fluxo.setQuantidade(quantidade);
-                fluxo.setValor(precoTotal);
-                fluxo.setData(data);
-                fluxo.setDesconto(desconto);
-                fluxodeCaixaDAO.inserir(fluxo);
-
-                // Atualiza estoque do produto
-                int novaQuantidade = produtoSelecionado.getQuantidade_produto() - quantidade;
-                produtoSelecionado.setQuantidade_produto(novaQuantidade);
-                produtosDAO.editar(produtoSelecionado);
-                carregarTableviewFluxodecaixa();
-                limparCampos();
-                precoTotalLabel.setText(precoFormatado + "MZN");
-                //descontoLabel.setText(desconto + "%");
-                descontoLabel.setText(String.format(" %.2f MZN", valorDesconto));
-
-            } catch (NumberFormatException e) {
-                System.out.println("Erro ao converter quantidade: " + e.getMessage());
-            }
-        }
-    }**/
     void btnSalvarFC(ActionEvent event) {
         if (validarEntradadedados()) {
             try {
@@ -314,11 +257,11 @@ public class FluxodecaixaController implements Initializable {
         }
     }
 
-
     private final FluxodeCaixaDAO fluxodeCaixaDAO = new FluxodeCaixaDAO();
     private final ProdutosDAO produtosDAO = new ProdutosDAO();
     private FluxodeCaixa fluxodeCaixa = new FluxodeCaixa();
     private List<FluxodeCaixa> fluxodeCaixaList = new ArrayList<>();
+    private FilteredList<FluxodeCaixa> fluxodeCaixaInfiltrado;
     private ObservableList<FluxodeCaixa> fluxodeCaixaObservableList;
     private List<Produtos> listProdutos;
     private ObservableList<Produtos> produtosObservableList;
@@ -329,72 +272,15 @@ public class FluxodecaixaController implements Initializable {
         carregarTableviewFluxodecaixa();
         emtemporealDesconto();
         tableviewFluxodeCaixaListener();
+        pesquisarFluxoPorNome();
+        listenerAtualizarTabelaFluxoDoSistema();
+        carregarFluxoCaixaDoSistema();
+
 
         txtprecoUnitarioFC.setEditable(false);
         txtprecototalFC.setEditable(false);
         tableviewFluxodeCaixa.setEditable(true);
-
     }
-
-    /**private void tableviewFluxodeCaixaListener() {
-        tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((
-                obs, oldSelection, newSelection) -> {
-            if (newSelection != null) {
-                // 1. Converter a data string para LocalDate
-                String dataString = newSelection.getData();
-                DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd");
-                LocalDate data = LocalDate.parse(dataString, formatter);
-                txtdatapickerFC.setValue(data);
-
-                // 2. Preencher os campos com dados do objeto selecionado
-                txtcomboboxProdutoFC.setValue(newSelection.getProduto());
-                txtquantidadeFC.setText(String.valueOf(newSelection.getQuantidade()));
-                txtprecoUnitarioFC.setText(String.format("%.2f", newSelection.getProduto().getPreco()));
-                txtdesconto.setText(String.valueOf(newSelection.getDesconto()));
-
-                // 3. Calcular valores para exibição
-                BigDecimal precoUnitario = newSelection.getProduto().getPreco();
-                int quantidade = newSelection.getQuantidade();
-                double descontoPercentual = newSelection.getDesconto();
-
-                BigDecimal valorBruto = precoUnitario.multiply(new BigDecimal(quantidade));
-                double valorDesconto = valorBruto * (descontoPercentual / 100);
-                double precoTotal = valorBruto - valorDesconto;
-
-                // 4. Atualiza os labels
-                precoTotalLabel.setText(String.format("%.2f MZN", precoTotal));
-                descontoLabel.setText(String.format(" %.2f MZN", valorDesconto));
-
-                // 5. Estoque atual
-                estoqueLabel.setText(newSelection.getProduto().getDescricao_produto() + ": " +
-                        newSelection.getProduto().getQuantidade_produto());
-            }
-        });
-
-
-        txtcomboboxProdutoFC.setOnAction(e -> {
-            Produtos produtoSelecionado = txtcomboboxProdutoFC.getValue();
-            if (produtoSelecionado != null) {
-                txtprecoUnitarioFC.setText(String.valueOf(produtoSelecionado.getPreco()));
-                atualizarPrecoTotal(); // atualizar o total se já tiver quantidade
-                estoqueLabel.setText(String.valueOf(produtoSelecionado.getDescricao_produto() + ": " +
-                        produtoSelecionado.getQuantidade_produto()));
-            }
-        });
-
-        txtquantidadeFC.setTextFormatter(new TextFormatter<>(change -> {
-            String novoTexto = change.getControlNewText();
-            if (novoTexto.matches("\\d*")) { // apenas dígitos
-                return change;
-            }
-            return null; // rejeita a entrada
-        }));
-
-        txtquantidadeFC.textProperty().addListener((obs,
-                                                    oldVal, newVal) -> {
-            atualizarPrecoTotal();
-        });
-    }**/
 
     private void tableviewFluxodeCaixaListener() {
         tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((
@@ -454,7 +340,6 @@ public class FluxodecaixaController implements Initializable {
             atualizarPrecoTotal();
         });
     }
-
 
     private void limparCampos() {
         txtcomboboxProdutoFC.setValue(null);
@@ -522,9 +407,9 @@ public class FluxodecaixaController implements Initializable {
         colunaProdutoFC.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getProduto().getDescricao_produto()));
         colunaQuantidadeFC.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
-        colunaPrecoTotalFC.setCellFactory(tc -> new TableCell<FluxodeCaixa, Double>() {
+        colunaPrecoTotalFC.setCellFactory(tc -> new TableCell<FluxodeCaixa, BigDecimal>() {
             @Override
-            protected void updateItem(Double valor, boolean empty) {
+            protected void updateItem(BigDecimal valor, boolean empty) {
                 super.updateItem(valor, empty);
                 if (empty || valor == null) {
                     setText(null);
@@ -616,7 +501,6 @@ public class FluxodecaixaController implements Initializable {
         }
     }
 
-
     //Para mostrar assim que o usuario digita desconto antes de executar venda
     private void atualizarValoresCalculados() {
         Produtos produto = txtcomboboxProdutoFC.getValue();
@@ -656,7 +540,6 @@ public class FluxodecaixaController implements Initializable {
         precoTotalLabel.setText(valorFinal.toPlainString() + " MZN");
     }
 
-
     private void emtemporealDesconto(){
             txtdesconto.textProperty().addListener((observable, oldValue, newValue) -> {
                 atualizarValoresCalculados();
@@ -670,5 +553,43 @@ public class FluxodecaixaController implements Initializable {
                 atualizarValoresCalculados();
             });
 
+    }
+
+    private void pesquisarFluxoPorNome() {
+
+        txtpesquisaFC.textProperty().addListener((obs, oldValue, newValue) -> {
+
+            fluxodeCaixaInfiltrado.setPredicate(fluxodeCaixa -> {
+
+                if (newValue == null || newValue.isBlank()) {
+                    return true;
+                }
+
+                return fluxodeCaixa.getDescricao_produto().toLowerCase().contains(newValue.toLowerCase());
+            });
+        });
+    }
+
+    private void listenerAtualizarTabelaFluxoDoSistema() {
+        Stage stage = new Stage();
+        stage.focusedProperty().addListener((obs, old, atualizado) ->
+                {
+                    if (atualizado) {
+                        carregarFluxoCaixaDoSistema();
+                        tableviewFluxodeCaixa.refresh();
+                    }
+                }
+        );
+    }
+
+    private void carregarFluxoCaixaDoSistema() {
+
+        fluxodeCaixaList = fluxodeCaixaDAO.listar();
+
+        fluxodeCaixaObservableList = FXCollections.observableArrayList(fluxodeCaixaList);
+
+        fluxodeCaixaInfiltrado = new FilteredList<>(fluxodeCaixaObservableList, f -> true);
+
+        tableviewFluxodeCaixa.setItems(fluxodeCaixaInfiltrado);
     }
 }
