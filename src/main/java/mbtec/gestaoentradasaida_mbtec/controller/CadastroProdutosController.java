@@ -56,6 +56,9 @@ public class CadastroProdutosController implements Initializable {
     private TableView<Produtos> tableviewProdutos;
 
     @FXML
+    private Label produtoSizeLB;
+
+    @FXML
     private ComboBox<Categoria> txtcomboboxCategoriaProduto;
 
     @FXML
@@ -77,7 +80,8 @@ public class CadastroProdutosController implements Initializable {
     private final CategoriaDAO categoriaDAO = new CategoriaDAO();
     private Produtos produto;
     private List<Produtos> produtosList;
-    private ObservableList<Produtos> observableProdutosList;
+    private ObservableList<Produtos> observableProdutosList = FXCollections.observableArrayList();
+    private FilteredList<Produtos> produtosFilteredList;
     private List<Categoria> categoriaList;
     private ObservableList<Categoria> observableCategoriaList;
 
@@ -123,8 +127,8 @@ public class CadastroProdutosController implements Initializable {
                 carregarTableViewProdutos();
                 limparCampos();
             }
-        }else {
-            AlertaUtil.mostrarErro("Falha na exclusao de dados","Selecione os dados na tabela");
+        } else {
+            AlertaUtil.mostrarErro("Falha na exclusao de dados", "Selecione os dados na tabela");
         }
     }
 
@@ -191,7 +195,7 @@ public class CadastroProdutosController implements Initializable {
         }
 
         if (!houveAlteracao(produto, descricao, quantidade, preco, categoriaSelecionada)) {
-            AlertaUtil.mostrarInfo("Erro na Atualizacao","Nenhuma alteração foi feita no produto.");
+            AlertaUtil.mostrarInfo("Erro na Atualizacao", "Nenhuma alteração foi feita no produto.");
             return;
         }
 
@@ -202,6 +206,7 @@ public class CadastroProdutosController implements Initializable {
 
         produtosDAO.editar(produto);
         carregarTableViewProdutos();
+        carregarProddutosDoSistema();
         limparCampos();
     }
 
@@ -281,6 +286,7 @@ public class CadastroProdutosController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         carregarCombboxProdutosAutoCompletado();
         carregarTableViewProdutos();
+        //listenerAtualizarTabelaDoSistema();
         tableviewProdutos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
                 txtdescricao.setText(String.valueOf(newSelection.getDescricao_produto()));
@@ -289,10 +295,14 @@ public class CadastroProdutosController implements Initializable {
                 txtcomboboxCategoriaProduto.setValue(newSelection.getCategoria());
             }
         });
+        listaBASE();
+        carregarProddutosDoSistema();
+        produtoSizeLB.setText(String.valueOf(produtosFilteredList.size()));
+        pesquisarPorNome();
     }
 
     /**
-     *Validar entrada de Dados no Cadastro
+     * Validar entrada de Dados no Cadastro
      */
     private boolean validarEntradadedados() {
         String erroMessage = "";
@@ -376,22 +386,8 @@ public class CadastroProdutosController implements Initializable {
         colunaDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao_produto"));
         colunaQTD.setCellValueFactory(new PropertyValueFactory<>("quantidade_produto"));
         colunapreco.setCellValueFactory(new PropertyValueFactory<>("preco"));
-        //colunacategoria.setCellValueFactory(new PropertyValueFactory<>("categoria"));
         colunacategoria.setCellValueFactory(cellData ->
                 new SimpleStringProperty(cellData.getValue().getCategoria().getDescricao_categoria()));
-
-
-        //Listener para txtProcuraNome
-        txtpesquisa.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                carregarTableViewProdutos();
-            }
-        });
-
-        produtosList = produtosDAO.listar();
-
-        observableProdutosList = FXCollections.observableArrayList(produtosList);
-        tableviewProdutos.setItems(observableProdutosList);
     }
 
     private void limparCampos() {
@@ -399,5 +395,34 @@ public class CadastroProdutosController implements Initializable {
         txtquantidade.clear();
         txtpreco.clear();
         txtcomboboxCategoriaProduto.setValue(null);
+    }
+
+    private void pesquisarPorNome() {
+
+        txtpesquisa.textProperty().addListener((obs, oldValue, newValue) -> {
+            produtosFilteredList.setPredicate(produtoitem -> {
+
+                if (newValue == null || newValue.isBlank()) {
+                    return true;
+                }
+
+                return produtoitem.getDescricao_produto() != null &&
+                        produtoitem.getDescricao_produto()
+                                .toLowerCase()
+                                .contains(newValue.toLowerCase());
+            });
+        });
+    }
+
+    private void carregarProddutosDoSistema() {
+        produtosList = produtosDAO.listar();
+        observableProdutosList.setAll(produtosList);
+    }
+
+    private void listaBASE(){
+
+        observableProdutosList = FXCollections.observableArrayList();
+        produtosFilteredList = new FilteredList<>(observableProdutosList, p -> true);
+        tableviewProdutos.setItems(produtosFilteredList);
     }
 }

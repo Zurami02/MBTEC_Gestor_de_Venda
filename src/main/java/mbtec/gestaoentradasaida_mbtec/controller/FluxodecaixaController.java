@@ -102,6 +102,7 @@ public class FluxodecaixaController implements Initializable {
                 produtosDAO.editar(produto);
                 fluxodeCaixaDAO.deletar(fluxodeCaixa);
                 carregarTableviewFluxodecaixa();
+                carregarFluxoCaixaDoSistema();
                 limparCampos();
             }
         } else {
@@ -169,6 +170,7 @@ public class FluxodecaixaController implements Initializable {
 
                 fluxodeCaixaDAO.atualizar(fluxodeCaixa);
                 carregarTableviewFluxodecaixa();
+                carregarFluxoCaixaDoSistema();
                 limparCampos();
             } else {
                 AlertaUtil.mostrarInfo("Atualização", "Nenhum dado foi modificado.");
@@ -246,6 +248,7 @@ public class FluxodecaixaController implements Initializable {
                 produtosDAO.editar(produtoSelecionado);
 
                 carregarTableviewFluxodecaixa();
+                carregarFluxoCaixaDoSistema();
                 limparCampos();
 
                 precoTotalLabel.setText(precoFormatado + " MZN");
@@ -262,7 +265,7 @@ public class FluxodecaixaController implements Initializable {
     private FluxodeCaixa fluxodeCaixa = new FluxodeCaixa();
     private List<FluxodeCaixa> fluxodeCaixaList = new ArrayList<>();
     private FilteredList<FluxodeCaixa> fluxodeCaixaInfiltrado;
-    private ObservableList<FluxodeCaixa> fluxodeCaixaObservableList;
+    private ObservableList<FluxodeCaixa> fluxodeCaixaObservableList = FXCollections.observableArrayList();
     private List<Produtos> listProdutos;
     private ObservableList<Produtos> produtosObservableList;
 
@@ -270,11 +273,12 @@ public class FluxodecaixaController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         carregarCombboxProdutosAutoCompletado();
         carregarTableviewFluxodecaixa();
-        emtemporealDesconto();
-        tableviewFluxodeCaixaListener();
+        listaBase();
+        carregarFluxoCaixaDoSistema();
         pesquisarFluxoPorNome();
         listenerAtualizarTabelaFluxoDoSistema();
-        carregarFluxoCaixaDoSistema();
+        tableviewFluxodeCaixaListener();
+        emtemporealDesconto();
 
 
         txtprecoUnitarioFC.setEditable(false);
@@ -282,6 +286,9 @@ public class FluxodecaixaController implements Initializable {
         tableviewFluxodeCaixa.setEditable(true);
     }
 
+    /**
+     * Meoto responsvel para preenchimento dos campos de texts ao clicar um item na tabela
+     */
     private void tableviewFluxodeCaixaListener() {
         tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((
                 obs, oldSelection, newSelection) -> {
@@ -404,8 +411,17 @@ public class FluxodecaixaController implements Initializable {
 
     public void carregarTableviewFluxodecaixa() {
         colunaCodigoFC.setCellValueFactory(new PropertyValueFactory<>("idfluxocaixa"));
-        colunaProdutoFC.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getProduto().getDescricao_produto()));
+        /**colunaProdutoFC.setCellValueFactory(cellData ->
+                new SimpleStringProperty(cellData.getValue().getProduto().getDescricao_produto()));**/
+         colunaProdutoFC.setCellValueFactory(cellData -> {
+            if (cellData.getValue().getProduto() != null) {
+                return new SimpleStringProperty(
+                        cellData.getValue().getProduto().getDescricao_produto()
+                );
+            } else {
+                return new SimpleStringProperty("Sem produto");
+            }
+        });
         colunaQuantidadeFC.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
         colunaPrecoTotalFC.setCellFactory(tc -> new TableCell<FluxodeCaixa, BigDecimal>() {
             @Override
@@ -441,18 +457,6 @@ public class FluxodecaixaController implements Initializable {
             }
         });
         colunaDesconto.setCellValueFactory(new PropertyValueFactory<>("desconto"));
-
-        //Listener para txtProcuraNome
-        txtpesquisaFC.textProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue.isEmpty()) {
-                carregarTableviewFluxodecaixa();
-            }
-        });
-
-        fluxodeCaixaList = fluxodeCaixaDAO.listar();
-
-        fluxodeCaixaObservableList = FXCollections.observableArrayList(fluxodeCaixaList);
-        tableviewFluxodeCaixa.setItems(fluxodeCaixaObservableList);
     }
 
     //Validar entrada de Dados no Cadastro
@@ -555,17 +559,21 @@ public class FluxodecaixaController implements Initializable {
 
     }
 
+    //Um listener para preencher a tabela ao digitar
     private void pesquisarFluxoPorNome() {
 
         txtpesquisaFC.textProperty().addListener((obs, oldValue, newValue) -> {
-
-            fluxodeCaixaInfiltrado.setPredicate(fluxodeCaixa -> {
+            fluxodeCaixaInfiltrado.setPredicate(fc -> {
 
                 if (newValue == null || newValue.isBlank()) {
                     return true;
                 }
 
-                return fluxodeCaixa.getDescricao_produto().toLowerCase().contains(newValue.toLowerCase());
+                return fc.getProduto() != null &&
+                        fc.getProduto().getDescricao_produto() != null &&
+                        fc.getProduto().getDescricao_produto()
+                                .toLowerCase()
+                                .contains(newValue.toLowerCase());
             });
         });
     }
@@ -582,11 +590,16 @@ public class FluxodecaixaController implements Initializable {
         );
     }
 
+    //carrega a lista do fluxo do db para lista observavel, passo 1
     private void carregarFluxoCaixaDoSistema() {
-
         fluxodeCaixaList = fluxodeCaixaDAO.listar();
+        fluxodeCaixaObservableList.setAll(fluxodeCaixaList);
 
-        fluxodeCaixaObservableList = FXCollections.observableArrayList(fluxodeCaixaList);
+    }
+
+    //Carrega a lista de lista observavel para tabela passo 2
+    private void listaBase(){
+        fluxodeCaixaObservableList = FXCollections.observableArrayList();
 
         fluxodeCaixaInfiltrado = new FilteredList<>(fluxodeCaixaObservableList, f -> true);
 

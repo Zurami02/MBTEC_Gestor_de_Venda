@@ -10,6 +10,7 @@
 <?import javafx.scene.image.Image?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.shape.Circle?>
 <?import javafx.scene.text.Font?>
 <?import javafx.scene.text.Text?>
 
@@ -101,5 +102,12 @@
             <Font name="System Bold" size="14.0" />
          </font>
       </Button>
+      <Circle fill="#e9edf2" layoutX="601.0" layoutY="34.0" radius="24.0" stroke="BLACK" strokeType="INSIDE" />
+      <Label fx:id="produtoSizeLB" layoutX="584.0" layoutY="33.0" text="00.000" textAlignment="CENTER" />
+      <Label layoutX="597.0" layoutY="12.0" text="P" textFill="#d7b405">
+         <font>
+            <Font name="System Bold" size="14.0" />
+         </font>
+      </Label>
    </children>
 </AnchorPane>

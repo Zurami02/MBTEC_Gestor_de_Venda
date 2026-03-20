@@ -285,7 +285,8 @@ public class UsuarioController implements Initializable {
                             dataFormatada.format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
                     );
                 } catch (Exception e) {
-                    System.out.println("Data Invalida no registro: " + dataOriginal);
+                    System.out.println();
+                    throw new RuntimeException("Data Invalida no registro: " + dataOriginal);
                 }
 
             }
@@ -355,7 +356,7 @@ public class UsuarioController implements Initializable {
                 carregarTableviewUsuario();
             }
         });
-        System.out.println(usuarioDAO.buscarPorId(1));
+
         usuarioList = usuarioDAO.listar();
 
         observableUsuarioList = FXCollections.observableArrayList(usuarioList);
