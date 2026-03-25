@@ -12,6 +12,7 @@ MBTEC Gestor de Venda é um "sistema desktop" desenvolvido pela empresa "MBTEC E
 
 * Cadastro de produtos, funcionários e fornecedores
 * Registro de Entradas, Saídas e fluxo de caixa
+* Emissao de VD, Orcamento, relatorios de historicos de Vendas e Orcamentos
 * Relatórios de E/S e finanças
 * Interface intuitiva em JavaFX
 * Exportação de relatórios (PDF/Excel)
