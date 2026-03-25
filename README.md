@@ -22,7 +22,7 @@ MBTEC Gestor de Venda é um "sistema desktop" desenvolvido pela empresa "MBTEC E
 
 
 
-* Java 23
+* Java 21
 * JavaFX
 * JDBC / SQLITE
 * JasperReports
