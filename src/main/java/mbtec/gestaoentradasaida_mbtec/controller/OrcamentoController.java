@@ -197,7 +197,7 @@ public class OrcamentoController implements Initializable {
             OrcamentoService orcamentoService = new OrcamentoService();
             orcamentoService.finalizarOrcamento(orcamento);
             imprimirOrcamento(orcamento);
-            AlertaUtil.mostrarInfo("", "OK!");
+            AlertaUtil.mostrarInfo("", "Guardado!");
             limparFormulario();
         } catch (Exception e) {
             AlertaUtil.mostrarErro("Erro", e.getMessage());
@@ -304,7 +304,13 @@ public class OrcamentoController implements Initializable {
     }
 
     private void carregarTableViewProdutosNoSistema() {
-        colunaCodigoProdutoDoSistema.setCellValueFactory(new PropertyValueFactory<>("idproduto"));
+        colunaCodigoProdutoDoSistema.setCellValueFactory(cellData ->
+                Bindings.createIntegerBinding(
+                        () -> tableViewCarrinho.getItems().indexOf(cellData.getValue()) + 1
+                ).asObject()
+        );
+        colunaCodigoProdutoDoSistema.setSortable(false);
+
         colunaProdutoProdutoDoSistema.setCellValueFactory(new PropertyValueFactory<>("descricao_produto"));
         colunaPrecoProdutoDoSistema.setCellValueFactory(new PropertyValueFactory<>("preco"));
         colunaEstoqueProdutoDoSistema.setCellValueFactory(new PropertyValueFactory<>("quantidade_produto"));
@@ -517,26 +523,6 @@ public class OrcamentoController implements Initializable {
         tableviewProdutoDoSistema.getSelectionModel().clearSelection();
     }
 
-    /**
-     * private void listenerIVA() {
-     * <p>
-     * BigDecimal iva = ConfiguracaoDAO.buscarPorChave("IVA").getValor();
-     * lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-     * checkBoxIVA.selectedProperty().addListener((obs, oldValue, marcado) -> {
-     * if (marcado) {
-     * BigDecimal taxa = new BigDecimal(iva).divide(new BigDecimal("100"));
-     * orcamento.setTaxaIVA(taxa);
-     * lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
-     * } else {
-     * orcamento.setTaxaIVA(new BigDecimal("0.0"));
-     * }
-     * <p>
-     * atualizarValoresOrcamento();
-     * });
-     * <p>
-     * }
-     **/
-
     private void listenerIVA() {
         BigDecimal iva;
         Configuracao config = ConfiguracaoDAO.buscarPorChave("IVA");
@@ -603,7 +589,7 @@ public class OrcamentoController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
+            AlertaUtil.mostrarErro("Falha ao imprimir Orcamento", e.getMessage());
         }
     }
 }

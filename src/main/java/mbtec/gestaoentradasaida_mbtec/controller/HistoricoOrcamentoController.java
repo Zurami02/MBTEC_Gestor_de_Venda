@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.binding.Bindings;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -215,7 +216,12 @@ public class HistoricoOrcamentoController implements Initializable {
     }
 
     private void carregarTableViewVendasHistorico() {
-        colunaCodigoOrcHistorico.setCellValueFactory(new PropertyValueFactory<>("idorcamento"));
+        colunaCodigoOrcHistorico.setCellValueFactory(cellData ->
+                Bindings.createIntegerBinding(
+                        () -> tableviewOrcHistorico.getItems().indexOf(cellData.getValue()) + 1
+                ).asObject()
+        );
+        colunaCodigoOrcHistorico.setSortable(false);
         colunaclienteOrcHistorico.setCellValueFactory(cell -> {
             Orcamento o = cell.getValue();
             if (o.getCliente() != null) {
@@ -270,7 +276,7 @@ public class HistoricoOrcamentoController implements Initializable {
 
         } catch (Exception e) {
             e.printStackTrace();
-            AlertaUtil.mostrarErro("Erro", "Falha ao imprimir Orcamento");
+            AlertaUtil.mostrarErro("Falha ao imprimir Orcamento", e.getMessage());
         }
     }
 }

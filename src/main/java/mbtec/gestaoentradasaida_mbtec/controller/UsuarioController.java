@@ -167,6 +167,7 @@ public class UsuarioController implements Initializable {
     void primeiraVezLogin(MouseEvent event) {
 
     }
+
     @FXML
     void btnRegistarUsuario(ActionEvent event) {
         if (validarEntradadedados()) {
@@ -489,6 +490,4 @@ public class UsuarioController implements Initializable {
             }
         });
     }
-
-
 }
