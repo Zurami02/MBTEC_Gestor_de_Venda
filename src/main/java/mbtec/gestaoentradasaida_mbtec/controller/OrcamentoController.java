@@ -546,7 +546,6 @@ public class OrcamentoController implements Initializable {
         });
     }
 
-
     //deve ser chamdo no Itilize porque eh 1Listener
     private void deletarItensCarrinhoPorTeclaDelete() {
         tableViewCarrinho.setOnKeyPressed(event -> {
