@@ -62,12 +62,14 @@ public class ClienteDAO {
     }
 
     public boolean atualizar(@NotNull Cliente cliente){
+
         String sql = "UPDATE cliente SET nome=?, nuit=?, endereco=? WHERE idcliente=?";
         try(Connection connection = ConexaoSQLite.getConnection();
             PreparedStatement stmt = connection.prepareStatement(sql)) {
             stmt.setString(1, cliente.getNome());
             stmt.setString(2, cliente.getNuit());
-            stmt.setString(2, cliente.getEndereco());
+            stmt.setString(3, cliente.getEndereco());
+            stmt.setInt(4, cliente.getIdcliente());
             stmt.execute();
             return true;
 

@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -207,13 +208,16 @@ public class FluxodecaixaController implements Initializable {
 
                 // Desconto
                 BigDecimal descontoPercentual = BigDecimal.ZERO;
+                BigDecimal desconto = BigDecimal.ZERO;
                 String texto = txtdesconto.getText();
                 if (texto != null && !texto.trim().isEmpty()) {
                     try {
                         texto = texto.replace(",", "."); // suporta vírgula como decimal
                         descontoPercentual = new BigDecimal(texto);
+                        desconto = new BigDecimal(texto);
                     } catch (NumberFormatException e) {
                         descontoPercentual = BigDecimal.ZERO;
+                        desconto = BigDecimal.ZERO;
                         System.out.println("Desconto inválido, usando 0.0");
                     }
                 }
@@ -224,7 +228,11 @@ public class FluxodecaixaController implements Initializable {
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 BigDecimal precoTotal = valorBruto.subtract(valorDesconto).setScale(2, RoundingMode.HALF_UP);
 
+                BigDecimal totalPreco = valorBruto.subtract(desconto).setScale(2, RoundingMode.HALF_UP);
+
                 String precoFormatado = precoTotal.toPlainString();
+                String precoFormatado1 = totalPreco.toPlainString();
+
                 String data = String.valueOf(txtdatapickerFC.getValue());
 
                 // Verifica se há estoque suficiente
@@ -237,9 +245,9 @@ public class FluxodecaixaController implements Initializable {
                 FluxodeCaixa fluxo = new FluxodeCaixa();
                 fluxo.setProduto(produtoSelecionado);
                 fluxo.setQuantidade(quantidade);
-                fluxo.setValor(precoTotal);
+                fluxo.setValor(totalPreco);
                 fluxo.setData(data);
-                fluxo.setDesconto(descontoPercentual);
+                fluxo.setDesconto(desconto);
                 fluxodeCaixaDAO.inserir(fluxo);
 
                 // Atualiza estoque do produto
@@ -251,8 +259,8 @@ public class FluxodecaixaController implements Initializable {
                 carregarFluxoCaixaDoSistema();
                 limparCampos();
 
-                precoTotalLabel.setText(precoFormatado + " MZN");
-                descontoLabel.setText(valorDesconto.toPlainString() + " MZN");
+                precoTotalLabel.setText(precoFormatado1 + " MZN");
+                descontoLabel.setText(desconto.toPlainString() + " MZN");
 
             } catch (NumberFormatException e) {
                 System.out.println("Erro ao converter quantidade: " + e.getMessage());
@@ -309,15 +317,19 @@ public class FluxodecaixaController implements Initializable {
                 BigDecimal precoUnitario = newSelection.getProduto().getPreco();
                 int quantidade = newSelection.getQuantidade();
                 BigDecimal descontoPercentual = newSelection.getDesconto();
+                BigDecimal desconto = newSelection.getDesconto();
 
                 BigDecimal valorBruto = precoUnitario.multiply(BigDecimal.valueOf(quantidade));
+
                 BigDecimal valorDesconto = valorBruto.multiply(descontoPercentual)
                         .divide(BigDecimal.valueOf(100), 2, RoundingMode.HALF_UP);
                 BigDecimal precoTotal = valorBruto.subtract(valorDesconto);
 
+                BigDecimal precoTotal1 = valorBruto.subtract(desconto);
+
                 // 4. Atualiza os labels
-                precoTotalLabel.setText(precoTotal.setScale(2, RoundingMode.HALF_UP) + " MZN");
-                descontoLabel.setText(valorDesconto.setScale(2, RoundingMode.HALF_UP) + " MZN");
+                precoTotalLabel.setText(precoTotal1.setScale(2, RoundingMode.HALF_UP) + " MZN");
+                descontoLabel.setText(desconto.setScale(2, RoundingMode.HALF_UP) + " MZN");
 
                 // 5. Estoque atual
                 estoqueLabel.setText(newSelection.getProduto().getDescricao_produto() + ": " +
@@ -410,9 +422,11 @@ public class FluxodecaixaController implements Initializable {
     }
 
     public void carregarTableviewFluxodecaixa() {
-        colunaCodigoFC.setCellValueFactory(new PropertyValueFactory<>("idfluxocaixa"));
-        /**colunaProdutoFC.setCellValueFactory(cellData ->
-                new SimpleStringProperty(cellData.getValue().getProduto().getDescricao_produto()));**/
+
+        colunaCodigoFC.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableviewFluxodeCaixa.getItems().indexOf(cell.getValue()) + 1));
+        colunaCodigoFC.setSortable(false);
          colunaProdutoFC.setCellValueFactory(cellData -> {
             if (cellData.getValue().getProduto() != null) {
                 return new SimpleStringProperty(

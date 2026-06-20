@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -267,7 +268,11 @@ public class GestaoESController implements Initializable {
     }
 
     private void carregarTableViewGestaoES() {
-        colunaCodigo.setCellValueFactory(new PropertyValueFactory<>("idgestao"));
+
+        colunaCodigo.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableviewGestaoes.getItems().indexOf(cell.getValue()) + 1));
+        colunaCodigo.setSortable(false);
         colunaData.setCellValueFactory(new PropertyValueFactory<>("data"));
 
         DateTimeFormatter dataEntrada = DateTimeFormatter.ofPattern("yyy-MM-dd");

@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -344,7 +345,11 @@ public class UsuarioController implements Initializable {
     }
 
     public void carregarTableviewUsuario() {
-        colunaCodigoUsuario.setCellValueFactory(new PropertyValueFactory<>("idusuario"));
+
+        colunaCodigoUsuario.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableviewUsuario.getItems().indexOf(cell.getValue()) + 1));
+        colunaCodigoUsuario.setSortable(false);
         colunaNomeUsuario.setCellValueFactory(new PropertyValueFactory<>("nome_usuario"));
         colunaSexoUsuario.setCellValueFactory(new PropertyValueFactory<>("sexo"));
         colunaPerfi.setCellValueFactory(new PropertyValueFactory<>("perfil"));

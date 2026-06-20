@@ -289,7 +289,7 @@ public class CadastroProdutosController implements Initializable {
         //listenerAtualizarTabelaDoSistema();
         tableviewProdutos.getSelectionModel().selectedItemProperty().addListener((obs, oldSelection, newSelection) -> {
             if (newSelection != null) {
-                txtdescricao.setText(String.valueOf(newSelection.getDescricao_produto()));
+                txtdescricao.setText(newSelection.getDescricao_produto());
                 txtquantidade.setText(String.valueOf(newSelection.getQuantidade_produto()));
                 txtpreco.setText(String.valueOf(newSelection.getPreco()));
                 txtcomboboxCategoriaProduto.setValue(newSelection.getCategoria());

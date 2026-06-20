@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -253,7 +254,11 @@ public class CadastroFornecedorController implements Initializable {
     }
 
     private void carregarTableViewFornecedores() {
-        colunaCodigoFornecedor.setCellValueFactory(new PropertyValueFactory<>("idfornecedor"));
+
+        colunaCodigoFornecedor.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableviewFornecedor.getItems().indexOf(cell.getValue()) + 1));
+        colunaCodigoFornecedor.setSortable(false);
         colunaDescricaoFornecedor.setCellValueFactory(new PropertyValueFactory<>("descricaoProduto"));
         colunaquantidadeFornecedor.setCellValueFactory(new PropertyValueFactory<>("quantidade"));
         colunaFornecedor.setCellValueFactory(new PropertyValueFactory<>("fornecedor"));

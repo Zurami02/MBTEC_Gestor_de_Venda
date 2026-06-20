@@ -114,13 +114,17 @@ public class TelaprincipalController implements Initializable {
     }
 
     /**
-     * Metodo nao usado na versao 1.0
+     * Me na versao 1.0
      */
     @FXML
     void menuitemcadastroServico(ActionEvent event) {
 //        carregarTela("/mbtec/gestaoentradasaida_mbtec/servico.fxml");
     }
 
+    @FXML
+    void menuitemcadastroCliente(ActionEvent event){
+        carregarTela("/mbtec/gestaoentradasaida_mbtec/cadastroCliente.fxml");
+    }
 
     @FXML
     void menuitemcadastroFornecedor(ActionEvent event) {

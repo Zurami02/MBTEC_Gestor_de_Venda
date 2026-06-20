@@ -781,7 +781,7 @@ public class VendasController implements Initializable {
         }
     }
 
-    private void mostrarFeedback() {
+    private void mostrarFeedback()  {
 
         lbFeedBack.setText("Venda finalizada com sucesso");
         lbFeedBack.setStyle(

@@ -4,6 +4,7 @@ import com.jfoenix.controls.JFXButton;
 import com.jfoenix.controls.JFXCheckBox;
 import com.jfoenix.controls.JFXComboBox;
 import javafx.beans.binding.Bindings;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
@@ -304,11 +305,10 @@ public class OrcamentoController implements Initializable {
     }
 
     private void carregarTableViewProdutosNoSistema() {
-        colunaCodigoProdutoDoSistema.setCellValueFactory(cellData ->
-                Bindings.createIntegerBinding(
-                        () -> tableViewCarrinho.getItems().indexOf(cellData.getValue()) + 1
-                ).asObject()
-        );
+
+        colunaCodigoProdutoDoSistema.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                        tableviewProdutoDoSistema.getItems().indexOf(cell.getValue()) + 1));
         colunaCodigoProdutoDoSistema.setSortable(false);
 
         colunaProdutoProdutoDoSistema.setCellValueFactory(new PropertyValueFactory<>("descricao_produto"));
@@ -367,6 +367,7 @@ public class OrcamentoController implements Initializable {
     }
 
     private void carregarTableViewCarrinho() {
+
         colunaDescricaoItens.setCellValueFactory(new PropertyValueFactory<>("descricaoitem"));
 
         colunaTipoItens.setCellValueFactory(data ->
