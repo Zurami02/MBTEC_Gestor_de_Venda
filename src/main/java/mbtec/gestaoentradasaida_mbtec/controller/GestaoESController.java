@@ -139,7 +139,8 @@ public class GestaoESController implements Initializable {
                 if (!gestaoES.getPlanoconta().equals(comboboxTipoGestao.getValue()) ||
                         !gestaoES.getDescricao().equals(txtdescricao.getText()) ||
                         gestaoES.getQuantidade() != Integer.parseInt(txtquantidade.getText()) ||
-                        gestaoES.getValor().compareTo(valorES) != 0) {
+                        gestaoES.getValor().compareTo(valorES) != 0 ||
+                        !gestaoES.getData().equals(String.valueOf(dataPicker.getValue()))){
 
                     gestaoES.setData(String.valueOf(dataPicker.getValue()));
                     gestaoES.setPlanoconta(comboboxTipoGestao.getValue());
@@ -159,6 +160,7 @@ public class GestaoESController implements Initializable {
 
                     gestaoESDAO.editar(gestaoES);
                     carregarTableViewGestaoES();
+                    limparCampos();
                 } else {
                     // Se não houve mudanças, você pode mostrar uma mensagem ou simplesmente retornar
                     Alert infoAlert = new Alert(Alert.AlertType.INFORMATION);
