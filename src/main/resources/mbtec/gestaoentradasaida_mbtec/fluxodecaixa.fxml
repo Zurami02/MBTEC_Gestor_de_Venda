@@ -162,6 +162,7 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
+                        <Label fx:id="lbQTDEstoque" layoutX="158.0" layoutY="96.0" prefHeight="17.0" prefWidth="98.0" />
                      </children>
                      <opaqueInsets>
                         <Insets />

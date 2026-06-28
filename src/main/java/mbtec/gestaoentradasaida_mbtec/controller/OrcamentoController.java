@@ -319,7 +319,7 @@ public class OrcamentoController implements Initializable {
     public void carregarCombboxClienteNoSistema() {
         List<Cliente> clienteList = new ClienteDAO().listar();
         clienteObservableList = FXCollections.observableArrayList(clienteList);
-        comboBoxClientenoSistema.setItems(clienteObservableList);
+
         // Define um filtro dinâmico
         FilteredList<Cliente> clienteFiltrados = new FilteredList<>(clienteObservableList, c -> true);
 
@@ -327,17 +327,35 @@ public class OrcamentoController implements Initializable {
 
         // Adiciona um listener para o editor de texto do ComboBox
         comboBoxClientenoSistema.setEditable(true);
+
+        // Flag para ignorar o listener quando um item foi seleccionado
+        final boolean[] itemSelecionado = {false};
+
+        comboBoxClientenoSistema.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                itemSelecionado[0] = true; // marca que foi uma selecção real
+            }
+        });
+
         comboBoxClientenoSistema.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            final String filtro = newValue.toLowerCase().trim();
+            // Se foi selecção real, ignora e reseta a flag
+            if (itemSelecionado[0]) {
+                itemSelecionado[0] = false;
+                return;
+            }
 
-            clienteFiltrados.setPredicate(cliente -> {
-                if (filtro.isEmpty()) {
-                    return true;
-                }
-                return cliente.getNome().toLowerCase().contains(filtro);
-            });
+            final String filtro = newValue == null ? "" : newValue.toLowerCase();
 
-            if (!comboBoxClientenoSistema.isShowing()) {
+            // Quando vazio, mostra todos
+            if (filtro.isEmpty()) {
+                clienteFiltrados.setPredicate(cliente -> true);
+            } else {
+                clienteFiltrados.setPredicate(cliente ->
+                        cliente.getNome().toLowerCase().contains(filtro)
+                );
+            }
+
+            if (comboBoxClientenoSistema.isFocused() && !comboBoxClientenoSistema.isShowing()) {
                 comboBoxClientenoSistema.show();
             }
         });
@@ -529,7 +547,7 @@ public class OrcamentoController implements Initializable {
         Configuracao config = ConfiguracaoDAO.buscarPorChave("IVA");
         if (config != null) {
             iva = config.getValor();
-        }else {
+        } else {
             iva = new BigDecimal("17");
         }
         lbTAXAIVAVendas.setText("IVA (" + iva + "%)");

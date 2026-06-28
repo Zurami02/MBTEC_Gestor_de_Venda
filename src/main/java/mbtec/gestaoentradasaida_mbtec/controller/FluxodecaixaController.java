@@ -73,6 +73,9 @@ public class FluxodecaixaController implements Initializable {
     private Label precoTotalLabel;
 
     @FXML
+    private Label lbQTDEstoque;
+
+    @FXML
     private Label descontoLabel;
 
     @FXML
@@ -332,8 +335,9 @@ public class FluxodecaixaController implements Initializable {
                 descontoLabel.setText(desconto.setScale(2, RoundingMode.HALF_UP) + " MZN");
 
                 // 5. Estoque atual
-                estoqueLabel.setText(newSelection.getProduto().getDescricao_produto() + ": " +
-                        newSelection.getProduto().getQuantidade_produto());
+                estoqueLabel.setText(newSelection.getProduto().getDescricao_produto());
+
+                lbQTDEstoque.setText(String.valueOf(newSelection.getProduto().getQuantidade_produto()));
             }
         });
 
@@ -342,8 +346,8 @@ public class FluxodecaixaController implements Initializable {
             if (produtoSelecionado != null) {
                 txtprecoUnitarioFC.setText(produtoSelecionado.getPreco().setScale(2, RoundingMode.HALF_UP).toPlainString());
                 atualizarPrecoTotal(); // atualizar o total se já tiver quantidade
-                estoqueLabel.setText(produtoSelecionado.getDescricao_produto() + ": " +
-                        produtoSelecionado.getQuantidade_produto());
+                estoqueLabel.setText(produtoSelecionado.getDescricao_produto());
+                lbQTDEstoque.setText(String.valueOf(produtoSelecionado.getQuantidade_produto()));
             }
         });
 
@@ -368,44 +372,53 @@ public class FluxodecaixaController implements Initializable {
         txtprecototalFC.clear();
         txtdesconto.clear();
         txtdesconto.clear();
-        precoTotalLabel.setText("");
-        estoqueLabel.setText("");
-        descontoLabel.setText("");
+        precoTotalLabel.setText("0.00MZN");
+        estoqueLabel.setText("MBTEC");
+        lbQTDEstoque.setText("0.0");
+        descontoLabel.setText("0.00");
 
     }
 
     public void carregarCombboxProdutosAutoCompletado() {
-        // Converte a lista de produtos em uma lista observável
-        listProdutos = new ProdutosDAO().listar(); // ou seu método
+        listProdutos = new ProdutosDAO().listar();
         produtosObservableList = FXCollections.observableArrayList(listProdutos);
-        txtcomboboxProdutoFC.setItems(produtosObservableList);
 
-        // Define um filtro dinâmico
         FilteredList<Produtos> produtosFiltrados = new FilteredList<>(produtosObservableList, p -> true);
-
         txtcomboboxProdutoFC.setItems(produtosFiltrados);
-
-        // Adiciona um listener para o editor de texto do ComboBox
         txtcomboboxProdutoFC.setEditable(true);
-        txtcomboboxProdutoFC.getEditor().textProperty().addListener((obs,
-                                                                     oldValue, newValue) -> {
-            final String filtro = newValue.toLowerCase();
 
-            // Aplica filtro
-            produtosFiltrados.setPredicate(produto -> {
-                if (filtro == null || filtro.isEmpty()) {
-                    return true;
-                }
-                return produto.getDescricao_produto().toLowerCase().contains(filtro);
-            });
+        // Flag para ignorar o listener quando um item foi seleccionado
+        final boolean[] itemSelecionado = {false};
 
-            // Mostra o menu dropdown automaticamente
-            if (!txtcomboboxProdutoFC.isShowing()) {
+        txtcomboboxProdutoFC.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                itemSelecionado[0] = true; // marca que foi uma selecção real
+            }
+        });
+
+        txtcomboboxProdutoFC.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            // Se foi selecção real, ignora e reseta a flag
+            if (itemSelecionado[0]) {
+                itemSelecionado[0] = false;
+                return;
+            }
+
+            final String filtro = newValue == null ? "" : newValue.toLowerCase();
+
+            // Quando vazio, mostra todos
+            if (filtro.isEmpty()) {
+                produtosFiltrados.setPredicate(p -> true);
+            } else {
+                produtosFiltrados.setPredicate(produto ->
+                        produto.getDescricao_produto().toLowerCase().contains(filtro)
+                );
+            }
+
+            if (txtcomboboxProdutoFC.isFocused() && !txtcomboboxProdutoFC.isShowing()) {
                 txtcomboboxProdutoFC.show();
             }
         });
 
-        // Corrige o comportamento de seleção para manter o objeto Produtos real
         txtcomboboxProdutoFC.setConverter(new StringConverter<Produtos>() {
             @Override
             public String toString(Produtos produto) {

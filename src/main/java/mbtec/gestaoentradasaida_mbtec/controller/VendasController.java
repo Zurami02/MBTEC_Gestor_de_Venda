@@ -426,7 +426,7 @@ public class VendasController implements Initializable {
     public void carregarCombboxClienteNoSistema() {
         List<Cliente> clienteList = new ClienteDAO().listar();
         clienteObservableList = FXCollections.observableArrayList(clienteList);
-        comboBoxClientenoSistema.setItems(clienteObservableList);
+
         // Define um filtro dinâmico
         FilteredList<Cliente> clienteFiltrados = new FilteredList<>(clienteObservableList, c -> true);
 
@@ -434,15 +434,31 @@ public class VendasController implements Initializable {
 
         // Adiciona um listener para o editor de texto do ComboBox
         comboBoxClientenoSistema.setEditable(true);
-        comboBoxClientenoSistema.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
-            final String filtro = newValue.toLowerCase().trim();
+        //Flag
+        final boolean[] itemSelecionado = {false};
 
-            clienteFiltrados.setPredicate(cliente -> {
-                if (filtro.isEmpty()) {
-                    return true;
-                }
-                return cliente.getNome().toLowerCase().contains(filtro);
-            });
+        comboBoxClientenoSistema.getSelectionModel().selectedItemProperty().addListener((obs, oldv, newVal)->{
+            if (newVal != null){
+                itemSelecionado[0] = true; //marca que foi uma selecao real
+            }
+        });
+
+        comboBoxClientenoSistema.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            //Se foi selecao real, ignore e reseta a fla
+            if (itemSelecionado[0]){
+                itemSelecionado[0] = false;
+                return;
+            }
+
+            final String filtro = newValue == null ? "" : newValue.toLowerCase();
+
+            //Quando vazio, atualiza a lista
+            if (filtro.isEmpty()){
+                clienteFiltrados.setPredicate(c -> true);
+            }else {
+                clienteFiltrados.setPredicate(c ->
+                        c.getNome().toLowerCase().contains(filtro));
+            }
 
             if (!comboBoxClientenoSistema.isShowing()) {
                 comboBoxClientenoSistema.show();

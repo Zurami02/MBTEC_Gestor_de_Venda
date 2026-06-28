@@ -338,7 +338,6 @@ public class CadastroProdutosController implements Initializable {
         // Converte a lista de produtos em uma lista observável
         categoriaList = new CategoriaDAO().listar(); // ou seu método
         observableCategoriaList = FXCollections.observableArrayList(categoriaList);
-        txtcomboboxCategoriaProduto.setItems(observableCategoriaList);
 
         // Define um filtro dinâmico
         FilteredList<Categoria> categoriaFiltrados = new FilteredList<>(observableCategoriaList, c -> true);
@@ -347,20 +346,35 @@ public class CadastroProdutosController implements Initializable {
 
         // Adiciona um listener para o editor de texto do ComboBox
         txtcomboboxCategoriaProduto.setEditable(true);
-        txtcomboboxCategoriaProduto.getEditor().textProperty().addListener((obs,
-                                                                            oldValue, newValue) -> {
-            final String filtro = newValue.toLowerCase();
 
-            // Aplica filtro
-            categoriaFiltrados.setPredicate(categoria -> {
-                if (filtro == null || filtro.isEmpty()) {
-                    return true;
-                }
-                return categoria.getDescricao_categoria().toLowerCase().contains(filtro);
-            });
+        // Flag para ignorar o listener quando um item foi seleccionado
+        final boolean[] itemSelecionado = {false};
 
-            // Mostra o menu dropdown automaticamente
-            if (!txtcomboboxCategoriaProduto.isShowing()) {
+        txtcomboboxCategoriaProduto.getSelectionModel().selectedItemProperty().addListener((obs, oldVal, newVal) -> {
+            if (newVal != null) {
+                itemSelecionado[0] = true; // marca que foi uma selecção real
+            }
+        });
+
+        txtcomboboxCategoriaProduto.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
+            // Se foi selecção real, ignora e reseta a flag
+            if (itemSelecionado[0]) {
+                itemSelecionado[0] = false;
+                return;
+            }
+
+            final String filtro = newValue == null ? "" : newValue.toLowerCase();
+
+            // Quando vazio, mostra todos
+            if (filtro.isEmpty()) {
+                categoriaFiltrados.setPredicate(c -> true);
+            } else {
+                categoriaFiltrados.setPredicate(c ->
+                        c.getDescricao_categoria().toLowerCase().contains(filtro)
+                );
+            }
+
+            if (txtcomboboxCategoriaProduto.isFocused() && !txtcomboboxCategoriaProduto.isShowing()) {
                 txtcomboboxCategoriaProduto.show();
             }
         });
@@ -419,7 +433,7 @@ public class CadastroProdutosController implements Initializable {
         observableProdutosList.setAll(produtosList);
     }
 
-    private void listaBASE(){
+    private void listaBASE() {
 
         observableProdutosList = FXCollections.observableArrayList();
         produtosFilteredList = new FilteredList<>(observableProdutosList, p -> true);
