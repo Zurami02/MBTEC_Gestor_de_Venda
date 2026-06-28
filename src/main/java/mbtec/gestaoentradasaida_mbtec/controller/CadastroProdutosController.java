@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
@@ -284,6 +285,7 @@ public class CadastroProdutosController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
+
         carregarCombboxProdutosAutoCompletado();
         carregarTableViewProdutos();
         //listenerAtualizarTabelaDoSistema();
@@ -396,7 +398,12 @@ public class CadastroProdutosController implements Initializable {
     }
 
     private void carregarTableViewProdutos() {
-        colunaCodigo.setCellValueFactory(new PropertyValueFactory<>("idproduto"));
+
+        colunaCodigo.setCellValueFactory(cell ->
+                new ReadOnlyObjectWrapper<>(
+                tableviewProdutos.getItems().indexOf(cell.getValue()) + 1
+        ));
+        colunaCodigo.setSortable(false);
         colunaDescricao.setCellValueFactory(new PropertyValueFactory<>("descricao_produto"));
         colunaQTD.setCellValueFactory(new PropertyValueFactory<>("quantidade_produto"));
         colunapreco.setCellValueFactory(new PropertyValueFactory<>("preco"));

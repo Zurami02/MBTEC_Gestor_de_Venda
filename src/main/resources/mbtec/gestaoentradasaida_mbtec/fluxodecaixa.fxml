@@ -162,7 +162,11 @@
                               <Font name="System Bold" size="15.0" />
                            </font>
                         </Label>
-                        <Label fx:id="lbQTDEstoque" layoutX="158.0" layoutY="96.0" prefHeight="17.0" prefWidth="98.0" />
+                        <Label fx:id="lbQTDEstoque" layoutX="158.0" layoutY="96.0" prefHeight="17.0" prefWidth="98.0" textFill="#1250c7">
+                           <font>
+                              <Font name="System Bold" size="15.0" />
+                           </font>
+                        </Label>
                      </children>
                      <opaqueInsets>
                         <Insets />
@@ -175,8 +179,8 @@
                      <children>
                         <Button mnemonicParsing="false" onAction="#btnPesquisaFC" text="PESQ." />
                         <Button mnemonicParsing="false" onAction="#btnSalvarFC" text="SALVAR" />
-                        <Button mnemonicParsing="false" onAction="#btnEditarFC" text="EDITAR" />
-                        <Button mnemonicParsing="false" onAction="#btnDeletar" text="DELETAR" />
+                        <Button fx:id="btnEditarFC" mnemonicParsing="false" onAction="#btnEditarFC" text="EDITAR" />
+                        <Button fx:id="btnDeletar" mnemonicParsing="false" onAction="#btnDeletar" text="DELETAR" />
                      </children>
                   </HBox>
                </children>
