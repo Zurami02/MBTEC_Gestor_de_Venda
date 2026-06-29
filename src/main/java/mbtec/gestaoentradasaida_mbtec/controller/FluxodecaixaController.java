@@ -1,5 +1,6 @@
 package mbtec.gestaoentradasaida_mbtec.controller;
 
+import javafx.application.Platform;
 import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -87,6 +88,8 @@ public class FluxodecaixaController implements Initializable {
     @FXML
     private Button btnEditarFC;
 
+    private boolean mudancaProgramatica = false;
+
     @FXML
     void btnDeletar(ActionEvent event) {
         fluxodeCaixa = tableviewFluxodeCaixa.getSelectionModel().getSelectedItem();
@@ -116,7 +119,7 @@ public class FluxodecaixaController implements Initializable {
                 limparCampos();
             }
         } else {
-            AlertaUtil.mostrarInfo("Erro!","Selecione o Fluxo de caixa na tabela");
+            AlertaUtil.mostrarInfo("Erro!", "Selecione o Fluxo de caixa na tabela");
 
         }
     }
@@ -168,7 +171,7 @@ public class FluxodecaixaController implements Initializable {
                     fluxodeCaixa.getProduto().getIdproduto() != produtoSelecionado.getIdproduto() ||
                             fluxodeCaixa.getQuantidade() != quantidade ||
                             !LocalDate.parse(fluxodeCaixa.getData()).equals(dataNova) ||
-                           fluxodeCaixa.getValor().compareTo(precoTotal) != 0 ||
+                            fluxodeCaixa.getValor().compareTo(precoTotal) != 0 ||
                             fluxodeCaixa.getDesconto().compareTo(desconto) != 0;
 
             if (alterado) {
@@ -295,8 +298,8 @@ public class FluxodecaixaController implements Initializable {
 
         btnDeletar.setDisable(true);
         btnEditarFC.setDisable(true);
-        tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((obs, old, selecionado)->{
-            if (selecionado != null){
+        tableviewFluxodeCaixa.getSelectionModel().selectedItemProperty().addListener((obs, old, selecionado) -> {
+            if (selecionado != null) {
                 btnDeletar.setDisable(false);
                 btnEditarFC.setDisable(false);
             }
@@ -458,7 +461,7 @@ public class FluxodecaixaController implements Initializable {
                 new ReadOnlyObjectWrapper<>(
                         tableviewFluxodeCaixa.getItems().indexOf(cell.getValue()) + 1));
         colunaCodigoFC.setSortable(false);
-         colunaProdutoFC.setCellValueFactory(cellData -> {
+        colunaProdutoFC.setCellValueFactory(cellData -> {
             if (cellData.getValue().getProduto() != null) {
                 return new SimpleStringProperty(
                         cellData.getValue().getProduto().getDescricao_produto()
@@ -484,7 +487,7 @@ public class FluxodecaixaController implements Initializable {
         colunaDataFC.setCellValueFactory(new PropertyValueFactory<>("data"));
         DateTimeFormatter dataEntrada = DateTimeFormatter.ofPattern("yyy-MM-dd");
         DateTimeFormatter datasaida = DateTimeFormatter.ofPattern("dd/MM/yyyy");
-        colunaDataFC.setCellFactory(column ->new TableCell<FluxodeCaixa, String>(){
+        colunaDataFC.setCellFactory(column -> new TableCell<FluxodeCaixa, String>() {
             @Override
             protected void updateItem(String data, boolean empty) {
                 super.updateItem(data, empty);
@@ -496,7 +499,7 @@ public class FluxodecaixaController implements Initializable {
                 try {
                     LocalDate d = LocalDate.parse(data, dataEntrada);
                     setText(datasaida.format(d));
-                }catch (Exception e){
+                } catch (Exception e) {
                     setText(data);
                 }
             }
@@ -582,25 +585,40 @@ public class FluxodecaixaController implements Initializable {
         // foi modificado a formula para usar desconto em valor
         BigDecimal valorDesconto = descontoPercentual;
 
+        if (quantidade > 0 && valorDesconto.compareTo(valorBruto) >= 0) {
+            AlertaUtil.mostrarErro("",
+                    "O desconto deve ser menor que o preço total do produto e menor/igual a 8%.");
+            Platform.runLater(()->{
+                mudancaProgramatica = true;
+                txtdesconto.setText("0");
+                mudancaProgramatica = false;
+                txtdesconto.positionCaret(1);
+            });
+
+            descontoLabel.setText("0.00 MZN");
+            precoTotalLabel.setText(valorBruto.setScale(2, RoundingMode.HALF_UP).toPlainString() + " MZN");
+            return;
+        }
         // valor final = valor bruto - desconto
         BigDecimal valorFinal = valorBruto.subtract(valorDesconto).setScale(2, RoundingMode.HALF_UP);
 
-        descontoLabel.setText(valorDesconto.toPlainString() + " MZN");
+        descontoLabel.setText(valorDesconto.setScale(2, RoundingMode.HALF_UP).toPlainString() + " MZN");
         precoTotalLabel.setText(valorFinal.toPlainString() + " MZN");
     }
 
-    private void emtemporealDesconto(){
-            txtdesconto.textProperty().addListener((observable, oldValue, newValue) -> {
-                atualizarValoresCalculados();
-            });
+    private void emtemporealDesconto() {
+        txtdesconto.textProperty().addListener((observable, oldValue, newValue) -> {
+            if (mudancaProgramatica) return;
+            atualizarValoresCalculados();
+        });
 
-            txtquantidadeFC.textProperty().addListener((obs, oldVal, newVal) -> {
-                atualizarValoresCalculados();
-            });
+        txtquantidadeFC.textProperty().addListener((obs, oldVal, newVal) -> {
+            atualizarValoresCalculados();
+        });
 
-            txtcomboboxProdutoFC.valueProperty().addListener((obs, oldVal, newVal) -> {
-                atualizarValoresCalculados();
-            });
+        txtcomboboxProdutoFC.valueProperty().addListener((obs, oldVal, newVal) -> {
+            atualizarValoresCalculados();
+        });
 
     }
 
@@ -643,7 +661,7 @@ public class FluxodecaixaController implements Initializable {
     }
 
     //Carrega a lista de lista observavel para tabela passo 2
-    private void listaBase(){
+    private void listaBase() {
         fluxodeCaixaObservableList = FXCollections.observableArrayList();
 
         fluxodeCaixaInfiltrado = new FilteredList<>(fluxodeCaixaObservableList, f -> true);
