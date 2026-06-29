@@ -286,6 +286,7 @@ public class VendasController implements Initializable {
 
         String valorPago = txtDinheiroPago.getText().trim();
         String pagamento = comboboxFormapagamento.getValue();
+        BigDecimal totalvenda = venda.getTotalFinal();
 
         if (!validarCliente()) return;
 
@@ -297,12 +298,20 @@ public class VendasController implements Initializable {
 
         BigDecimal valorPagamento;
         try {
+            valorPago = valorPago.replace(",", ".");
             valorPagamento = new BigDecimal(valorPago);
         } catch (NumberFormatException e) {
             AlertaUtil.mostrarErro("Erro", "Valor pago inválido");
             return;
         }
 
+        if (valorPagamento.compareTo(totalvenda) < 0) {
+            AlertaUtil.piscarVermelho(txtDinheiroPago);
+            AlertaUtil.mostrarErro("Pagamento Insuficiente",
+                    "O valor pago (" + valorPagamento.toPlainString() +
+                            " MZN) é menor que o total da venda (" + totalvenda.toPlainString() + " MZN).");
+            return;
+        }
 
         try {
             VendaCompletaService vendacompleta = new VendaCompletaService();
@@ -437,15 +446,15 @@ public class VendasController implements Initializable {
         //Flag
         final boolean[] itemSelecionado = {false};
 
-        comboBoxClientenoSistema.getSelectionModel().selectedItemProperty().addListener((obs, oldv, newVal)->{
-            if (newVal != null){
+        comboBoxClientenoSistema.getSelectionModel().selectedItemProperty().addListener((obs, oldv, newVal) -> {
+            if (newVal != null) {
                 itemSelecionado[0] = true; //marca que foi uma selecao real
             }
         });
 
         comboBoxClientenoSistema.getEditor().textProperty().addListener((obs, oldValue, newValue) -> {
             //Se foi selecao real, ignore e reseta a fla
-            if (itemSelecionado[0]){
+            if (itemSelecionado[0]) {
                 itemSelecionado[0] = false;
                 return;
             }
@@ -453,9 +462,9 @@ public class VendasController implements Initializable {
             final String filtro = newValue == null ? "" : newValue.toLowerCase();
 
             //Quando vazio, atualiza a lista
-            if (filtro.isEmpty()){
+            if (filtro.isEmpty()) {
                 clienteFiltrados.setPredicate(c -> true);
-            }else {
+            } else {
                 clienteFiltrados.setPredicate(c ->
                         c.getNome().toLowerCase().contains(filtro));
             }
@@ -608,7 +617,7 @@ public class VendasController implements Initializable {
         Configuracao config = ConfiguracaoDAO.buscarPorChave("IVA");
         if (config != null) {
             iva = config.getValor();
-        }else {
+        } else {
             iva = new BigDecimal("17");
         }
         lbTAXAIVAVendas.setText("IVA (" + iva + "%)");
@@ -797,7 +806,7 @@ public class VendasController implements Initializable {
         }
     }
 
-    private void mostrarFeedback()  {
+    private void mostrarFeedback() {
 
         lbFeedBack.setText("Venda finalizada com sucesso");
         lbFeedBack.setStyle(
